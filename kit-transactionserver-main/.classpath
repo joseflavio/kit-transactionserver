@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="libs/bootstrap-core-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/kit-transactionserver-services"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/kit-transactionserver-simplestatemachine"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.6.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="libs/slf4j-api-1.6.2.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-simple-1.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
