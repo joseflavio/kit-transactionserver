@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MyProject" default="init" basedir=".">
+
+	<target name="init">
+		<scp todir="daniel:ras0conf@wealthy.danielferber.com.br">
+			<fileset dir="lib-tmp">
+				<include name="**/*.*" />
+			</fileset>
+		</scp>
+	</target>
+
+</project>

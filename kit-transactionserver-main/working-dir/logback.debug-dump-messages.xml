@@ -1,0 +1,48 @@
+<configuration>
+
+    <property name="LOG_XML_FILES_HOME" value="D:/temp/hotelsearchengine" />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE_XML_HSE-FSA-GEO-SEARCH-REQUEST" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_XML_FILES_HOME}\log.%d{yyyy-MM-dd-HH-mm-ss-SSS}.hse_fsa_geosearch_request.xml</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>%msg</Pattern>
+		</encoder>		
+	</appender>
+
+    <appender name="FILE_XML_HSE-FSA-GEO-SEARCH-RESPONSE" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_XML_FILES_HOME}\log.%d{yyyy-MM-dd-HH-mm-ss-SSS}.hse_fsa_geosearch_response.xml</fileNamePattern>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%msg</Pattern>
+        </encoder>      
+    </appender>
+
+	<logger name="com.amadeus.tsl.hotelsearchengine.be.fsa.GeoSearchRequestLogger" level="DEBUG" additivity="false">
+		<appender-ref ref="FILE_XML_HSE-FSA-GEO-SEARCH-REQUEST" />
+	</logger>
+
+	<logger	name="com.amadeus.tsl.hotelsearchengine.be.fsa.GeoSearchResponseLogger" level="DEBUG" additivity="false">
+		<appender-ref ref="FILE_XML_HSE-FSA-GEO-SEARCH-RESPONSE" />
+	</logger>
+
+	<logger name="ch.qos.logback" level="OFF">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<root>
+		<level value="debug" />
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</configuration>

@@ -1,0 +1,46 @@
+package com.kit.lightserver.statemachine.states;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.jfap.framework.statemachine.ProcessingResult;
+import com.jfap.framework.statemachine.ResultStateTransition;
+import com.jfap.framework.statemachine.ResultWaitEvent;
+import com.jfap.framework.statemachine.StateSME;
+import com.kit.lightserver.statemachine.ConversationFinishedStatusCTX;
+import com.kit.lightserver.statemachine.KitGeneralCTX;
+import com.kit.lightserver.types.response.ChannelNotificationServerErrorRSTY;
+
+public final class UnrecoverableErrorState implements StateSME<KitEventSME> {
+
+    static private final Logger LOGGER = LoggerFactory.getLogger(ClientAuthenticationSuccessfulState.class);
+
+    static public StateSME<KitEventSME> getInstance(final KitGeneralCTX context, final ConversationFinishedStatusCTX conversationFinishedStatus) {
+        final UnrecoverableErrorState state = new UnrecoverableErrorState(context, conversationFinishedStatus);
+        return state;
+    }
+
+    private final KitGeneralCTX context;
+    private final ConversationFinishedStatusCTX conversationFinishedStatus;
+
+    private UnrecoverableErrorState(final KitGeneralCTX context, final ConversationFinishedStatusCTX conversationFinishedStatus) {
+        this.context = context;
+        this.conversationFinishedStatus = conversationFinishedStatus;
+    }// constructor
+
+    @Override
+    public ProcessingResult<KitEventSME> transitionOccurred() {
+        final ChannelNotificationServerErrorRSTY error = new ChannelNotificationServerErrorRSTY();
+        context.getClientAdapterOut().sendBack(error);
+        final StateSME<KitEventSME> newState = FinishAndWaitForDataInputCloseState.getInstance(context, conversationFinishedStatus);
+        final ResultStateTransition<KitEventSME> transition = new ResultStateTransition<KitEventSME>(newState);
+        return transition;
+    }
+
+    @Override
+    public ProcessingResult<KitEventSME> processEvent(final KitEventSME event) {
+        LOGGER.error("Unexpected event. event=" + event);
+        return new ResultWaitEvent<KitEventSME>();
+    }
+
+}// class
