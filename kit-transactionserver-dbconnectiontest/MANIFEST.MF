@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.6.0_27-b07 (Sun Microsystems Inc.)
+Built-By: Jose Flavio Aguilar Paulino
+Main-Class: TestDatabaseConnection
+Class-Path: lib/sqljdbc_1.2/enu/sqljdbc.jar
+
