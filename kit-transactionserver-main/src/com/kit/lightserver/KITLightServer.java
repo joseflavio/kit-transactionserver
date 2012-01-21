@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.adapterin.ClientAdapterInListenerThread;
 import com.kit.lightserver.configuration.ConfigurationReader;
+import com.kit.lightserver.domain.types.ConnectionId;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
-import com.kit.lightserver.services.types.ConnectionId;
 
 public final class KITLightServer {
 

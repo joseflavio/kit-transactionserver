@@ -23,6 +23,9 @@ CREATE NONCLUSTERED INDEX Index_KTClientID ON dbo.LogConexoes(KTClientID);
 CREATE NONCLUSTERED INDEX Index_KTStatusDaConexao ON dbo.LogConexoes(KTStatusDaConexao);
 
 
+UPDATE [dbo].[LogConexoes] SET [KTCelularIdAB] = [KTCelularIdA]+':'+[KTCelularIdB]
+
+
 -- Tabela Authenticate
 EXEC sp_rename 'Authenticate.KTLastAuthentication', 'KTLastAuthenticationDbDateTime', 'COLUMN'
 ALTER TABLE dbo.Authenticate ADD KTUsuarioConectado bit NOT NULL DEFAULT 0;

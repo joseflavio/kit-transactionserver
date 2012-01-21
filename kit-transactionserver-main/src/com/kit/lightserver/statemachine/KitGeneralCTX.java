@@ -1,7 +1,7 @@
 package com.kit.lightserver.statemachine;
 
 import com.kit.lightserver.adapterout.ClientAdapterOut;
-import com.kit.lightserver.services.types.ConnectionId;
+import com.kit.lightserver.domain.types.ConnectionId;
 
 public final class KitGeneralCTX {
 

@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import java.util.Date;
 import java.util.UUID;
 
-import com.kit.lightserver.services.types.ConnectionId;
+import com.kit.lightserver.domain.types.ConnectionId;
 
 final class ConnectionIdGenerator {
 

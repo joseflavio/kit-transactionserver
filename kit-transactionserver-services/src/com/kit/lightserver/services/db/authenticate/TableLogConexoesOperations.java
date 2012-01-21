@@ -4,10 +4,10 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.kit.lightserver.domain.types.ConnectionId;
+import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.InsertQueryExecuter;
 import com.kit.lightserver.services.db.InsertQueryResult;
-import com.kit.lightserver.services.types.ConnectionId;
-import com.kit.lightserver.services.types.InstallationIdSTY;
 
 public final class TableLogConexoesOperations {
 

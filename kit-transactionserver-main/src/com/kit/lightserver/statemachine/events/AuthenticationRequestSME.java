@@ -1,7 +1,7 @@
 package com.kit.lightserver.statemachine.events;
 
 import com.kit.lightserver.domain.AuthenticationRequestTypeEnumSTY;
-import com.kit.lightserver.services.types.InstallationIdSTY;
+import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
 

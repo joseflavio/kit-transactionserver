@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.conhecimentos;
+package com.kit.lightserver.services.db.forms.conhecimentos;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

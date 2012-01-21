@@ -17,9 +17,9 @@ import com.kit.lightserver.services.db.QueryResultContainer;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
 import com.kit.lightserver.services.db.UpdateQueryExecuter;
 import com.kit.lightserver.services.db.UpdateQueryResult;
-import com.kit.lightserver.services.db.conhecimentos.SelectConhecimentosQuery;
-import com.kit.lightserver.services.db.conhecimentos.SelectConhecimentosQueryResultAdapter;
-import com.kit.lightserver.services.db.conhecimentos.UpdateConhecimentosFlagsQuery;
+import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
+import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQueryResultAdapter;
+import com.kit.lightserver.services.db.forms.conhecimentos.UpdateConhecimentosFlagsQuery;
 import com.kit.lightserver.services.db.forms.notasfiscais.UpdateNotafiscaisFlagsQuery;
 
 public final class FormServices {

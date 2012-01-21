@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.types;
+package com.kit.lightserver.domain.types;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

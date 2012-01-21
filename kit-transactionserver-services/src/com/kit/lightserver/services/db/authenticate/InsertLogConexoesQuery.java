@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import com.kit.lightserver.domain.types.ConnectionId;
+import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.InsertQueryInterface;
 import com.kit.lightserver.services.db.QueryDateTimeParameter;
 import com.kit.lightserver.services.db.QueryIntegerParameter;
 import com.kit.lightserver.services.db.QueryParameter;
 import com.kit.lightserver.services.db.QueryStringParameter;
-import com.kit.lightserver.services.types.ConnectionId;
-import com.kit.lightserver.services.types.InstallationIdSTY;
 
 final class InsertLogConexoesQuery implements InsertQueryInterface {
 

@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.types;
+package com.kit.lightserver.domain.types;
 
 public final class InstallationIdSTY {
 

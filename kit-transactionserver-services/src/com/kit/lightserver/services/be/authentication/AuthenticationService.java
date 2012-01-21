@@ -5,14 +5,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kit.lightserver.domain.types.ConnectionId;
+import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.InsertQueryResult;
 import com.kit.lightserver.services.db.QueryResultContainer;
 import com.kit.lightserver.services.db.UpdateQueryResult;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
 import com.kit.lightserver.services.db.authenticate.TableLogConexoesConstants;
 import com.kit.lightserver.services.db.authenticate.TableLogConexoesOperations;
-import com.kit.lightserver.services.types.ConnectionId;
-import com.kit.lightserver.services.types.InstallationIdSTY;
 
 public final class AuthenticationService {
 

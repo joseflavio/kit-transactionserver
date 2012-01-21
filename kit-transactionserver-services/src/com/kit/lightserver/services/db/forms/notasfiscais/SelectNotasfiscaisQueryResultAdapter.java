@@ -9,7 +9,7 @@ import java.util.List;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.services.db.SelectQueryResultAdapter;
-import com.kit.lightserver.services.db.conhecimentos.StatusEntregaSTYParser;
+import com.kit.lightserver.services.db.forms.conhecimentos.StatusEntregaSTYParser;
 
 public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryResultAdapter<List<NotafiscalSTY>> {
 

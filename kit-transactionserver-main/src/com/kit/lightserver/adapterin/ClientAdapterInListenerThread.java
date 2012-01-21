@@ -11,7 +11,7 @@ import kit.primitives.factory.PrimitiveStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kit.lightserver.services.types.ConnectionId;
+import com.kit.lightserver.domain.types.ConnectionId;
 import com.kit.lightserver.statemachine.KITStateMachineRunnable;
 import com.kit.lightserver.statemachine.events.AdapterInDataInputClosedSME;
 import com.kit.lightserver.statemachine.events.AdapterInErrorTimeOutSME;

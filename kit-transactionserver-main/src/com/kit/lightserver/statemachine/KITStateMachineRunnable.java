@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.jfap.framework.statemachine.StateMachine;
 import com.jfap.framework.statemachine.StateSME;
 import com.kit.lightserver.adapterout.ClientAdapterOut;
-import com.kit.lightserver.services.types.ConnectionId;
+import com.kit.lightserver.domain.types.ConnectionId;
 import com.kit.lightserver.statemachine.states.InitialState;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 import com.kit.lightserver.types.response.ClientResponseRSTY;

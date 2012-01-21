@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.conhecimentos;
+package com.kit.lightserver.services.db.forms.conhecimentos;
 
 import java.util.LinkedList;
 import java.util.List;
