@@ -1,6 +1,6 @@
 package com.kit.lightserver.types.response;
 
-import com.kit.lightserver.domain.NotafiscalSTY;
+import com.kit.lightserver.domain.types.NotafiscalSTY;
 
 public final class FormContentFullNotafiscalRSTY extends FormContentFullRSTY implements ClientResponseRSTY {
 

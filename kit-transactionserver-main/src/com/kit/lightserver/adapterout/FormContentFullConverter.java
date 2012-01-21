@@ -6,9 +6,9 @@ import kit.primitives.forms.FieldAndContentBean;
 import kit.primitives.forms.FormContent;
 import kit.primitives.forms.FormContentFull;
 
-import com.kit.lightserver.domain.ConhecimentoSTY;
-import com.kit.lightserver.domain.NotafiscalSTY;
-import com.kit.lightserver.domain.TemplateEnumSTY;
+import com.kit.lightserver.domain.types.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.NotafiscalSTY;
+import com.kit.lightserver.domain.types.TemplateEnumSTY;
 import com.kit.lightserver.types.response.FormContentFullConhecimentoRSTY;
 import com.kit.lightserver.types.response.FormContentFullNotafiscalRSTY;
 import com.kit.lightserver.types.response.FormContentFullRSTY;

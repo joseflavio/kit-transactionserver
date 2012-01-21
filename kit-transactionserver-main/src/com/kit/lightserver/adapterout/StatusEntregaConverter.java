@@ -1,6 +1,6 @@
 package com.kit.lightserver.adapterout;
 
-import com.kit.lightserver.domain.StatusEntregaEnumSTY;
+import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 
 final class StatusEntregaConverter {
 

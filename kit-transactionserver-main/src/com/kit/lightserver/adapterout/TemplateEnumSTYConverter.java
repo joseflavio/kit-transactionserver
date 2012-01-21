@@ -1,6 +1,6 @@
 package com.kit.lightserver.adapterout;
 
-import com.kit.lightserver.domain.TemplateEnumSTY;
+import com.kit.lightserver.domain.types.TemplateEnumSTY;
 
 final class TemplateEnumSTYConverter {
 

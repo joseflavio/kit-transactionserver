@@ -3,7 +3,7 @@ package com.kit.lightserver.statemachine;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.kit.lightserver.domain.FormSTY;
+import com.kit.lightserver.domain.types.FormSTY;
 
 public final class CommunicationCTX {
 
