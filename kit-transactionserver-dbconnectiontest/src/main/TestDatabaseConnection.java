@@ -11,29 +11,24 @@ import java.util.Properties;
 
 public final class TestDatabaseConnection {
 
-
     static final double NANO_TO_SECONDS = 1000000000.0d;
 
 	public static void main(final String[] args) throws ClassNotFoundException, SQLException {
 
 		Properties properties = ResourcesLoader.loadExternalPropertyFile("config/database.joseflavio-mira-srvkit-tinet.properties");
 
-		DatabaseConfig storageConfiguration = new DatabaseConfig(properties);
+		DatabaseConfig dbConfig = new DatabaseConfig(properties);
 
-		System.out.println(storageConfiguration);
+		System.out.println(dbConfig);
 
 		// final String driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-		Class.forName(storageConfiguration.getDbDriver());
+		Class.forName(dbConfig.getDbDriver());
 
-		System.out.println("JDBC Driver loaded: " + storageConfiguration.getDbDriver());
+		System.out.println("JDBC Driver loaded: " + dbConfig.getDbDriver());
 
 		long startTime = System.nanoTime();
-
 		long connectStartTime = System.nanoTime();
-
-		Connection connection = DriverManager
-				.getConnection(storageConfiguration.getDbUrl(), storageConfiguration.getDbUser(), storageConfiguration.getDbPassword());
-
+		Connection connection = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getDbPassword());
 		long connectEndTime = System.nanoTime();
 
 		PreparedStatement st = connection.prepareStatement("SELECT KTClientId, KTPassword, name, KTClientStatus FROM dbo.Authenticate");
