@@ -42,10 +42,10 @@ final class ClientAuthenticationSuccessfulState extends KitTransactionalAbstract
         final String ktUserClientId = context.getClientInfo().getKtClientId();
         final SimpleServiceResponse<FormsCTX> serviceResponse;
         if (context.getClientInfo().isMustReset()) {
-            serviceResponse = FormServices.retrieveFormContext(ktUserClientId);
+            serviceResponse = FormServices.retrieveCurrentForms(ktUserClientId);
         }
         else {
-            serviceResponse = FormServices.retrieveFormContext(ktUserClientId);
+            serviceResponse = FormServices.retrieveCurrentForms(ktUserClientId);
         }
 
         if (serviceResponse.isValid() == false) {

@@ -26,7 +26,7 @@ public final class FormServices {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(FormServices.class);
 
-    static public SimpleServiceResponse<FormsCTX> retrieveFormContext(final String ktUserClientId) {
+    static public SimpleServiceResponse<FormsCTX> retrieveCurrentForms(final String ktUserClientId) {
 
         SelectConhecimentosQueryResultAdapter conhecimentosAdapter = new SelectConhecimentosQueryResultAdapter();
         SelectConhecimentosQuery conhecimentosQuery = new SelectConhecimentosQuery(ktUserClientId);
@@ -38,8 +38,6 @@ public final class FormServices {
             return errorServiceResponse;
         }
 
-
-
         List<ConhecimentoSTY> conhecimentoList = conhecimentosQueryResult.getResult();
 
         //TODO: Usar um método melhor de salvar estatisticas dos serviços
@@ -47,7 +45,7 @@ public final class FormServices {
         chronometer.start();
         SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = NotasfiscaisServices.retrieveNotasfiscais(conhecimentoList);
         chronometer.stop();
-        FormServices.LOGGER.info("service time: " + chronometer.getElapsedTime());
+        FormServices.LOGGER.info("Service time: " + chronometer.getElapsedTime());
 
         if (notasfiscaisResult.isValid() == false) {
             final SimpleServiceResponse<FormsCTX> errorServiceResponse = new SimpleServiceResponse<FormsCTX>();

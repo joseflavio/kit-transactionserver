@@ -24,7 +24,7 @@ public final class ClientAdapterInListenerThread implements Runnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(ClientAdapterInListenerThread.class);
 
-    static private final int ADAPTER_IN_TIMEOUT_IN_MILLIS = 20000; //180000;// 180000=180s in production and 7000=7s in tests
+    static private final int ADAPTER_IN_TIMEOUT_IN_MILLIS = 30000; //180000;// 180000=180s in production and 7000=7s in tests
 
     private final Socket socket;
 

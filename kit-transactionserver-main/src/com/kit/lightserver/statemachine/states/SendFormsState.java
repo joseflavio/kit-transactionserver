@@ -29,7 +29,7 @@ final class SendFormsState extends KitTransactionalAbstractState implements Stat
 
     static private final Logger LOGGER = LoggerFactory.getLogger(SendFormsState.class);
 
-    static private final int MAX_FORMS_TO_SEND_UNTIL_CONFIRMATION = 50; // Calculado com time-out no ADI de 5 segundos
+    static private final int MAX_FORMS_TO_SEND_UNTIL_CONFIRMATION = 40; // Calculado empiricamente pelo time-out
 
     private final CommunicationCTX communicationCTX;
 
@@ -87,9 +87,12 @@ final class SendFormsState extends KitTransactionalAbstractState implements Stat
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
                 return new ResultStateTransition<KitEventSME>(errorState);
             }
+
+            // Success
             communicationCTX.clearSentListWaitingForConfirmation();
             sendFormsAndRequestClientStatus();
             return new ResultWaitEvent<KitEventSME>();
+
         }
         else if (event instanceof FormOperationUpdateFormsCompleteEventSME) {
             return finishedSendingFormsAndRequestUpdates();

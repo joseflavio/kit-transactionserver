@@ -32,6 +32,10 @@ ALTER TABLE dbo.Authenticate ADD KTUsuarioConectado bit NOT NULL DEFAULT 0;
 ALTER TABLE dbo.Authenticate ADD KTDeveResetar bit NOT NULL DEFAULT 0;
 ALTER TABLE dbo.Authenticate ADD KTLastDisconnectionDbDateTime datetime NULL DEFAULT NULL;
 
+-- Table KTStatus (Deve ser removida depois)
+INSERT INTO dbo.KTStatus (KTStatus) VALUES ('moved_to_new_version')
+INSERT INTO dbo.KTStatus (KTStatus) VALUES ('atualizado_para_nova_versao')
+
 -- Tabela Conhecimentos
 ALTER TABLE dbo.Conhecimentos ADD KTControleProntoParaEnviar bit NOT NULL DEFAULT 0;
 ALTER TABLE dbo.Conhecimentos ADD KTControleDeveDeletar bit NOT NULL DEFAULT 0;
@@ -51,8 +55,23 @@ ALTER TABLE dbo.Conhecimentos ADD KTFlagHistoricoUpdateDBTime datetime NULL;
 CREATE NONCLUSTERED INDEX Index_KTClientId ON dbo.Conhecimentos(KTClientId);
 CREATE NONCLUSTERED INDEX Index_KTClientId_KTFlagHistorico_KTControleProntoParaEnviar ON dbo.Conhecimentos(KTClientId, KTFlagHistorico, KTControleProntoParaEnviar);
 
-INSERT INTO dbo.KTStatus (KTStatus) VALUES ('moved_to_new_version')
-
 -- Em teoria todos conhecimentos devem estar migrados ou devem ser marcados como nao prontos para enviar
 UPDATE dbo.Conhecimentos SET KTFlagHistorico=1, KTStatus='moved_to_new_version' WHERE KTStatus='historic'
 UPDATE dbo.Conhecimentos SET KTControleDeveDeletar=1, KTStatus='moved_to_new_version' WHERE KTStatus='deleteRequestByExternal'
+
+-- ----------------------------------------------------------------------------------------------------------
+-- Tabela NotasFiscais
+-- ----------------------------------------------------------------------------------------------------------
+ALTER TABLE dbo.NotasFiscais ADD KTControleProntoParaEnviar bit NOT NULL DEFAULT 0;
+ALTER TABLE dbo.NotasFiscais ADD KTControleDeveDeletar bit NOT NULL DEFAULT 0;
+
+ALTER TABLE dbo.NotasFiscais ADD KTFlagRecebido bit NOT NULL DEFAULT 0;
+ALTER TABLE dbo.NotasFiscais ADD KTFlagRecebidoUpdateDBTime datetime NULL;
+
+ALTER TABLE dbo.NotasFiscais ADD KTFlagHistorico bit NOT NULL DEFAULT 0;
+ALTER TABLE dbo.NotasFiscais ADD KTFlagHistoricoUpdateDBTime datetime NULL;
+
+UPDATE dbo.NotasFiscais SET KTFlagHistorico=1, KTStatus='moved_to_new_version' WHERE KTStatus='historic'
+UPDATE dbo.NotasFiscais SET KTControleDeveDeletar=1, KTStatus='moved_to_new_version' WHERE KTStatus='deleteRequestByExternal'
+
+
