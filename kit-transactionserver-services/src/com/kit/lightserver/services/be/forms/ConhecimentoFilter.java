@@ -1,8 +1,8 @@
 package com.kit.lightserver.services.be.forms;
 
 import com.jfap.util.collections.SmartCollectionTransformFilter;
-import com.kit.lightserver.domain.ConhecimentoSTY;
-import com.kit.lightserver.domain.FormSTY;
+import com.kit.lightserver.domain.types.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.FormSTY;
 
 final class ConhecimentoFilter implements SmartCollectionTransformFilter<ConhecimentoSTY, FormSTY> {
 

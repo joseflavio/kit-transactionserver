@@ -50,6 +50,6 @@ CREATE NONCLUSTERED INDEX Index_KTClientId_KTFlagHistorico_KTControleProntoParaE
 
 INSERT INTO dbo.KTStatus (KTStatus) VALUES ('moved_to_new_version')
 
-
+-- Em teoria todos conhecimentos devem estar migrados ou devem ser marcados como nao prontos para enviar
 UPDATE dbo.Conhecimentos SET KTFlagHistorico=1, KTStatus='moved_to_new_version' WHERE KTStatus='historic'
 UPDATE dbo.Conhecimentos SET KTControleDeveDeletar=1, KTStatus='moved_to_new_version' WHERE KTStatus='deleteRequestByExternal'

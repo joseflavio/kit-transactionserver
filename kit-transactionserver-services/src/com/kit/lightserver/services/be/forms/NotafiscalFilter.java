@@ -1,8 +1,8 @@
 package com.kit.lightserver.services.be.forms;
 
 import com.jfap.util.collections.SmartCollectionTransformFilter;
-import com.kit.lightserver.domain.FormSTY;
-import com.kit.lightserver.domain.NotafiscalSTY;
+import com.kit.lightserver.domain.types.FormSTY;
+import com.kit.lightserver.domain.types.NotafiscalSTY;
 
 final class NotafiscalFilter implements SmartCollectionTransformFilter<NotafiscalSTY, FormSTY> {
 

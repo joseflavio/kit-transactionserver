@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import com.jfap.chronometer.Chronometer;
 import com.jfap.util.collections.SmartCollections;
-import com.kit.lightserver.domain.ConhecimentoSTY;
-import com.kit.lightserver.domain.FormSTY;
-import com.kit.lightserver.domain.NotafiscalSTY;
+import com.kit.lightserver.domain.containers.FormsCTX;
+import com.kit.lightserver.domain.containers.SimpleServiceResponse;
+import com.kit.lightserver.domain.types.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.FormSTY;
+import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.db.QueryResultContainer;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
 import com.kit.lightserver.services.db.UpdateQueryExecuter;
@@ -18,8 +20,6 @@ import com.kit.lightserver.services.db.UpdateQueryResult;
 import com.kit.lightserver.services.db.conhecimentos.SelectConhecimentosQuery;
 import com.kit.lightserver.services.db.conhecimentos.SelectConhecimentosQueryResultAdapter;
 import com.kit.lightserver.services.db.conhecimentos.UpdateConhecimentosFlagsQuery;
-import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQuery;
-import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQueryResultAdapter;
 import com.kit.lightserver.services.db.forms.notasfiscais.UpdateNotafiscaisFlagsQuery;
 
 public final class FormServices {
@@ -28,22 +28,24 @@ public final class FormServices {
 
     static public SimpleServiceResponse<FormsCTX> retrieveFormContext(final String ktUserClientId) {
 
-        final SelectConhecimentosQueryResultAdapter conhecimentosAdapter = new SelectConhecimentosQueryResultAdapter();
-        final SelectConhecimentosQuery conhecimentosQuery = new SelectConhecimentosQuery(ktUserClientId);
+        SelectConhecimentosQueryResultAdapter conhecimentosAdapter = new SelectConhecimentosQueryResultAdapter();
+        SelectConhecimentosQuery conhecimentosQuery = new SelectConhecimentosQuery(ktUserClientId);
 
-        final SelectQueryExecuter<List<ConhecimentoSTY>> conhecimentosQueryExecuter = new SelectQueryExecuter<List<ConhecimentoSTY>>(conhecimentosAdapter);
-        final QueryResultContainer<List<ConhecimentoSTY>> conhecimentosQueryResult = conhecimentosQueryExecuter.executeSelectQuery(conhecimentosQuery);
+        SelectQueryExecuter<List<ConhecimentoSTY>> conhecimentosQueryExecuter = new SelectQueryExecuter<List<ConhecimentoSTY>>(conhecimentosAdapter);
+        QueryResultContainer<List<ConhecimentoSTY>> conhecimentosQueryResult = conhecimentosQueryExecuter.executeSelectQuery(conhecimentosQuery);
         if (conhecimentosQueryResult.isQuerySuccessful() == false) {
             final SimpleServiceResponse<FormsCTX> errorServiceResponse = new SimpleServiceResponse<FormsCTX>();
             return errorServiceResponse;
         }
 
+
+
+        List<ConhecimentoSTY> conhecimentoList = conhecimentosQueryResult.getResult();
+
+        //TODO: Usar um método melhor de salvar estatisticas dos serviços
         final Chronometer chronometer = new Chronometer();
-
-        final List<ConhecimentoSTY> conhecimentoList = conhecimentosQueryResult.getResult();
-
         chronometer.start();
-        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = FormServices.retrieveNotasfiscais(conhecimentoList);
+        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = NotasfiscaisServices.retrieveNotasfiscais(conhecimentoList);
         chronometer.stop();
         FormServices.LOGGER.info("service time: " + chronometer.getElapsedTime());
 
@@ -59,40 +61,6 @@ public final class FormServices {
 
         final SimpleServiceResponse<FormsCTX> serviceResponse = new SimpleServiceResponse<FormsCTX>(formsContext);
 
-        return serviceResponse;
-
-    }
-
-    static SimpleServiceResponse<List<NotafiscalSTY>> retrieveNotasfiscais(final List<ConhecimentoSTY> conhecimentoList) {
-
-        /*
-         * Conhecimentos
-         */
-        final List<Integer> parentKnowledgeRowIdList = new LinkedList<Integer>();
-        for (ConhecimentoSTY conhecimentoSTY : conhecimentoList) {
-            parentKnowledgeRowIdList.add(conhecimentoSTY.getKtRowId());
-        }
-
-        final SelectNotasfiscaisQueryResultAdapter notasfiscaisAdapter = new SelectNotasfiscaisQueryResultAdapter();
-        final SelectQueryExecuter<List<NotafiscalSTY>> notasfiscaisQueryExecuter = new SelectQueryExecuter<List<NotafiscalSTY>>(notasfiscaisAdapter);
-
-
-        /*
-         * Notas fiscais
-         */
-        final List<NotafiscalSTY> result = new LinkedList<NotafiscalSTY>();
-
-        if( parentKnowledgeRowIdList.size() > 0 ) {
-            final SelectNotasfiscaisQuery notasfiscaisQuery = new SelectNotasfiscaisQuery(parentKnowledgeRowIdList);
-            final QueryResultContainer<List<NotafiscalSTY>> notasfiscaisQueryResult = notasfiscaisQueryExecuter.executeSelectQuery(notasfiscaisQuery);
-            if (notasfiscaisQueryResult.isQuerySuccessful() == false) {
-                final SimpleServiceResponse<List<NotafiscalSTY>> errorServiceResponse = new SimpleServiceResponse<List<NotafiscalSTY>>();
-                return errorServiceResponse;
-            }
-            result.addAll(notasfiscaisQueryResult.getResult());
-        }
-
-        final SimpleServiceResponse<List<NotafiscalSTY>> serviceResponse = new SimpleServiceResponse<List<NotafiscalSTY>>(result);
         return serviceResponse;
 
     }

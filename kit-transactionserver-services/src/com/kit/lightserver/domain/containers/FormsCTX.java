@@ -1,12 +1,12 @@
-package com.kit.lightserver.services.be.forms;
+package com.kit.lightserver.domain.containers;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.kit.lightserver.domain.ConhecimentoSTY;
-import com.kit.lightserver.domain.NotafiscalSTY;
+import com.kit.lightserver.domain.types.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.NotafiscalSTY;
 
 public final class FormsCTX {
 

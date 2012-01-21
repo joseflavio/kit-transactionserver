@@ -3,7 +3,7 @@ package com.kit.lightserver.services.db.conhecimentos;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.kit.lightserver.domain.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.services.db.QueryIntegerParameter;
 import com.kit.lightserver.services.db.QueryParameter;
 import com.kit.lightserver.services.db.QueryStringParameter;

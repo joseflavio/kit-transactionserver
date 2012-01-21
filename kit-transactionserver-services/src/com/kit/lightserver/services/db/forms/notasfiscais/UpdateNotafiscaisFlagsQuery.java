@@ -3,7 +3,7 @@ package com.kit.lightserver.services.db.forms.notasfiscais;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.kit.lightserver.domain.NotafiscalSTY;
+import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.db.QueryIntegerParameter;
 import com.kit.lightserver.services.db.QueryParameter;
 import com.kit.lightserver.services.db.UpdateQueryInterface;

@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.kit.lightserver.domain.ConhecimentoSTY;
-import com.kit.lightserver.domain.StatusEntregaEnumSTY;
+import com.kit.lightserver.domain.types.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.services.db.SelectQueryResultAdapter;
 import com.kit.lightserver.services.db.common.MsSqlBitConverter;
 

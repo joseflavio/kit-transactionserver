@@ -1,4 +1,4 @@
-package com.kit.lightserver.domain;
+package com.kit.lightserver.domain.types;
 
 public enum StatusEntregaEnumSTY {
 

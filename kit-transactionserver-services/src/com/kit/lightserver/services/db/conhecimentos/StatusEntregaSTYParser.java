@@ -1,6 +1,6 @@
 package com.kit.lightserver.services.db.conhecimentos;
 
-import com.kit.lightserver.domain.StatusEntregaEnumSTY;
+import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 
 final public class StatusEntregaSTYParser {
 

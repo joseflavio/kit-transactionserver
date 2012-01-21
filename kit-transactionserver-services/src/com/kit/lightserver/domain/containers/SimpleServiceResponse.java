@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.be.forms;
+package com.kit.lightserver.domain.containers;
 
 public final class SimpleServiceResponse<T> {
 
