@@ -72,7 +72,7 @@ final class ToSendPrimiveConverter {
         }
         else if (clientResponseRSTY instanceof FormOperationRSTY) {
             final FormOperationRSTY casted = (FormOperationRSTY) clientResponseRSTY;
-            converterResult = FormOperationConverter.converter(casted);
+            converterResult = AdoFormOperationConverter.converter(casted);
         }
         else if (clientResponseRSTY instanceof FormContentFullRSTY) {
             final FormContentFullRSTY formContentFullRSTY = (FormContentFullRSTY) clientResponseRSTY;

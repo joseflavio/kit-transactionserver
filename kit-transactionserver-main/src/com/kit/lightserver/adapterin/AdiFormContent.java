@@ -1,5 +1,7 @@
 package com.kit.lightserver.adapterin;
 
+import java.util.Date;
+
 import kit.primitives.forms.FormContent;
 
 import org.slf4j.Logger;
@@ -17,7 +19,13 @@ final class AdiFormContent {
 
 	    final ReceivedPrimitiveConverterResult<KitEventSME> result;
 		if(primitive.formStatus == FormContent.FORM_READ) {
-			FormContentFormReadSME event = new FormContentFormReadSME();
+
+		    String formId = primitive.formId; // formId=conhecimentos%1094966
+		    LOGGER.error("formId="+formId);
+
+			Date firstReadDate = primitive.firstReadDate;
+
+			FormContentFormReadSME event = new FormContentFormReadSME(firstReadDate);
 			result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, event);
 		}
 		else {

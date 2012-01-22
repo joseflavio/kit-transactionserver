@@ -21,7 +21,6 @@ final class AdiFormOperation {
             result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, event);
         }
         else {
-
             result = new ReceivedPrimitiveConverterResult<KitEventSME>();
         }
 

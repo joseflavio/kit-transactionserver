@@ -2,13 +2,18 @@ package com.kit.lightserver.adapterout;
 
 import kit.primitives.forms.FormOperation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kit.lightserver.types.response.FormOperationGetStatusRSTY;
 import com.kit.lightserver.types.response.FormOperationRSTY;
 import com.kit.lightserver.types.response.FormOperationResetRSTY;
 import com.kit.lightserver.types.response.FormOperationUpdatedFormsClearFlagsRSTY;
 import com.kit.lightserver.types.response.FormOperationUpdatedFormsRequestRSTY;
 
-public final class FormOperationConverter {
+public final class AdoFormOperationConverter {
+
+    static private final Logger LOGGER = LoggerFactory.getLogger(AdoFormOperationConverter.class);
 
     static public ConverterResult converter(final FormOperationRSTY clientResponseRSTY) {
 
@@ -26,6 +31,7 @@ public final class FormOperationConverter {
             formOperation = new FormOperation();
             formOperation.type = FormOperation.GET_STATUS;
         } else {
+            LOGGER.error("Invalid Form Operation.");
             formOperation = null;
         }
 
