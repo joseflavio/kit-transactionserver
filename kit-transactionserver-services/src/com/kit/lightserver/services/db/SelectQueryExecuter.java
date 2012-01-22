@@ -29,8 +29,9 @@ public final class SelectQueryExecuter<T> {
             return failResult;
         }
 
+        final String queryName = selectQuery.getClass().getCanonicalName();
         final String printedSelectQuery = QueryPrinter.printQuery(selectQuery);
-        LOGGER.info("Executing query. printedSelectQuery=" + printedSelectQuery);
+        LOGGER.info("Executing query. queryName="+ queryName + ", printedSelectQuery=" + printedSelectQuery);
 
         final long startTime = System.nanoTime();
         final QueryResultContainer<T> result = executeSelectQuery(connection, selectQuery);

@@ -27,7 +27,7 @@ public final class SelectConhecimentosQueryResultAdapter implements SelectQueryR
             final boolean isEdited = MsSqlBitConverter.convert(rs.getInt("KTFlagEditado"));
 
             // final String tempKtStatus = rs.getString("KTStatus");
-            final String numeroConhecimento = rs.getString("knowledgeNumber");
+            final String numeroConhecimento = rs.getString("KTFieldNumeroDoConhecimento"); // Nome antigo: knowledgeNumber
             final String serialConhecimento = rs.getString("knowledgeSerial");
             final String codigoFilial = rs.getString("subsidiaryCode");
 
@@ -45,7 +45,7 @@ public final class SelectConhecimentosQueryResultAdapter implements SelectQueryR
 
             result.add(conhecimentoSTY);
 
-        }
+        }// while
 
         return result;
 

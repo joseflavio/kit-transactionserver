@@ -20,7 +20,7 @@ public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryRe
         while (rs.next()) {
 
             final int notafiscalKtRowId = rs.getInt("KTRowId");
-            final int parentConhecimentoRowId = rs.getInt("knowledgeRowId");
+            final int parentConhecimentoRowId = rs.getInt("KTParentRowId");
 
             final boolean isReceived = true;
             final boolean isRead = true;

@@ -41,14 +41,14 @@ public final class FormsCTX {
          */
         for (ConhecimentoSTY conhecimentoSTY : conhecimentoList) {
             final int parentConhecimentoRowId = conhecimentoSTY.getKtRowId();
-            List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get(parentConhecimentoRowId);
+            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get(parentConhecimentoRowId);
             if (notasFiscaisDoConhecimentoList == null) {
-                throw new RuntimeException("Invalid state. notasFiscaisDoConhecimentoList=" + notasFiscaisDoConhecimentoList);
+                throw new RuntimeException("Invalid state. notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList+", parentConhecimentoRowId="+parentConhecimentoRowId);
             }
-            if (notasFiscaisDoConhecimentoList.size() == 0) {
-                throw new RuntimeException("Invalid state. notasFiscaisDoConhecimentoList=" + notasFiscaisDoConhecimentoList);
+            else if (notasFiscaisDoConhecimentoList.size() == 0) {
+                throw new RuntimeException("Invalid state. notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList+", parentConhecimentoRowId="+parentConhecimentoRowId);
             }
-        }
+        }// for
 
     }
 

@@ -21,7 +21,7 @@ final public class SelectConhecimentosQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        final String selectQueryStr = "SELECT KTRowId, KTClientId, KTStatus, KTFlagRecebido, KTFlagLido, KTFlagEditado, knowledgeNumber, knowledgeSerial, subsidiaryCode, senderId, recipientName, deliveryStatus, "
+        final String selectQueryStr = "SELECT KTRowId, KTClientId, KTStatus, KTFlagRecebido, KTFlagLido, KTFlagEditado, KTFieldNumeroDoConhecimento, knowledgeSerial, subsidiaryCode, senderId, recipientName, deliveryStatus, "
                 + "deliveryDate FROM " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS + " WHERE KTClientId=? and KTFlagHistorico=0 and KTControleProntoParaEnviar=1";
 
         return selectQueryStr;

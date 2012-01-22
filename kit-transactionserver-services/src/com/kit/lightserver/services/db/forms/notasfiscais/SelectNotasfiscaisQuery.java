@@ -20,7 +20,7 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
             throw new RuntimeException("The list can not be empty.");
         }
 
-        final String orClause = QueryUtil.buildLongOrClause("knowledgeRowId", parentKnowledgeRowIdList.size());
+        final String orClause = QueryUtil.buildLongOrClause("KTParentRowId", parentKnowledgeRowIdList.size());
 
         for (final Integer currentParentKnowledgeRowId : parentKnowledgeRowIdList) {
             final QueryIntegerParameter ktClientIdParam = new QueryIntegerParameter(currentParentKnowledgeRowId);
@@ -34,7 +34,7 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        final String selectQueryStr = "SELECT KTRowId, KTStatus, knowledgeRowId, receiptNumber, receiptSerial, deliveryStatus, deliveryDate FROM "
+        final String selectQueryStr = "SELECT KTRowId, KTStatus, KTParentRowId, receiptNumber, receiptSerial, deliveryStatus, deliveryDate FROM "
                 + TableNotasfiscaisConstants.TABLE_NAME_NOTASFISCAIS + " WHERE KTFlagHistorico=0 AND ( " + parentKnowledgeRowIdOrClause + " )";
 
         return selectQueryStr;
