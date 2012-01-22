@@ -26,10 +26,10 @@ public final class FormServices {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(FormServices.class);
 
-    static public SimpleServiceResponse<FormsCTX> retrieveCurrentForms(final String ktUserClientId) {
+    static public SimpleServiceResponse<FormsCTX> retrieveCurrentForms(final String ktUserClientId, final boolean retrieveSomenteNaoRecebidos) {
 
         SelectConhecimentosQueryResultAdapter conhecimentosAdapter = new SelectConhecimentosQueryResultAdapter();
-        SelectConhecimentosQuery conhecimentosQuery = new SelectConhecimentosQuery(ktUserClientId);
+        SelectConhecimentosQuery conhecimentosQuery = new SelectConhecimentosQuery(ktUserClientId, retrieveSomenteNaoRecebidos);
 
         SelectQueryExecuter<List<ConhecimentoSTY>> conhecimentosQueryExecuter = new SelectQueryExecuter<List<ConhecimentoSTY>>(conhecimentosAdapter);
         QueryResultContainer<List<ConhecimentoSTY>> conhecimentosQueryResult = conhecimentosQueryExecuter.executeSelectQuery(conhecimentosQuery);
@@ -43,7 +43,7 @@ public final class FormServices {
         //TODO: Usar um método melhor de salvar estatisticas dos serviços
         final Chronometer chronometer = new Chronometer();
         chronometer.start();
-        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = NotasfiscaisServices.retrieveNotasfiscais(conhecimentoList);
+        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = NotasfiscaisServices.retrieveNotasfiscais(conhecimentoList, retrieveSomenteNaoRecebidos);
         chronometer.stop();
         FormServices.LOGGER.info("Service time: " + chronometer.getElapsedTime());
 

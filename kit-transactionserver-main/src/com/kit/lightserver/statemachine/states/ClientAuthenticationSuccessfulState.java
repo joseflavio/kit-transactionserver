@@ -42,10 +42,10 @@ final class ClientAuthenticationSuccessfulState extends KitTransactionalAbstract
         final String ktUserClientId = context.getClientInfo().getKtClientId();
         final SimpleServiceResponse<FormsCTX> serviceResponse;
         if (context.getClientInfo().isMustReset()) {
-            serviceResponse = FormServices.retrieveCurrentForms(ktUserClientId);
+            serviceResponse = FormServices.retrieveCurrentForms(ktUserClientId, false); //TODO: Eu nao queria usar flags aqui, pensar se melhor ter dois metodos
         }
         else {
-            serviceResponse = FormServices.retrieveCurrentForms(ktUserClientId);
+            serviceResponse = FormServices.retrieveCurrentForms(ktUserClientId, true);
         }
 
         if (serviceResponse.isValid() == false) {

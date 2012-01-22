@@ -13,7 +13,8 @@ import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQuer
 
 final class NotasfiscaisServices {
 
-    static SimpleServiceResponse<List<NotafiscalSTY>> retrieveNotasfiscais(final List<ConhecimentoSTY> conhecimentoList) {
+    static SimpleServiceResponse<List<NotafiscalSTY>> retrieveNotasfiscais(final List<ConhecimentoSTY> conhecimentoList,
+            final boolean retrieveSomenteNaoRecebidos) {
 
         /*
          * Conhecimentos
@@ -26,14 +27,13 @@ final class NotasfiscaisServices {
         final SelectNotasfiscaisQueryResultAdapter notasfiscaisAdapter = new SelectNotasfiscaisQueryResultAdapter();
         final SelectQueryExecuter<List<NotafiscalSTY>> notasfiscaisQueryExecuter = new SelectQueryExecuter<List<NotafiscalSTY>>(notasfiscaisAdapter);
 
-
         /*
          * Notas fiscais
          */
         final List<NotafiscalSTY> result = new LinkedList<NotafiscalSTY>();
 
-        if( parentKnowledgeRowIdList.size() > 0 ) {
-            final SelectNotasfiscaisQuery notasfiscaisQuery = new SelectNotasfiscaisQuery(parentKnowledgeRowIdList);
+        if (parentKnowledgeRowIdList.size() > 0) {
+            final SelectNotasfiscaisQuery notasfiscaisQuery = new SelectNotasfiscaisQuery(parentKnowledgeRowIdList, retrieveSomenteNaoRecebidos);
             final QueryResultContainer<List<NotafiscalSTY>> notasfiscaisQueryResult = notasfiscaisQueryExecuter.executeSelectQuery(notasfiscaisQuery);
             if (notasfiscaisQueryResult.isQuerySuccessful() == false) {
                 final SimpleServiceResponse<List<NotafiscalSTY>> errorServiceResponse = new SimpleServiceResponse<List<NotafiscalSTY>>();
