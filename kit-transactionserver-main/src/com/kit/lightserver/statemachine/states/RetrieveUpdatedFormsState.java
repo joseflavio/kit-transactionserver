@@ -9,6 +9,7 @@ import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
 import com.kit.lightserver.statemachine.ConversationFinishedStatusCTX;
 import com.kit.lightserver.statemachine.KitGeneralCTX;
+import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
 import com.kit.lightserver.statemachine.events.FormOperationUpdateFormsCompleteEventSME;
 import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 import com.kit.lightserver.types.response.FormOperationUpdatedFormsClearFlagsRSTY;
@@ -32,24 +33,31 @@ final class RetrieveUpdatedFormsState extends KitTransactionalAbstractState impl
     @Override
     public ProcessingResult<KitEventSME> processEvent(final KitEventSME event) {
 
-        final StateSME<KitEventSME> newState;
-        if (event instanceof FormOperationUpdateFormsCompleteEventSME) {
+        final ProcessingResult<KitEventSME> result;
 
-                final FormOperationUpdatedFormsClearFlagsRSTY formOperationClearFlags = new FormOperationUpdatedFormsClearFlagsRSTY();
-                context.getClientAdapterOut().sendBack(formOperationClearFlags);
+        if (event instanceof FormContentConhecimentoReadSME) {
+            LOGGER.error("Unimplemented event. event=" + event);
+            result = new ResultWaitEvent<KitEventSME>();
+        }
+        else if (event instanceof FormOperationUpdateFormsCompleteEventSME) {
 
-                final ChannelNotificationEndConversationRSTY channelNotificationEndConversationRSTY = new ChannelNotificationEndConversationRSTY();
-                context.getClientAdapterOut().sendBack(channelNotificationEndConversationRSTY);
+            final FormOperationUpdatedFormsClearFlagsRSTY formOperationClearFlags = new FormOperationUpdatedFormsClearFlagsRSTY();
+            context.getClientAdapterOut().sendBack(formOperationClearFlags);
 
-                newState = WaitForEventEndConversationState.getInstance(context);
+            final ChannelNotificationEndConversationRSTY channelNotificationEndConversationRSTY = new ChannelNotificationEndConversationRSTY();
+            context.getClientAdapterOut().sendBack(channelNotificationEndConversationRSTY);
+
+            StateSME<KitEventSME> newState = WaitForEventEndConversationState.getInstance(context);
+            result = new ResultStateTransition<KitEventSME>(newState);
 
         }
         else {
             LOGGER.error("Invalid event. event=" + event);
-            newState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_ERROR_UNEXPECTED_EVENT);
+            StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_ERROR_UNEXPECTED_EVENT);
+            result = new ResultStateTransition<KitEventSME>(errorState);
         }
 
-        return new ResultStateTransition<KitEventSME>(newState);
+        return result;
 
     }
 
