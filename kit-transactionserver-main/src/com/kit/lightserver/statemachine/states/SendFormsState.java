@@ -78,7 +78,7 @@ final class SendFormsState extends KitTransactionalAbstractState implements Stat
 
             if( communicationCTX.getFormsSentWaitingForConfirmationList().size() == 0 ) {
                 LOGGER.warn("Investigate. getFormsSentWaitingForConfirmationList().size()=0");
-                return finishedSendingFormsAndRequestUpdates();
+                return getRetrieveUpdatedFormsState();
             }
 
             final String ktClientId = context.getClientInfo().getKtClientId();
@@ -95,7 +95,7 @@ final class SendFormsState extends KitTransactionalAbstractState implements Stat
 
         }
         else if (event instanceof FormOperationUpdateFormsCompleteEventSME) {
-            return finishedSendingFormsAndRequestUpdates();
+            return getRetrieveUpdatedFormsState();
         }
         else {
 
@@ -112,10 +112,11 @@ final class SendFormsState extends KitTransactionalAbstractState implements Stat
             return new ResultStateTransition<KitEventSME>(newState);
 
         }
-    }
 
-    private ProcessingResult<KitEventSME> finishedSendingFormsAndRequestUpdates() {
-        LOGGER.warn("communicationCTX.getFormsToSendOrderedListSize()=" + communicationCTX.getFormsToSendOrderedListSize());
+    }// processEvent
+
+    private ProcessingResult<KitEventSME> getRetrieveUpdatedFormsState() {
+        LOGGER.info("communicationCTX.getFormsToSendOrderedListSize()=" + communicationCTX.getFormsToSendOrderedListSize());
         LOGGER.info("Client Status is ok. All Forms successfully sent.");
         final RetrieveUpdatedFormsState retrieveUpdatedFormsState = new RetrieveUpdatedFormsState(context);
         return new ResultStateTransition<KitEventSME>(retrieveUpdatedFormsState);
