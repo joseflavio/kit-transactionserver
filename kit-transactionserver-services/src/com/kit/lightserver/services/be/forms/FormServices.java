@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jfap.chronometer.Chronometer;
 import com.jfap.util.collections.SmartCollections;
-import com.kit.lightserver.domain.containers.FormsCTX;
+import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
@@ -26,7 +26,7 @@ public final class FormServices {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(FormServices.class);
 
-    static public SimpleServiceResponse<FormsCTX> retrieveCurrentForms(final String ktUserClientId, final boolean retrieveSomenteNaoRecebidos) {
+    static public SimpleServiceResponse<FormsParaEnviarCTX> retrieveCurrentForms(final String ktUserClientId, final boolean retrieveSomenteNaoRecebidos) {
 
         SelectConhecimentosQueryResultAdapter conhecimentosAdapter = new SelectConhecimentosQueryResultAdapter();
         SelectConhecimentosQuery conhecimentosQuery = new SelectConhecimentosQuery(ktUserClientId, retrieveSomenteNaoRecebidos);
@@ -34,7 +34,7 @@ public final class FormServices {
         SelectQueryExecuter<List<ConhecimentoSTY>> conhecimentosQueryExecuter = new SelectQueryExecuter<List<ConhecimentoSTY>>(conhecimentosAdapter);
         QueryResultContainer<List<ConhecimentoSTY>> conhecimentosQueryResult = conhecimentosQueryExecuter.executeSelectQuery(conhecimentosQuery);
         if (conhecimentosQueryResult.isQuerySuccessful() == false) {
-            final SimpleServiceResponse<FormsCTX> errorServiceResponse = new SimpleServiceResponse<FormsCTX>();
+            final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();
             return errorServiceResponse;
         }
 
@@ -48,16 +48,16 @@ public final class FormServices {
         FormServices.LOGGER.info("Service time: " + chronometer.getElapsedTime());
 
         if (notasfiscaisResult.isValid() == false) {
-            final SimpleServiceResponse<FormsCTX> errorServiceResponse = new SimpleServiceResponse<FormsCTX>();
+            final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();
             return errorServiceResponse;
         }
 
         final List<NotafiscalSTY> notasfiscaisList = notasfiscaisResult.getValidResult();
         FormServices.LOGGER.info("notasfiscaisList.size()=" + notasfiscaisList.size());
 
-        final FormsCTX formsContext = new FormsCTX(conhecimentoList, notasfiscaisList);
+        final FormsParaEnviarCTX formsContext = new FormsParaEnviarCTX(conhecimentoList, notasfiscaisList);
 
-        final SimpleServiceResponse<FormsCTX> serviceResponse = new SimpleServiceResponse<FormsCTX>(formsContext);
+        final SimpleServiceResponse<FormsParaEnviarCTX> serviceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>(formsContext);
 
         return serviceResponse;
 
@@ -102,6 +102,11 @@ public final class FormServices {
         LOGGER.info("Service time: " + chronometer.getElapsedTime());
 
         return true;
+    }
+
+    static public boolean flagFormsAsRead(final String ktClientId) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }// class

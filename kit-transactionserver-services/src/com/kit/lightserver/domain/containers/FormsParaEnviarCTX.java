@@ -8,14 +8,14 @@ import java.util.Map;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 
-public final class FormsCTX {
+public final class FormsParaEnviarCTX {
 
     private final List<ConhecimentoSTY> conhecimentoList;
     private final List<NotafiscalSTY> notasfiscaisList;
 
     private final Map<Integer, List<NotafiscalSTY>> notasfiscaisPorConhecimentoMap = new HashMap<Integer, List<NotafiscalSTY>>();
 
-    public FormsCTX(final List<ConhecimentoSTY> conhecimentoList, final List<NotafiscalSTY> notasfiscaisList) {
+    public FormsParaEnviarCTX(final List<ConhecimentoSTY> conhecimentoList, final List<NotafiscalSTY> notasfiscaisList) {
 
         this.conhecimentoList = conhecimentoList;
         this.notasfiscaisList = notasfiscaisList;

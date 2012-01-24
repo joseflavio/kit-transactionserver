@@ -1,4 +1,4 @@
-package com.kit.lightserver.statemachine;
+package com.kit.lightserver.statemachine.types;
 
 public enum ConversationFinishedStatusCTX {
 

@@ -8,21 +8,21 @@ import org.slf4j.LoggerFactory;
 import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.StateSME;
-import com.kit.lightserver.domain.containers.FormsCTX;
+import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.be.forms.FormServices;
-import com.kit.lightserver.statemachine.CommunicationCTX;
-import com.kit.lightserver.statemachine.ConversationFinishedStatusCTX;
-import com.kit.lightserver.statemachine.KitGeneralCTX;
+import com.kit.lightserver.statemachine.StateMachineMainContext;
+import com.kit.lightserver.statemachine.types.CommunicationCTX;
+import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.AuthenticationResponseSuccessRSTY;
 
-final class ClientAuthenticationSuccessfulState extends KitTransactionalAbstractState implements StateSME<KitEventSME> {
+final class ClientAuthenticationSuccessfulState extends BaseState implements StateSME<KitEventSME> {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(ClientAuthenticationSuccessfulState.class);
 
-    public ClientAuthenticationSuccessfulState(final KitGeneralCTX context) {
+    public ClientAuthenticationSuccessfulState(final StateMachineMainContext context) {
         super(context);
     }
 
@@ -40,7 +40,7 @@ final class ClientAuthenticationSuccessfulState extends KitTransactionalAbstract
          * GETTING ALL THE FORMS HERE, SHOULD IT BE HERE???
          */
         final String ktUserClientId = context.getClientInfo().getKtClientId();
-        final SimpleServiceResponse<FormsCTX> serviceResponse;
+        final SimpleServiceResponse<FormsParaEnviarCTX> serviceResponse;
         if (context.getClientInfo().isMustReset()) {
             serviceResponse = FormServices.retrieveCurrentForms(ktUserClientId, false); //TODO: Eu nao queria usar flags aqui, pensar se melhor ter dois metodos
         }
@@ -58,7 +58,7 @@ final class ClientAuthenticationSuccessfulState extends KitTransactionalAbstract
         /*
          * First we order the forms (group the Notasficais to be sent after its Conhecimento)
          */
-        final FormsCTX formsContext = serviceResponse.getValidResult();
+        final FormsParaEnviarCTX formsContext = serviceResponse.getValidResult();
         final CommunicationCTX communicationCTX = new CommunicationCTX();
         for (final ConhecimentoSTY conhecimentoSTY : formsContext.getConhecimentoList()) {
             communicationCTX.addToFormsToSendOrderedList(conhecimentoSTY);

@@ -7,22 +7,22 @@ import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
-import com.kit.lightserver.statemachine.ConversationFinishedStatusCTX;
-import com.kit.lightserver.statemachine.KitGeneralCTX;
+import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.ChannelNotificationEndConversationSME;
+import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 
 public final class WaitForEventEndConversationState implements StateSME<KitEventSME> {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(WaitForEventEndConversationState.class);
 
-    static public StateSME<KitEventSME> getInstance(final KitGeneralCTX context) {
+    static public StateSME<KitEventSME> getInstance(final StateMachineMainContext context) {
         WaitForEventEndConversationState state = new WaitForEventEndConversationState(context);
         return state;
     }
 
-    private final KitGeneralCTX context;
+    private final StateMachineMainContext context;
 
-    private WaitForEventEndConversationState(final KitGeneralCTX context) {
+    private WaitForEventEndConversationState(final StateMachineMainContext context) {
         this.context = context;
     }// constructor
 

@@ -2,8 +2,9 @@ package com.kit.lightserver.statemachine;
 
 import com.kit.lightserver.adapterout.ClientAdapterOut;
 import com.kit.lightserver.domain.types.ConnectionId;
+import com.kit.lightserver.statemachine.types.ClientInfoCTX;
 
-public final class KitGeneralCTX {
+public final class StateMachineMainContext {
 
     private final ClientAdapterOut clientAdapterOut;
 
@@ -11,7 +12,7 @@ public final class KitGeneralCTX {
 
     private ClientInfoCTX clientInfo = null;
 
-    public KitGeneralCTX(final ClientAdapterOut clientAdapterOut, final ConnectionId connectionId) {
+    public StateMachineMainContext(final ClientAdapterOut clientAdapterOut, final ConnectionId connectionId) {
         this.clientAdapterOut = clientAdapterOut;
         this.connectionId = connectionId;
     }// constructor

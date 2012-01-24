@@ -7,19 +7,19 @@ import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultMachineStopped;
 import com.jfap.framework.statemachine.StateSME;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
-import com.kit.lightserver.statemachine.ClientInfoCTX;
-import com.kit.lightserver.statemachine.ConversationFinishedStatusCTX;
-import com.kit.lightserver.statemachine.KitGeneralCTX;
+import com.kit.lightserver.statemachine.StateMachineMainContext;
+import com.kit.lightserver.statemachine.types.ClientInfoCTX;
+import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 
 public final class MachineEndedState implements StateSME<KitEventSME> {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(MachineEndedState.class);
 
-    private final KitGeneralCTX context;
+    private final StateMachineMainContext context;
 
     private final ConversationFinishedStatusCTX conversationFinishedStatusCTX;
 
-    public MachineEndedState(final KitGeneralCTX context, final ConversationFinishedStatusCTX conversationFinishedStatusCTX) {
+    public MachineEndedState(final StateMachineMainContext context, final ConversationFinishedStatusCTX conversationFinishedStatusCTX) {
         this.context = context;
         this.conversationFinishedStatusCTX = conversationFinishedStatusCTX;
     }// constructor

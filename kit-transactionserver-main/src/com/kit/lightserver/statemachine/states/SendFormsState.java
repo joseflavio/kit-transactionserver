@@ -13,11 +13,11 @@ import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.be.forms.FormServices;
-import com.kit.lightserver.statemachine.CommunicationCTX;
-import com.kit.lightserver.statemachine.ConversationFinishedStatusCTX;
-import com.kit.lightserver.statemachine.KitGeneralCTX;
+import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormOperationClientSuccessEventSME;
 import com.kit.lightserver.statemachine.events.FormOperationUpdateFormsCompleteEventSME;
+import com.kit.lightserver.statemachine.types.CommunicationCTX;
+import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.ChannelProgressRSTY;
 import com.kit.lightserver.types.response.FormContentFullConhecimentoRSTY;
 import com.kit.lightserver.types.response.FormContentFullNotafiscalRSTY;
@@ -25,7 +25,7 @@ import com.kit.lightserver.types.response.FormContentFullRSTY;
 import com.kit.lightserver.types.response.FormOperationGetStatusRSTY;
 import com.kit.lightserver.types.response.FormOperationResetRSTY;
 
-final class SendFormsState extends KitTransactionalAbstractState implements StateSME<KitEventSME> {
+final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(SendFormsState.class);
 
@@ -33,7 +33,7 @@ final class SendFormsState extends KitTransactionalAbstractState implements Stat
 
     private final CommunicationCTX communicationCTX;
 
-    public SendFormsState(final KitGeneralCTX context, final CommunicationCTX communicationCTX) {
+    public SendFormsState(final StateMachineMainContext context, final CommunicationCTX communicationCTX) {
         super(context);
         this.communicationCTX = communicationCTX;
     }
@@ -63,11 +63,6 @@ final class SendFormsState extends KitTransactionalAbstractState implements Stat
         sendFormsAndRequestClientStatus();
 
         return new ResultWaitEvent<KitEventSME>();
-
-        // DELETE FORMS?
-        // public static FormOperation createServerRequestChanges() {
-        // return createFormOperation(FormOperation.UPDATED_FORMS);
-        // }
 
     }
 
@@ -130,6 +125,7 @@ final class SendFormsState extends KitTransactionalAbstractState implements Stat
                 + communicationCTX.getFormsToSendOrderedListSize());
 
         if (formsToSend.size() > 0) {
+
             for (FormSTY formSTY : formsToSend) {
 
                 final FormContentFullRSTY clientResponse;
@@ -151,9 +147,13 @@ final class SendFormsState extends KitTransactionalAbstractState implements Stat
                 communicationCTX.addToFormSentList(formSTY);
 
             }// for
+
         }
 
-        final FormOperationGetStatusRSTY formOperationGetStatusRSTY = new FormOperationGetStatusRSTY();
+        /*
+         * Pergunta para o cliente se esta tudo bem
+         */
+        FormOperationGetStatusRSTY formOperationGetStatusRSTY = new FormOperationGetStatusRSTY();
         context.getClientAdapterOut().sendBack(formOperationGetStatusRSTY);
 
     }

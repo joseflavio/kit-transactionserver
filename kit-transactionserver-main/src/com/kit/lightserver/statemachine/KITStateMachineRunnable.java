@@ -63,7 +63,7 @@ public final class KITStateMachineRunnable implements Runnable {
     @Override
     public void run() { // be careful it can never be synchronized can cause deadlocks
 
-        final KitGeneralCTX generalContext = new KitGeneralCTX(clientAdapterOut, connectionId);
+        final StateMachineMainContext generalContext = new StateMachineMainContext(clientAdapterOut, connectionId);
         final StateSME<KitEventSME> initialState = new InitialState(generalContext);
         kitStateState.start(initialState);
 

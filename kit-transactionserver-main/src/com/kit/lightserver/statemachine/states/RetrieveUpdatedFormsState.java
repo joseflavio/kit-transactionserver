@@ -7,19 +7,20 @@ import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
-import com.kit.lightserver.statemachine.ConversationFinishedStatusCTX;
-import com.kit.lightserver.statemachine.KitGeneralCTX;
+import com.kit.lightserver.services.be.forms.FormServices;
+import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
 import com.kit.lightserver.statemachine.events.FormOperationUpdateFormsCompleteEventSME;
+import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 import com.kit.lightserver.types.response.FormOperationUpdatedFormsClearFlagsRSTY;
 import com.kit.lightserver.types.response.FormOperationUpdatedFormsRequestRSTY;
 
-final class RetrieveUpdatedFormsState extends KitTransactionalAbstractState implements StateSME<KitEventSME> {
+final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitEventSME> {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(RetrieveUpdatedFormsState.class);
 
-    protected RetrieveUpdatedFormsState(final KitGeneralCTX context) {
+    protected RetrieveUpdatedFormsState(final StateMachineMainContext context) {
         super(context);
     }
 
@@ -36,8 +37,14 @@ final class RetrieveUpdatedFormsState extends KitTransactionalAbstractState impl
         final ProcessingResult<KitEventSME> result;
 
         if (event instanceof FormContentConhecimentoReadSME) {
+
             LOGGER.error("Unimplemented event. event=" + event);
+
+            final String ktClientId = context.getClientInfo().getKtClientId();
+            final boolean serviceSuccess = FormServices.flagFormsAsRead(ktClientId);
+
             result = new ResultWaitEvent<KitEventSME>();
+
         }
         else if (event instanceof FormOperationUpdateFormsCompleteEventSME) {
 

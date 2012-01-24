@@ -1,4 +1,4 @@
-package com.kit.lightserver.statemachine;
+package com.kit.lightserver.statemachine.types;
 
 import java.util.LinkedList;
 import java.util.List;

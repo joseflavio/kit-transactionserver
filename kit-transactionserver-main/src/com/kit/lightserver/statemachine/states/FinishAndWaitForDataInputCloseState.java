@@ -7,25 +7,25 @@ import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
-import com.kit.lightserver.statemachine.ConversationFinishedStatusCTX;
-import com.kit.lightserver.statemachine.KitGeneralCTX;
+import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.AdapterInDataInputClosedSME;
+import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.CloseDataOutputCommandRSTY;
 
 public final class FinishAndWaitForDataInputCloseState implements StateSME<KitEventSME> {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(FinishAndWaitForDataInputCloseState.class);
 
-    static public StateSME<KitEventSME> getInstance(final KitGeneralCTX context, final ConversationFinishedStatusCTX conversationFinishedStatus) {
+    static public StateSME<KitEventSME> getInstance(final StateMachineMainContext context, final ConversationFinishedStatusCTX conversationFinishedStatus) {
         final FinishAndWaitForDataInputCloseState state = new FinishAndWaitForDataInputCloseState(context, conversationFinishedStatus);
         return state;
     }
 
-    private final KitGeneralCTX context;
+    private final StateMachineMainContext context;
 
     private final ConversationFinishedStatusCTX conversationFinishedStatus;
 
-    private FinishAndWaitForDataInputCloseState(final KitGeneralCTX context, final ConversationFinishedStatusCTX conversationFinishedStatus) {
+    private FinishAndWaitForDataInputCloseState(final StateMachineMainContext context, final ConversationFinishedStatusCTX conversationFinishedStatus) {
         this.context = context;
         this.conversationFinishedStatus = conversationFinishedStatus;
     }// constructor

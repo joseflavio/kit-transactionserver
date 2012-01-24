@@ -13,20 +13,20 @@ import com.kit.lightserver.domain.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 import com.kit.lightserver.services.be.authentication.AuthenticationServiceResponse;
-import com.kit.lightserver.statemachine.ClientInfoCTX;
-import com.kit.lightserver.statemachine.ConversationFinishedStatusCTX;
-import com.kit.lightserver.statemachine.KitGeneralCTX;
+import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.AuthenticationRequestSME;
+import com.kit.lightserver.statemachine.types.ClientInfoCTX;
+import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.AuthenticationResponseFailedDatabaseErrorRSTY;
 import com.kit.lightserver.types.response.AuthenticationResponseFailedUserAlreadyLoggedRSTY;
 import com.kit.lightserver.types.response.AuthenticationResponseFailedWrongPassowordRSTY;
 import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 
-public final class InitialState extends KitTransactionalAbstractState implements StateSME<KitEventSME> {
+public final class InitialState extends BaseState implements StateSME<KitEventSME> {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(InitialState.class);
 
-    public InitialState(final KitGeneralCTX context) {
+    public InitialState(final StateMachineMainContext context) {
         super(context);
     }// constructor
 
