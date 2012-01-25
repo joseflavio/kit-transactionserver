@@ -32,8 +32,8 @@ final class PreparedParametersUtil {
                 final String parameterValue = parameter.getParameterValue();
                 st.setString(parameterIndex, parameterValue);
             }
-            else if (queryParameter instanceof QueryDateTimeParameter) {
-                final QueryDateTimeParameter parameter = (QueryDateTimeParameter) queryParameter;
+            else if (queryParameter instanceof QueryJodaDateTimeParameter) {
+                final QueryJodaDateTimeParameter parameter = (QueryJodaDateTimeParameter) queryParameter;
                 final DateTime dateTimeLocalTimeZone = parameter.getParameterValue();
                 final DateTime dateTimeUTC = dateTimeLocalTimeZone.withZone(DateTimeZone.UTC);
                 final Timestamp sqlDate = new Timestamp(dateTimeUTC.getMillis());

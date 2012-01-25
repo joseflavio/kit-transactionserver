@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import com.kit.lightserver.domain.types.ConnectionId;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.InsertQueryInterface;
-import com.kit.lightserver.services.db.QueryDateTimeParameter;
+import com.kit.lightserver.services.db.QueryJodaDateTimeParameter;
 import com.kit.lightserver.services.db.QueryIntegerParameter;
 import com.kit.lightserver.services.db.QueryParameter;
 import com.kit.lightserver.services.db.QueryStringParameter;
@@ -33,7 +33,7 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
         final QueryIntegerParameter ktDataAnoParam = new QueryIntegerParameter(ano);
         final QueryIntegerParameter ktDataMesParam = new QueryIntegerParameter(mes);
         final QueryIntegerParameter ktDataDiaParam = new QueryIntegerParameter(dia);
-        final QueryDateTimeParameter ktDataJavaServerNative = new QueryDateTimeParameter(dateTime);
+        final QueryJodaDateTimeParameter ktDataJavaServerNative = new QueryJodaDateTimeParameter(dateTime);
         final QueryStringParameter ktDataJavaServerString = new QueryStringParameter(localDateStr);
 
         queryParameters.add(ktConexaoIdParam);
