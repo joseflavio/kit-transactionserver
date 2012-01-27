@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jfap.framework.configuration.ConfigurationReader;
+import com.jfap.framework.configuration.ConfigurationReaderResult;
+
 public final class DatabaseConnectionUtil {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(DatabaseConnectionUtil.class);
@@ -18,19 +21,22 @@ public final class DatabaseConnectionUtil {
     static public Connection getConnection() {
 
         if( DatabaseConnectionUtil.driverLoaded == false ) {
-            DatabaseConnectionUtil.loadDatabaseDriver();
+            DatabaseConnectionUtil.loadMicrosoftSQLServerDatabaseDriver();
         }
 
         // jdbc:sqlserver://srvkit.tinet.com.br:1433;databaseName=TESTDEV_JOSEFLAVIO_KEEPIN3_MIRA_DBV20111129;
         // jdbc:sqlserver://192.168.1.41:1433;databaseName=KEEPIN3_MIRA_DBV20110708; // 192.168.1.41 = Fenris
 
+        ConfigurationReaderResult configuration = ConfigurationReader.loadConfiguration();
+
         final String dbHost = "srvkit.tinet.com.br";
         final int dbPort = 1433;
         final String dbName = "TESTDEV_JOSEFLAVIO_KEEPIN3_MIRA_DBV20111129";
-
-        final String dbUrl = "jdbc:sqlserver://" + dbHost + ":" + dbPort + ";databaseName=" + dbName;
         final String dbUser = "sa";
         final String dbPassword = "chicabom";
+
+        final String dbUrl = "jdbc:sqlserver://" + dbHost + ":" + dbPort + ";databaseName=" + dbName;
+
 
         try {
             LOGGER.info("Getting db connection. dbUrl="+dbUrl);
@@ -49,7 +55,7 @@ public final class DatabaseConnectionUtil {
 
     }
 
-    static private void loadDatabaseDriver() {
+    static private void loadMicrosoftSQLServerDatabaseDriver() {
         final String driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
         try {
             Class.forName(driverClassName);

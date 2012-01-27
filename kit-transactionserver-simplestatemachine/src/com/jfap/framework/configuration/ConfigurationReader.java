@@ -1,5 +1,6 @@
-package com.kit.lightserver.configuration;
+package com.jfap.framework.configuration;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,10 +10,13 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 public final class ConfigurationReader {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(ConfigurationReader.class);
 
+    static private final String databaseProperties = "resources/database.properties";
 
     static public ConfigurationReaderResult loadConfiguration() {
 
@@ -47,8 +51,12 @@ public final class ConfigurationReader {
     }
 
     static private Properties loadDatabaseProperties() {
+        FileInputStream in = null;
         try {
-            FileInputStream in = new FileInputStream("database.properties");
+            File file = new File(databaseProperties);
+            LOGGER.info("Loading file=" + file.getAbsoluteFile());
+
+            in = new FileInputStream(databaseProperties);
             Properties properties = new Properties();
             properties.load(in);
             return properties;
@@ -61,6 +69,16 @@ public final class ConfigurationReader {
             LOGGER.error("Could no load properties.", e);
             return null;
         }
+        finally {
+            if(in != null) {
+                try {
+                    in.close();
+                }
+                catch (IOException e) {
+                    LOGGER.error("Could not close the file.", e);
+                }
+            }
+        }// try-catch-finally
     }
 
 }// class

@@ -138,7 +138,7 @@ ALTER TABLE Conhecimentos DROP COLUMN deliveryDate;
 ALTER TABLE Conhecimentos DROP COLUMN KTLastStatusChange;
 ALTER TABLE Conhecimentos DROP COLUMN KTStatus;
 ALTER TABLE Conhecimentos DROP COLUMN KTLastRead;
-
+ALTER TABLE Conhecimentos DROP COLUMN KTLastUpdate;
 
 
 

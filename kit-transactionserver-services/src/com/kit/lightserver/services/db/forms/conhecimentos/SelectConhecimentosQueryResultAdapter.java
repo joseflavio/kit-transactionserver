@@ -26,17 +26,16 @@ public final class SelectConhecimentosQueryResultAdapter implements SelectQueryR
             final boolean isRead = MsSqlBitConverter.convert(rs.getInt("KTFlagLido"));
             final boolean isEdited = MsSqlBitConverter.convert(rs.getInt("KTFlagEditado"));
 
-            // final String tempKtStatus = rs.getString("KTStatus");
-            final String numeroConhecimento = rs.getString("KTFieldNumeroDoConhecimento"); // Nome antigo: knowledgeNumber
-            final String serialConhecimento = rs.getString("knowledgeSerial");
-            final String codigoFilial = rs.getString("subsidiaryCode");
+            final String numeroConhecimento = rs.getString("KTFieldNumeroDoConhecimento"); // knowledgeNumber
+            final String serialConhecimento = rs.getString("KTFieldSerialDoConhecimento"); // knowledgeSerial
+            final String codigoFilial = rs.getString("KTFieldCodigoDaSubsidiaria"); // subsidiaryCode
 
-            final String remetenteCNPJ = rs.getString("senderId");
-            final String destinatarioNome = rs.getString("recipientName");
-            final String statusDaEntregaStr = rs.getString("deliveryStatus");
+            final String remetenteCNPJ = rs.getString("KTFieldRemetenteId"); // senderId
+            final String destinatarioNome = rs.getString("KTFieldNomeDoDestinatario"); // recipientName
+            final String statusDaEntregaStr = rs.getString("KTCelularEntregaStatus"); // deliveryStatus
             final StatusEntregaEnumSTY statusDaEntrega = StatusEntregaSTYParser.parse(statusDaEntregaStr);// StatusEntregaEnumSTY.AN_AINDA_NAO_ENTREGUE;
 
-            final Date conhecimentoDataEntrega = rs.getDate("deliveryDate");
+            final Date conhecimentoDataEntrega = null;
 
             final String title = "CO " + numeroConhecimento + " " + serialConhecimento + " " + codigoFilial;
 

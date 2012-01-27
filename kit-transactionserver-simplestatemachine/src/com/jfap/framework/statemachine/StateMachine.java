@@ -9,8 +9,6 @@ public final class StateMachine<T> {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(StateMachine.class);
 
-    private final ReentrantLock lock = new ReentrantLock();
-
     private StateSME<T> currentState = null;
 
     public StateMachine() {
@@ -31,40 +29,45 @@ public final class StateMachine<T> {
 
     private boolean processResults(final ProcessingResult<T> processResult) {
 
+        final ReentrantLock lock = new ReentrantLock();
         lock.lock();
+        boolean isMachineStillAlive = false;
+        try {
 
-        ProcessingResult<T> currentResult = processResult;
-        boolean shouldContinue = false;
-        boolean isMachineStillAlive;
-        do {
+            ProcessingResult<T> currentResult = processResult;
+            boolean shouldContinue = false;
 
-            if (currentResult instanceof ResultStateTransition) {
-                final ResultStateTransition<T> resultTransition = (ResultStateTransition<T>) currentResult;
-                final StateSME<T> newState = resultTransition.getNewState();
-                LOGGER.info("Transition from " + currentState + " to " + newState);
-                currentState = newState;
-                currentResult = currentState.transitionOccurred();
-                shouldContinue = true;
-                isMachineStillAlive = true;
-            }
-            else if (currentResult instanceof ResultWaitEvent) {
-                shouldContinue = false;
-                isMachineStillAlive = true;
-            }
-            else if( currentResult instanceof ResultMachineStopped ) {
-                shouldContinue = false;
-                isMachineStillAlive = false;
-            }
-            else {
-                LOGGER.error("Invalid result type. currentResult=" + currentResult);
-                shouldContinue = false;
-                isMachineStillAlive = false;
-            }
+            do {
 
+                if (currentResult instanceof ResultStateTransition) {
+                    final ResultStateTransition<T> resultTransition = (ResultStateTransition<T>) currentResult;
+                    final StateSME<T> newState = resultTransition.getNewState();
+                    LOGGER.info("Transition from " + currentState + " to " + newState);
+                    currentState = newState;
+                    currentResult = currentState.transitionOccurred();
+                    shouldContinue = true;
+                    isMachineStillAlive = true;
+                }
+                else if (currentResult instanceof ResultWaitEvent) {
+                    shouldContinue = false;
+                    isMachineStillAlive = true;
+                }
+                else if (currentResult instanceof ResultMachineStopped) {
+                    shouldContinue = false;
+                    isMachineStillAlive = false;
+                }
+                else {
+                    LOGGER.error("Invalid result type. currentResult=" + currentResult);
+                    shouldContinue = false;
+                    isMachineStillAlive = false;
+                }
 
-        } while (shouldContinue);
+            } while (shouldContinue);
 
-        lock.unlock();
+        }
+        finally {
+            lock.unlock();
+        }
 
         return isMachineStillAlive;
     }

@@ -7,12 +7,15 @@ import java.util.UUID;
 
 public final class ConnectionId {
 
-    static private final DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmm-ss-SSS");
+    static private final String dateFormat = "yyyyMMdd-HHmm-ss-SSS";
+
+
 
     private final String connectionIdStr;
 
     public ConnectionId(final UUID connectionUUID, final Date connectionDate, final String clientHostAddress) {
         final String connectionUUIDStr = connectionUUID.toString();
+        final DateFormat df = new SimpleDateFormat(dateFormat);
         final String connectionDateStr = df.format(connectionDate);
         final String clientHostAddressValidStr = clientHostAddress.replace('.', '-');
         connectionIdStr = "(" + connectionDateStr + ")-(" + clientHostAddressValidStr + ")-(" + connectionUUIDStr + ")";

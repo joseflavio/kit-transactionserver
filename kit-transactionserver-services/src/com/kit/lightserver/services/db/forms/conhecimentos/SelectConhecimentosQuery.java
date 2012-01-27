@@ -9,6 +9,8 @@ import com.kit.lightserver.services.db.SelectQueryInterface;
 
 final public class SelectConhecimentosQuery implements SelectQueryInterface {
 
+    static private final int MAX_RETRIEVE_CONHECIMENTOS = 250;
+
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
     private final boolean selecionarSomenteNaoRecebidos;
 
@@ -24,8 +26,11 @@ final public class SelectConhecimentosQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        String selectQueryStr = "SELECT KTRowId, KTClientId, KTStatus, KTFlagRecebido, KTFlagLido, KTFlagEditado, KTFieldNumeroDoConhecimento, knowledgeSerial, subsidiaryCode, senderId, recipientName, deliveryStatus, "
-                + "deliveryDate FROM " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS + " WHERE KTClientId=? AND KTFlagHistorico=0 AND KTControleProntoParaEnviar=1";
+        String selectQueryStr =
+                "SELECT TOP " + MAX_RETRIEVE_CONHECIMENTOS + " " +
+                "KTRowId, KTClientId, KTFlagRecebido, KTFlagLido, KTFlagEditado, KTFieldNumeroDoConhecimento, KTFieldSerialDoConhecimento, " +
+                "KTFieldCodigoDaSubsidiaria, KTFieldRemetenteId, KTFieldNomeDoDestinatario, KTCelularEntregaStatus " +
+                "FROM " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS + " WHERE KTClientId=? AND KTFlagHistorico=0 AND KTControleProntoParaEnviar=1";
 
         if( selecionarSomenteNaoRecebidos == true ) {
             selectQueryStr += " AND KTFlagRecebido=0";

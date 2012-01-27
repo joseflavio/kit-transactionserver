@@ -67,9 +67,9 @@ public final class FormContentFullConverter {
         final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", statusEntregaStr);
         response.add(statusEntregaBean);
 
-        final String dataEntregaStr = DataEntregaConverter.convert(form.getDataEntrega());
-        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", dataEntregaStr);
-        response.add(dataEntregaBean);
+        //final String dataEntregaStr = DataEntregaConverter.convert(form.getDataEntrega());
+        //final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", dataEntregaStr);
+        //response.add(dataEntregaBean);
 
         final String remetenteCNPJ = form.getRemetenteCNPJ();
         final FieldAndContentBean remetenteCNPJBean = new FieldAndContentBean("remetenteCNPJ", remetenteCNPJ);
