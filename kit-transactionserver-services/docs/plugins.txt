@@ -1,0 +1,7 @@
+Plugins:
+
+Find Bugs For Java
+
+http://findbugs.sourceforge.net/
+
+http://findbugs.cs.umd.edu/eclipse

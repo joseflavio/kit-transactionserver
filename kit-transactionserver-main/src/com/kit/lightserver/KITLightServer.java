@@ -10,7 +10,6 @@ import java.net.SocketTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jfap.framework.configuration.ConfigurationReader;
 import com.kit.lightserver.adapterin.ClientAdapterInListenerThread;
 import com.kit.lightserver.domain.types.ConnectionId;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
@@ -26,8 +25,6 @@ public final class KITLightServer {
     private final ServerSocket serverSocket;
 
     public KITLightServer(final int poolingTimeOutInMillis) {
-
-        ConfigurationReader.loadConfiguration();
 
         boolean authenticationServiceInitSuccess = AuthenticationService.initAndRecoverIfNecessary();
         if( authenticationServiceInitSuccess == false ) {

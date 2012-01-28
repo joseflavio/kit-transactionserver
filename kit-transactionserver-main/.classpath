@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src.test"/>
+	<classpathentry kind="src" path="src.resources"/>
 	<classpathentry kind="lib" path="libs/primitives_v1-2_mira_rev51a.jar"/>
 	<classpathentry kind="lib" path="libs/bootstrap-core-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/kit-transactionserver-services"/>

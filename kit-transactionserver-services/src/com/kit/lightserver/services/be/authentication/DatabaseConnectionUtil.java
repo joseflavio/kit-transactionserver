@@ -7,12 +7,15 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jfap.framework.configuration.ConfigurationAccessor;
 import com.jfap.framework.configuration.ConfigurationReader;
-import com.jfap.framework.configuration.ConfigurationReaderResult;
+import com.jfap.framework.configuration.IntegerAdapter;
 
 public final class DatabaseConnectionUtil {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(DatabaseConnectionUtil.class);
+
+    static private final ConfigurationAccessor CONFIG = ConfigurationReader.getConfiguration(DatabaseConnectionUtil.class);
 
     static private boolean driverLoaded = false;
 
@@ -24,16 +27,11 @@ public final class DatabaseConnectionUtil {
             DatabaseConnectionUtil.loadMicrosoftSQLServerDatabaseDriver();
         }
 
-        // jdbc:sqlserver://srvkit.tinet.com.br:1433;databaseName=TESTDEV_JOSEFLAVIO_KEEPIN3_MIRA_DBV20111129;
-        // jdbc:sqlserver://192.168.1.41:1433;databaseName=KEEPIN3_MIRA_DBV20110708; // 192.168.1.41 = Fenris
-
-        ConfigurationReaderResult configuration = ConfigurationReader.loadConfiguration();
-
-        final String dbHost = "srvkit.tinet.com.br";
-        final int dbPort = 1433;
-        final String dbName = "TESTDEV_JOSEFLAVIO_KEEPIN3_MIRA_DBV20111129";
-        final String dbUser = "sa";
-        final String dbPassword = "chicabom";
+        final String dbHost = CONFIG.getMandatoryProperty("database.host");
+        final Integer dbPort = CONFIG.getMandatoryProperty("database.port", new IntegerAdapter());
+        final String dbName = CONFIG.getMandatoryProperty("database.name");
+        final String dbUser = CONFIG.getMandatoryProperty("database.user");
+        final String dbPassword = CONFIG.getMandatoryProperty("database.password");
 
         final String dbUrl = "jdbc:sqlserver://" + dbHost + ":" + dbPort + ";databaseName=" + dbName;
 
