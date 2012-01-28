@@ -22,7 +22,6 @@ public final class AdiAuthenticationRequest {
         final long installationId2 = primitive.installationId2;
         final InstallationIdSTY installationIdSTY = new InstallationIdSTY(installationId1, installationId2);
 
-
         final byte type = primitive.type;
 
         final AuthenticationRequestTypeEnumSTY authenticationRequestType;

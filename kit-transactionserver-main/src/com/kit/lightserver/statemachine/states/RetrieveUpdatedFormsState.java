@@ -42,8 +42,13 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
 
             final String ktClientId = context.getClientInfo().getKtClientId();
             final boolean serviceSuccess = FormServices.flagFormsAsRead(ktClientId);
-
-            result = new ResultWaitEvent<KitEventSME>();
+            if (serviceSuccess == false) {
+                final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
+                result = new ResultStateTransition<KitEventSME>(errorState);
+            }
+            else {
+                result = new ResultWaitEvent<KitEventSME>();
+            }
 
         }
         else if (event instanceof FormOperationUpdateFormsCompleteEventSME) {

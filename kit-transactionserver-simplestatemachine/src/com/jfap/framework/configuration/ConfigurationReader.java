@@ -19,8 +19,8 @@ public final class ConfigurationReader {
 
     static private ConfigurationReader INSTANCE = new ConfigurationReader();
 
-    static public ConfigurationAccessor getConfiguration(final Class<?> source) {
-        LOGGER.info("Getting a new configuration. source="+source);
+    static public ConfigurationAccessor getConfiguration(final Class<?> origin) {
+        LOGGER.info("New configuration instance. source="+origin);
         ConfigurationAccessor config = new ConfigurationAccessor(INSTANCE.properties);
         return config;
     }

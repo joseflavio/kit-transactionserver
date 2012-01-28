@@ -41,11 +41,11 @@ public final class FormServices {
         List<ConhecimentoSTY> conhecimentoList = conhecimentosQueryResult.getResult();
 
         //TODO: Usar um método melhor de salvar estatisticas dos serviços
-        final Chronometer chronometer = new Chronometer();
+        final Chronometer chronometer = new Chronometer("NotasfiscaisServices.retrieveNotasfiscais");
         chronometer.start();
         SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = NotasfiscaisServices.retrieveNotasfiscais(conhecimentoList, retrieveSomenteNaoRecebidos);
         chronometer.stop();
-        FormServices.LOGGER.info("Service time: " + chronometer.getElapsedTime());
+        FormServices.LOGGER.info(chronometer.getLogString());
 
         if (notasfiscaisResult.isValid() == false) {
             final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();
@@ -73,9 +73,6 @@ public final class FormServices {
 
         LOGGER.info("Updating forms flags. forms="+forms.size()+", conhecimentos="+conhecimentos.size()+", notasfiscais="+notasfiscais.size());
 
-        final Chronometer chronometer = new Chronometer();
-        chronometer.start();
-
         if( conhecimentos.size() == 0 ) {
             LOGGER.info("No 'conhecimentos' to update.");
         }
@@ -98,10 +95,8 @@ public final class FormServices {
             }
         }
 
-        chronometer.stop();
-        LOGGER.info("Service time: " + chronometer.getElapsedTime());
-
         return true;
+
     }
 
     static public boolean flagFormsAsRead(final String ktClientId) {

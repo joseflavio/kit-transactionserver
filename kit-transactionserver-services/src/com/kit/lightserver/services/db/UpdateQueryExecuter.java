@@ -17,7 +17,7 @@ public final class UpdateQueryExecuter {
 
     static public UpdateQueryResult executeUpdateQuery(final UpdateQueryInterface updateQuery) {
 
-        final Connection connection = DatabaseConnectionUtil.getConnection();
+        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection();
         if (connection == null) {
             final UpdateQueryResult failResult = new UpdateQueryResult();
             return failResult;
@@ -26,14 +26,15 @@ public final class UpdateQueryExecuter {
         final String printedUpdateQuery = QueryPrinter.printQuery(updateQuery);
         LOGGER.info("Executing query. printedUpdateQuery=" + printedUpdateQuery);
 
-        final Chronometer chronometer = new Chronometer();
+        final Chronometer chronometer = new Chronometer("UpdateQueryExecuter.executeUpdateQuery(..)");
         chronometer.start();
         final UpdateQueryResult result = UpdateQueryExecuter.executeUpdateQuery(connection, updateQuery);
         chronometer.stop();
 
-        DatabaseConnectionUtil.closeConnection(connection);
-        final long queryExecutionTime = chronometer.getElapsedTime();
-        LOGGER.info("queryExecutionTime=" + queryExecutionTime +", result=" + result);
+        DatabaseConnectionUtil.getInstance().closeConnection(connection);
+
+        LOGGER.info(chronometer.getLogString());
+
         return result;
 
     }

@@ -16,7 +16,7 @@ public final class InsertQueryExecuter {
 
     static public InsertQueryResult executeInsertQuery(final InsertQueryInterface insertQuery) {
 
-        final Connection connection = DatabaseConnectionUtil.getConnection();
+        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection();
         if (connection == null) {
             final InsertQueryResult failResult = new InsertQueryResult();
             return failResult;
@@ -25,11 +25,11 @@ public final class InsertQueryExecuter {
         final String printedInsertQuery = QueryPrinter.printQuery(insertQuery);
         LOGGER.info("Executing query. printedUpdateQuery=" + printedInsertQuery);
 
-        final InsertQueryResult result = executeInsertQuery(connection, insertQuery);
-
-        DatabaseConnectionUtil.closeConnection(connection);
-
+        final InsertQueryResult result = InsertQueryExecuter.executeInsertQuery(connection, insertQuery);
         LOGGER.info("result=" + result);
+
+        DatabaseConnectionUtil.getInstance().closeConnection(connection);
+
         return result;
 
     }

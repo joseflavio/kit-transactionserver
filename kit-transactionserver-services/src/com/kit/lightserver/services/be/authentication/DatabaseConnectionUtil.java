@@ -7,71 +7,62 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jfap.framework.configuration.ConfigurationAccessor;
-import com.jfap.framework.configuration.ConfigurationReader;
-import com.jfap.framework.configuration.IntegerAdapter;
-
 public final class DatabaseConnectionUtil {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(DatabaseConnectionUtil.class);
 
-    static private final ConfigurationAccessor CONFIG = ConfigurationReader.getConfiguration(DatabaseConnectionUtil.class);
+    static private final DatabaseConnectionUtil INSTANCE = new DatabaseConnectionUtil();
 
-    static private boolean driverLoaded = false;
+    static private final String driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
-    static private int openConnectionsCount = 0;
+    static public DatabaseConnectionUtil getInstance() {
+        return INSTANCE;
+    }
 
-    static public Connection getConnection() {
+    private final DatabaseConfiguration dbConfig = new DatabaseConfiguration();
 
-        if( DatabaseConnectionUtil.driverLoaded == false ) {
-            DatabaseConnectionUtil.loadMicrosoftSQLServerDatabaseDriver();
+    private int openConnectionsCount = 0;
+
+    private DatabaseConnectionUtil() {
+
+        LOGGER.info("Database configuration loaded. dbUrl="+dbConfig.getDbUrl());
+
+        /*
+         * Loads Microsoft SQLServer Database Driver
+         */
+        try {
+            Class.forName(driverClassName);
+            DatabaseConnectionUtil.LOGGER.info("Success loading jdbc driver class. driverClassName="+driverClassName);
+        } catch (final ClassNotFoundException e) {
+            throw new RuntimeException("Could not load jdbc driver class. driverClassName="+driverClassName, e);
         }
 
-        final String dbHost = CONFIG.getMandatoryProperty("database.host");
-        final Integer dbPort = CONFIG.getMandatoryProperty("database.port", new IntegerAdapter());
-        final String dbName = CONFIG.getMandatoryProperty("database.name");
-        final String dbUser = CONFIG.getMandatoryProperty("database.user");
-        final String dbPassword = CONFIG.getMandatoryProperty("database.password");
+    }// constructor
 
-        final String dbUrl = "jdbc:sqlserver://" + dbHost + ":" + dbPort + ";databaseName=" + dbName;
-
+    public synchronized Connection getConnection() {
 
         try {
-            LOGGER.info("Getting db connection. dbUrl="+dbUrl);
-            final Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            final Connection connection = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getDbPassword());
             connection.setAutoCommit(true);
-            ++DatabaseConnectionUtil.openConnectionsCount;
-            LOGGER.info("Connection open. openConnectionsCount="+DatabaseConnectionUtil.openConnectionsCount);
+            ++openConnectionsCount;
+            LOGGER.info("Connection open. openConnectionsCount="+openConnectionsCount);
             return connection;
-
-
         } catch (final SQLException e) {
-            LOGGER.warn("Could not open a new connection. openConnectionsCount=" + DatabaseConnectionUtil.openConnectionsCount, e);
+            LOGGER.warn("Could not open a new connection. openConnectionsCount=" + openConnectionsCount, e);
             return null;
         }
 
 
     }
 
-    static private void loadMicrosoftSQLServerDatabaseDriver() {
-        final String driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-        try {
-            Class.forName(driverClassName);
-            DatabaseConnectionUtil.driverLoaded = true;
-            DatabaseConnectionUtil.LOGGER.info("Success loading jdbc driver class. driverClassName="+driverClassName);
-        } catch (final ClassNotFoundException e) {
-            DatabaseConnectionUtil.LOGGER.error("Could not find jdbc driver class. driverClassName="+driverClassName, e);
-        }
-    }
-
-    static public void closeConnection(final Connection connection) {
+    public synchronized void closeConnection(final Connection connection) {
         try {
             connection.close();
-            --DatabaseConnectionUtil.openConnectionsCount;
-            DatabaseConnectionUtil.LOGGER.info("Connection closed. openConnectionsCount="+DatabaseConnectionUtil.openConnectionsCount);
+            --openConnectionsCount;
+            DatabaseConnectionUtil.LOGGER.info("Connection closed. openConnectionsCount="+openConnectionsCount);
         }
         catch (final SQLException e) {
-            DatabaseConnectionUtil.LOGGER.error("Could not close the jdbc connection. openConnectionsCount="+DatabaseConnectionUtil.openConnectionsCount, e);
+            DatabaseConnectionUtil.LOGGER.error("Could not close the jdbc connection. openConnectionsCount="+openConnectionsCount, e);
         }
     }
 

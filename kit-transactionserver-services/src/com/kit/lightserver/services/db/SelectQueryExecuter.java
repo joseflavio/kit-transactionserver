@@ -23,7 +23,7 @@ public final class SelectQueryExecuter<T> {
 
     public QueryResultContainer<T> executeSelectQuery(final SelectQueryInterface selectQuery) {
 
-        final Connection connection = DatabaseConnectionUtil.getConnection();
+        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection();
         if (connection == null) {
             final QueryResultContainer<T> failResult = new QueryResultContainer<T>();
             return failResult;
@@ -37,11 +37,13 @@ public final class SelectQueryExecuter<T> {
         final QueryResultContainer<T> result = executeSelectQuery(connection, selectQuery);
         final long endTime = System.nanoTime();
 
-        DatabaseConnectionUtil.closeConnection(connection);
+        DatabaseConnectionUtil.getInstance().closeConnection(connection);
 
         final double elapsedTime = (endTime - startTime) / 1000000000.0d;
         LOGGER.info("Query executed. elapsedTime="+elapsedTime+"s, result=" + result);
+
         return result;
+
     }
 
     private QueryResultContainer<T> executeSelectQuery(final Connection connection, final SelectQueryInterface selectQuery) {
@@ -61,6 +63,7 @@ public final class SelectQueryExecuter<T> {
             LOGGER.error("Error executing the query.", e);
             return new QueryResultContainer<T>();
         }
+
     }
 
 }// class
