@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.kit.lightserver.domain.types.ConnectionId;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.InsertQueryResult;
-import com.kit.lightserver.services.db.QueryResultContainer;
+import com.kit.lightserver.services.db.SelectQueryResult;
 import com.kit.lightserver.services.db.UpdateQueryResult;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
 import com.kit.lightserver.services.db.authenticate.TableLogConexoesConstants;
@@ -23,7 +23,7 @@ public final class AuthenticationService {
      */
     static public boolean initAndRecoverIfNecessary() {
 
-        final QueryResultContainer<List<String>> queryResult = TableAuthenticateOperations.selectLoggedInClients();
+        final SelectQueryResult<List<String>> queryResult = TableAuthenticateOperations.selectLoggedInClients();
         if(queryResult.isQuerySuccessful() == false ) {
             return false;
         }
@@ -62,7 +62,7 @@ public final class AuthenticationService {
 
     static private AuthenticationServiceResponse checkAuthentication(final String userClientId, final String password) {
 
-        final QueryResultContainer<AuthenticateQueryResult> resultContainer = TableAuthenticateOperations.selectClientIdExists(userClientId);
+        final SelectQueryResult<AuthenticateQueryResult> resultContainer = TableAuthenticateOperations.selectClientIdExists(userClientId);
         LOGGER.info("resultContainer="+resultContainer);
 
         if( resultContainer.isQuerySuccessful() == false ) { // Just checking if the query was successful

@@ -1,4 +1,4 @@
-package com.kit.lightserver.adapterin;
+package com.kit.lightserver.adapters.adapterin;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -11,6 +11,7 @@ import kit.primitives.factory.PrimitiveStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kit.lightserver.adapters.logger.AdaptersLogger;
 import com.kit.lightserver.domain.types.ConnectionId;
 import com.kit.lightserver.statemachine.KITStateMachineRunnable;
 import com.kit.lightserver.statemachine.events.AdapterInDataInputClosedSME;
@@ -70,7 +71,7 @@ public final class ClientAdapterInListenerThread implements Runnable {
 
                     final Primitive clientPrimitive = PrimitiveStreamFactory.readPrimitive(dataInputStream);
                     lastEventTime = System.currentTimeMillis();
-                    LOGGER.info("Received primitive. clientPrimitive=" + clientPrimitive);
+                    AdaptersLogger.logReceived(clientPrimitive);
 
                     final ReceivedPrimitiveConverterResult<KitEventSME> converterResult = ReceivedPrimitiveConverter.convert(clientPrimitive);
 

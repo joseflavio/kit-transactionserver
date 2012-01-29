@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jfap.framework.exception.LogUncaughtExceptionHandler;
-import com.kit.lightserver.adapterin.ClientAdapterInListenerThread;
+import com.kit.lightserver.adapters.adapterin.ClientAdapterInListenerThread;
 import com.kit.lightserver.domain.types.ConnectionId;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 

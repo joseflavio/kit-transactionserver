@@ -8,7 +8,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jfap.chronometer.Chronometer;
 import com.kit.lightserver.services.be.authentication.DatabaseConnectionUtil;
+import com.kit.lightserver.services.db.logger.DatabaseLogger;
 
 public final class InsertQueryExecuter {
 
@@ -22,10 +24,17 @@ public final class InsertQueryExecuter {
             return failResult;
         }
 
-        final String printedInsertQuery = QueryPrinter.printQuery(insertQuery);
-        LOGGER.info("Executing query. printedUpdateQuery=" + printedInsertQuery);
+        /*
+         * Logs the query
+         */
+        DatabaseLogger.logInsertQuery(insertQuery);
 
+        final Chronometer chronometer = new Chronometer("executeInsertQuery(..)");
+        chronometer.start();
         final InsertQueryResult result = InsertQueryExecuter.executeInsertQuery(connection, insertQuery);
+        chronometer.stop();
+
+        DatabaseLogger.logInsertResult(chronometer, result);
         LOGGER.info("result=" + result);
 
         DatabaseConnectionUtil.getInstance().closeConnection(connection);

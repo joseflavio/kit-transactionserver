@@ -1,6 +1,6 @@
 package com.kit.lightserver.statemachine;
 
-import com.kit.lightserver.adapterout.ClientAdapterOut;
+import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
 import com.kit.lightserver.domain.types.ConnectionId;
 import com.kit.lightserver.statemachine.types.ClientInfoCTX;
 

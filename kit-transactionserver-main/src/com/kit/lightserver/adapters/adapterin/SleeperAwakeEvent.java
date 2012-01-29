@@ -1,4 +1,4 @@
-package com.kit.lightserver.adapterin;
+package com.kit.lightserver.adapters.adapterin;
 
 public interface SleeperAwakeEvent {
 

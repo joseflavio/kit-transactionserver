@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kit.lightserver.services.db.logger.DatabaseLogger;
+
 public final class DatabaseConnectionUtil {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(DatabaseConnectionUtil.class);
@@ -45,10 +47,10 @@ public final class DatabaseConnectionUtil {
             final Connection connection = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getDbPassword());
             connection.setAutoCommit(true);
             ++openConnectionsCount;
-            LOGGER.info("Connection open. openConnectionsCount="+openConnectionsCount);
+            DatabaseLogger.logConnectionOpen(openConnectionsCount);
             return connection;
         } catch (final SQLException e) {
-            LOGGER.warn("Could not open a new connection. openConnectionsCount=" + openConnectionsCount, e);
+            LOGGER.error("Could not open a new connection. openConnectionsCount=" + openConnectionsCount, e);
             return null;
         }
 
@@ -59,7 +61,7 @@ public final class DatabaseConnectionUtil {
         try {
             connection.close();
             --openConnectionsCount;
-            DatabaseConnectionUtil.LOGGER.info("Connection closed. openConnectionsCount="+openConnectionsCount);
+            DatabaseLogger.logConnectionClosed(openConnectionsCount);
         }
         catch (final SQLException e) {
             DatabaseConnectionUtil.LOGGER.error("Could not close the jdbc connection. openConnectionsCount="+openConnectionsCount, e);

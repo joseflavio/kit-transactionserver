@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jfap.chronometer.Chronometer;
 import com.kit.lightserver.services.be.authentication.DatabaseConnectionUtil;
+import com.kit.lightserver.services.db.logger.DatabaseLogger;
 
 public final class UpdateQueryExecuter {
 
@@ -23,17 +24,16 @@ public final class UpdateQueryExecuter {
             return failResult;
         }
 
-        final String printedUpdateQuery = QueryPrinter.printQuery(updateQuery);
-        LOGGER.info("Executing query. printedUpdateQuery=" + printedUpdateQuery);
+        DatabaseLogger.logUpdateQuery(updateQuery);
 
-        final Chronometer chronometer = new Chronometer("UpdateQueryExecuter.executeUpdateQuery(..)");
+        final Chronometer chronometer = new Chronometer("executeUpdateQuery(..)");
         chronometer.start();
         final UpdateQueryResult result = UpdateQueryExecuter.executeUpdateQuery(connection, updateQuery);
         chronometer.stop();
 
-        DatabaseConnectionUtil.getInstance().closeConnection(connection);
+        DatabaseLogger.logUpdateResult(chronometer, result);
 
-        LOGGER.info(chronometer.getLogString());
+        DatabaseConnectionUtil.getInstance().closeConnection(connection);
 
         return result;
 

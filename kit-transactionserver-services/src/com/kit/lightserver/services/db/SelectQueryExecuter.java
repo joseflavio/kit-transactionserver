@@ -9,7 +9,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jfap.chronometer.Chronometer;
 import com.kit.lightserver.services.be.authentication.DatabaseConnectionUtil;
+import com.kit.lightserver.services.db.logger.DatabaseLogger;
 
 public final class SelectQueryExecuter<T> {
 
@@ -21,32 +23,33 @@ public final class SelectQueryExecuter<T> {
         this.resultAdapter = resultAdapter;
     }// constructor
 
-    public QueryResultContainer<T> executeSelectQuery(final SelectQueryInterface selectQuery) {
+    public SelectQueryResult<T> executeSelectQuery(final SelectQueryInterface selectQuery) {
 
         final Connection connection = DatabaseConnectionUtil.getInstance().getConnection();
         if (connection == null) {
-            final QueryResultContainer<T> failResult = new QueryResultContainer<T>();
+            final SelectQueryResult<T> failResult = new SelectQueryResult<T>();
             return failResult;
         }
 
-        final String queryName = selectQuery.getClass().getCanonicalName();
-        final String printedSelectQuery = QueryPrinter.printQuery(selectQuery);
-        LOGGER.info("Executing query. queryName="+ queryName + ", printedSelectQuery=" + printedSelectQuery);
+        /*
+         * Log the query
+         */
+        DatabaseLogger.logSelectQuery(selectQuery);
 
-        final long startTime = System.nanoTime();
-        final QueryResultContainer<T> result = executeSelectQuery(connection, selectQuery);
-        final long endTime = System.nanoTime();
+        final Chronometer chronometer = new Chronometer("executeSelectQuery(..)");
+        chronometer.start();
+        final SelectQueryResult<T> result = executeSelectQuery(connection, selectQuery);
+        chronometer.stop();
+
+        DatabaseLogger.logSelectResult(chronometer, result);
 
         DatabaseConnectionUtil.getInstance().closeConnection(connection);
-
-        final double elapsedTime = (endTime - startTime) / 1000000000.0d;
-        LOGGER.info("Query executed. elapsedTime="+elapsedTime+"s, result=" + result);
 
         return result;
 
     }
 
-    private QueryResultContainer<T> executeSelectQuery(final Connection connection, final SelectQueryInterface selectQuery) {
+    private SelectQueryResult<T> executeSelectQuery(final Connection connection, final SelectQueryInterface selectQuery) {
 
         try {
 
@@ -57,11 +60,11 @@ public final class SelectQueryExecuter<T> {
             final ResultSet rs = st.executeQuery();
             final T selectQueryResult = resultAdapter.adaptResultSet(rs);
 
-            return new QueryResultContainer<T>(selectQueryResult);
+            return new SelectQueryResult<T>(selectQueryResult);
 
         } catch (final SQLException e) {
             LOGGER.error("Error executing the query.", e);
-            return new QueryResultContainer<T>();
+            return new SelectQueryResult<T>();
         }
 
     }

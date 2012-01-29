@@ -1,4 +1,4 @@
-package com.kit.lightserver.adapterin;
+package com.kit.lightserver.adapters.adapterin;
 
 import com.kit.lightserver.statemachine.states.KitEventSME;
 

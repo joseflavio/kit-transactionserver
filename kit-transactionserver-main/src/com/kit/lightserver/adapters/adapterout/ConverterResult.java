@@ -1,4 +1,4 @@
-package com.kit.lightserver.adapterout;
+package com.kit.lightserver.adapters.adapterout;
 
 import kit.primitives.base.Primitive;
 

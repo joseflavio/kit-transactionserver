@@ -121,7 +121,7 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
 
         final List<FormSTY> formsToSend = communicationCTX.extractFormsToSendInOrder(MAX_FORMS_TO_SEND_UNTIL_CONFIRMATION);
 
-        LOGGER.info("Client Status is ok. Sending forms. formsToSend.size()=" + formsToSend + ", formsToSendOrderedListSize()="
+        LOGGER.info("Client Status is ok. Sending forms. formsToSend.size()=" + formsToSend.size() + ", formsToSendOrderedListSize()="
                 + communicationCTX.getFormsToSendOrderedListSize());
 
         if (formsToSend.size() > 0) {

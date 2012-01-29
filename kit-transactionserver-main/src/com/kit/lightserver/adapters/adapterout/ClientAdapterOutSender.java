@@ -1,4 +1,4 @@
-package com.kit.lightserver.adapterout;
+package com.kit.lightserver.adapters.adapterout;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import kit.primitives.factory.PrimitiveStreamFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.kit.lightserver.adapters.logger.AdaptersLogger;
 
 final class ClientAdapterOutSender {
 
@@ -31,7 +33,8 @@ final class ClientAdapterOutSender {
 
     final void sendToTheClientSocket(final Primitive clientPrimitive) {
         try {
-            LOGGER.info("Sending clientPrimitive=" + clientPrimitive);
+            AdaptersLogger.logSending(clientPrimitive);
+
             PrimitiveStreamFactory.writePrimitive(dataOutputStream, clientPrimitive);
         } catch (final IOException e) {
             closeOutput();

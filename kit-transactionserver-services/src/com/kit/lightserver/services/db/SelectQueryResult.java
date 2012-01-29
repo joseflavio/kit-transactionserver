@@ -1,18 +1,18 @@
 package com.kit.lightserver.services.db;
 
 
-public final class QueryResultContainer<T> {
+public final class SelectQueryResult<T> {
 
 	private final boolean success;
 
 	private final T result;
 
-	public QueryResultContainer(final T result) {
+	public SelectQueryResult(final T result) {
 		this.success = true;
 		this.result = result;
 	}// constructor
 
-	public QueryResultContainer() {
+	public SelectQueryResult() {
 		this.success = false;
 		this.result = null;
 	}// constructor
