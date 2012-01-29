@@ -82,6 +82,9 @@ final class AdoPrimiveConverter {
             converterResult = new ConverterResult();
         }
 
+        /*
+         * In case it managed to convert
+         */
         if( converterResult.isSuccess() ) {
 
             final boolean success = true;

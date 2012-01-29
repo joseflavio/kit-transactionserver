@@ -39,54 +39,55 @@ public final class ConhecimentoSTY extends FormSTY {
 
     }// constructor
 
-	public TemplateEnumSTY getTemplate() {
-		return template;
-	}
+    public TemplateEnumSTY getTemplate() {
+        return template;
+    }
 
-	public int getKtRowId() {
-		return ktRowId;
-	}
+    public int getKtRowId() {
+        return ktRowId;
+    }
 
-	public String getKtClientId() {
+    public String getKtClientId() {
         return ktClientId;
     }
 
     public boolean isReceived() {
-		return isReceived;
-	}
+        return isReceived;
+    }
 
-	public boolean isRead() {
-		return isRead;
-	}
+    public boolean isRead() {
+        return isRead;
+    }
 
-	public boolean isEdited() {
-		return isEdited;
-	}
+    public boolean isEdited() {
+        return isEdited;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getRemetenteCNPJ() {
-		return remetenteCNPJ;
-	}
+    public String getRemetenteCNPJ() {
+        return remetenteCNPJ;
+    }
 
-	public String getDestinatarioNome() {
-		return destinatarioNome;
-	}
+    public String getDestinatarioNome() {
+        return destinatarioNome;
+    }
 
-	public StatusEntregaEnumSTY getStatusEntrega() {
-		return statusEntrega;
-	}
+    public StatusEntregaEnumSTY getStatusEntrega() {
+        return statusEntrega;
+    }
 
-	@Override
-	public String toString() {
-		return "ConhecimentoSTY [template=" + template + ", ktRowId=" + ktRowId
-				+ ", isReceived=" + isReceived + ", isRead=" + isRead
-				+ ", isEdited=" + isEdited + ", title=" + title
-				+ ", remetenteCNPJ=" + remetenteCNPJ + ", destinatarioNome="
-				+ destinatarioNome + ", dataEntrega=" + dataEntrega
-				+ ", statusEntrega=" + statusEntrega + "]";
-	}
+    public Date getDataEntrega() {
+        return dataEntrega;
+    }
+
+    @Override
+    public String toString() {
+        return "ConhecimentoSTY [template=" + template + ", ktRowId=" + ktRowId + ", ktClientId=" + ktClientId + ", isReceived=" + isReceived + ", isRead="
+                + isRead + ", isEdited=" + isEdited + ", title=" + title + ", remetenteCNPJ=" + remetenteCNPJ + ", destinatarioNome=" + destinatarioNome
+                + ", dataEntrega=" + dataEntrega + ", statusEntrega=" + statusEntrega + "]";
+    }
 
 }// class

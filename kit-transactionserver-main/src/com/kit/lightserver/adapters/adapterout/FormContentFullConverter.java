@@ -6,6 +6,9 @@ import kit.primitives.forms.FieldAndContentBean;
 import kit.primitives.forms.FormContent;
 import kit.primitives.forms.FormContentFull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.domain.types.TemplateEnumSTY;
@@ -14,6 +17,8 @@ import com.kit.lightserver.types.response.FormContentFullNotafiscalRSTY;
 import com.kit.lightserver.types.response.FormContentFullRSTY;
 
 public final class FormContentFullConverter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FormContentFullConverter.class);
 
     static public ConverterResult convertForm(final FormContentFullRSTY formContentFullRSTY) {
 
@@ -67,8 +72,10 @@ public final class FormContentFullConverter {
         final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", statusEntregaStr);
         response.add(statusEntregaBean);
 
-        final String dataEntregaStr = DataEntregaConverter.convert(new Date()); // Mandatory, the mobile crashes without it
-        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", dataEntregaStr);
+        if( form.getDataEntrega() != null ) { // Sanity
+            LOGGER.error("Investigate. form.getDataEntrega() != null, form="+form);
+        }
+        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", "null");  // Mandatory, the mobile crashes without it
         response.add(dataEntregaBean);
 
         final String remetenteCNPJ = form.getRemetenteCNPJ();
