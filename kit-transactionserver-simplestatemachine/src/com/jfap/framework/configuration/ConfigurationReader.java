@@ -9,7 +9,7 @@ public final class ConfigurationReader {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(ConfigurationReader.class);
 
-    static private final String databasePropertiesFilename = "/resources/config/database.properties";
+    static private final String databasePropertiesFilename = "/config/database.properties";
 
     private final Properties properties = new Properties();
 
