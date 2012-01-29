@@ -52,15 +52,22 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
         /*
          * The number of steps for the mobile progress bar
          */
-        final int totalUpdateSteps = communicationCTX.getFormsToSendOrderedListSize();
-        LOGGER.info("Channel Progress totalUpdateSteps=" + totalUpdateSteps);
-        final ChannelProgressRSTY channelProgress = new ChannelProgressRSTY(totalUpdateSteps);
-        context.getClientAdapterOut().sendBack(channelProgress);
+        final int totalNumberOfFormsToSend = communicationCTX.getFormsToSendOrderedListSize();
+        LOGGER.info("totalNumberOfFormsToSend=" + totalNumberOfFormsToSend);
+        if( totalNumberOfFormsToSend > 0 ) {
 
-        /*
-         * Getting the first *bunch* of forms and sending
-         */
-        sendFormsAndRequestClientStatus();
+            final ChannelProgressRSTY channelProgress = new ChannelProgressRSTY(totalNumberOfFormsToSend);
+            context.getClientAdapterOut().sendBack(channelProgress);
+
+            /*
+             * Getting the first *bunch* of forms and sending
+             */
+            sendFormsAndRequestClientStatus();
+        }
+        else {
+            FormOperationGetStatusRSTY formOperationGetStatusRSTY = new FormOperationGetStatusRSTY();
+            context.getClientAdapterOut().sendBack(formOperationGetStatusRSTY);
+        }
 
         return new ResultWaitEvent<KitEventSME>();
 
@@ -72,7 +79,7 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
         if (event instanceof FormOperationClientSuccessEventSME) {
 
             if( communicationCTX.getFormsSentWaitingForConfirmationList().size() == 0 ) {
-                LOGGER.warn("Investigate. getFormsSentWaitingForConfirmationList().size()=0");
+                LOGGER.error("Investigate. getFormsSentWaitingForConfirmationList().size()=0");
                 return getRetrieveUpdatedFormsState();
             }
 
