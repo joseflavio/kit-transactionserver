@@ -16,7 +16,7 @@ public final class ConhecimentoSTY extends FormSTY {
     private final String remetenteCNPJ; // e.g: 03762480000116
     private final String destinatarioNome;
 
-    private final Date dataEntrega;
+    private final Date dataEntrega; // TODO: REMOVER?
     private final StatusEntregaEnumSTY statusEntrega;
 
     public ConhecimentoSTY(final int ktRowId, final String ktClientId, final boolean isReceived, final boolean isRead, final boolean isEdited,
@@ -73,10 +73,6 @@ public final class ConhecimentoSTY extends FormSTY {
 
 	public String getDestinatarioNome() {
 		return destinatarioNome;
-	}
-
-	public Date getDataEntrega() {
-		return dataEntrega;
 	}
 
 	public StatusEntregaEnumSTY getStatusEntrega() {

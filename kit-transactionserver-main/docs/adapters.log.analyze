@@ -1,0 +1,52 @@
+[20:27:40.025] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.authentication.AuthenticationRequest (1', 'teles, 123')
+[20:27:44.830] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.authentication.AuthenticationResponse (1)
+[20:27:46.436] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (9)  // GET_STATUS
+[20:27:47.090] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.forms.FormOperation (11) // CLIENT_SUCCESS
+[20:27:47.189] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (2)  // UPDATED_FORMS
+[20:27:47.704] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.forms.FormOperation (3)  // UPDATED_FORMS_COMPLETE
+[20:27:47.939] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (4)  // UPDATED_FORMS_CLEAR_FLAGS
+[20:27:47.940] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.channel.ChannelNotification ( 1 )
+[20:27:48.255] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.channel.ChannelNotification ( 1 )
+
+...
+[20:46:49.570] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.authentication.AuthenticationRequest (2', 'cnorris, 666')
+[20:46:54.531] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.authentication.AuthenticationResponse (1)
+[20:46:57.712] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (1)
+[20:46:57.712] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.channel.ChannelProgress ChannelProgress ( number of steps 2 )
+[20:46:57.723] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormContentFull (KT ID: conhecimentos%1094966, KT Status: 2, KT Read: Sun Jan 29 20:46:57 CET 2012, KT Edit: Sun Jan 29 20:46:57 CET 2012, ancora: 1094966, statusEntrega: AN, remetenteCNPJ: CNPJ-3101065, destinatarioNome: Destinarario Plisken) (KT Template: conhecimentos, KT Title: CO NUM-6666 * 2, KT Categogy: 1094966P, KT Show Flags: 32, )
+[20:46:57.723] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormContentFull (KT ID: notasFiscais%1816335, KT Status: 3, KT Read: Sun Jan 29 20:46:57 CET 2012, KT Edit: Sun Jan 29 20:46:57 CET 2012, ancora: 1094966P, statusEntrega: AN, dataEntrega: ) (KT Template: notasFiscais, KT Title: NF 1234 2, KT Categogy: 1094966, KT Show Flags: 0, )
+[20:46:57.723] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (9)  // GET_STATUS
+[20:47:00.020] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.forms.FormOperation (11) // CLIENT_SUCCESS
+[20:47:03.182] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (9)  // GET_STATUS
+[20:47:03.911] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.forms.FormOperation (11) // CLIENT_SUCCESS
+[20:47:03.934] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (2)  // UPDATED_FORMS
+[20:47:04.321] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.forms.FormOperation (3)  // UPDATED_FORMS_COMPLETE
+[20:47:04.434] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (4)  // UPDATED_FORMS_CLEAR_FLAGS
+[20:47:04.434] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.channel.ChannelNotification ( 1 )
+[20:47:04.772] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.channel.ChannelNotification ( 1 )
+
+
+[21:39:15.018] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.authentication.AuthenticationRequest (1', 'cnorris, 666')
+[21:39:20.143] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.authentication.AuthenticationResponse (1)
+[21:39:21.826] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (2)
+[21:39:22.696] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.forms.FormOperation (3)
+[21:39:22.827] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (4)
+[21:39:22.828] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.channel.ChannelNotification ( 1 )
+[21:39:23.147] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.channel.ChannelNotification ( 1 )
+
+
+
+[21:45:37.791] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.authentication.AuthenticationRequest (2', 'cnorris, 666')
+[21:45:42.801] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.authentication.AuthenticationResponse (1)
+[21:45:45.974] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (1)
+[21:45:45.975] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.channel.ChannelProgress ChannelProgress ( number of steps 2 )
+[21:45:45.978] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormContentFull (KT ID: conhecimentos%1094966, KT Status: 2, KT Read: Sun Jan 29 21:45:45 CET 2012, KT Edit: Sun Jan 29 21:45:45 CET 2012, ancora: 1094966, statusEntrega: AN, remetenteCNPJ: CNPJ-3101065, destinatarioNome: Destinarario Plisken) (KT Template: conhecimentos, KT Title: CO NUM-6666 * 2, KT Categogy: 1094966P, KT Show Flags: 32, )
+[21:45:45.980] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormContentFull (KT ID: notasFiscais%1816335, KT Status: 3, KT Read: Sun Jan 29 21:45:45 CET 2012, KT Edit: Sun Jan 29 21:45:45 CET 2012, ancora: 1094966P, statusEntrega: AN, dataEntrega: ) (KT Template: notasFiscais, KT Title: NF 1234 2, KT Categogy: 1094966, KT Show Flags: 0, )
+[21:45:45.982] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (9)
+[21:45:47.927] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.forms.FormOperation (11)
+[21:45:51.122] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (2)
+[21:45:51.615] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.forms.FormOperation (3)
+[21:45:51.622] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (4)
+[21:45:51.623] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.channel.ChannelNotification ( 1 )
+[21:45:51.866] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.channel.ChannelNotification ( 1 )
+
