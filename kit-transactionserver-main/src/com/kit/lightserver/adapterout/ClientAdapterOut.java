@@ -28,13 +28,13 @@ public final class ClientAdapterOut {
 
 
         if( clientResponse instanceof CloseDataOutputCommandRSTY ) {
-            LOGGER.info("Processing " + clientResponse);
+            LOGGER.info("Closing data output stream to mobile. clientResponse=" + clientResponse);
             sender.closeOutput();
         }
         else {
 
             final AdapterOutConverterResult<Primitive> converterResult = ToSendPrimiveConverter.convert(clientResponse);
-            LOGGER.info("Processing " + clientResponse + " to " + converterResult);
+            //LOGGER.debug("Processing " + clientResponse + " to " + converterResult);
 
             if( !converterResult.isSuccess() ) {
 

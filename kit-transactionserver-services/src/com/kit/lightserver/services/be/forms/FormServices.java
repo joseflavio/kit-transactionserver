@@ -38,12 +38,13 @@ public final class FormServices {
             return errorServiceResponse;
         }
 
-        List<ConhecimentoSTY> conhecimentoList = conhecimentosQueryResult.getResult();
+        List<ConhecimentoSTY> conhecimentosList = conhecimentosQueryResult.getResult();
+        FormServices.LOGGER.debug("conhecimentoList.size()=" + conhecimentosList.size());
 
         //TODO: Usar um método melhor de salvar estatisticas dos serviços
         final Chronometer chronometer = new Chronometer("NotasfiscaisServices.retrieveNotasfiscais");
         chronometer.start();
-        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = NotasfiscaisServices.retrieveNotasfiscais(conhecimentoList, retrieveSomenteNaoRecebidos);
+        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = NotasfiscaisServices.retrieveNotasfiscais(conhecimentosList, retrieveSomenteNaoRecebidos);
         chronometer.stop();
         FormServices.LOGGER.info(chronometer.getLogString());
 
@@ -53,9 +54,9 @@ public final class FormServices {
         }
 
         final List<NotafiscalSTY> notasfiscaisList = notasfiscaisResult.getValidResult();
-        FormServices.LOGGER.info("notasfiscaisList.size()=" + notasfiscaisList.size());
+        FormServices.LOGGER.debug("notasfiscaisList.size()=" + notasfiscaisList.size());
 
-        final FormsParaEnviarCTX formsContext = new FormsParaEnviarCTX(conhecimentoList, notasfiscaisList);
+        final FormsParaEnviarCTX formsContext = new FormsParaEnviarCTX(conhecimentosList, notasfiscaisList);
 
         final SimpleServiceResponse<FormsParaEnviarCTX> serviceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>(formsContext);
 

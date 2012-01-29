@@ -69,8 +69,8 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
         final StateSME<KitEventSME> newState;
         final ClientInfoCTX clientInfo;
-        if (authenticationResponse.equals(AuthenticationServiceResponse.SUCCESS_MUST_RESET)
-                || authenticationResponse.equals(AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET)) {
+        if ( authenticationResponse.equals(AuthenticationServiceResponse.SUCCESS_MUST_RESET) ||
+             authenticationResponse.equals(AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET) ) {
 
 
             final AuthenticationRequestTypeEnumSTY authenticationRequestType =  authenticationRequestSME.getAuthenticationRequestType();

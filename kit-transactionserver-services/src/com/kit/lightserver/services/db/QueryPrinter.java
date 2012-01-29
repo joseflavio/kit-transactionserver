@@ -42,7 +42,18 @@ public final class QueryPrinter {
 
         String replacedQueryString = queryString;
         for (final QueryParameter queryParam : queryParameters) {
-            replacedQueryString = replacedQueryString.replaceFirst("\\?", queryParam.getValue().toString());
+
+            final Object paramValue = queryParam.getValue();
+
+            final String printedParam;
+            if( paramValue instanceof String ) {
+                printedParam = "'" + (String)paramValue + "'";
+            }
+            else {
+                printedParam = paramValue.toString();
+            }
+
+            replacedQueryString = replacedQueryString.replaceFirst("\\?", printedParam);
         }
 
         return replacedQueryString;

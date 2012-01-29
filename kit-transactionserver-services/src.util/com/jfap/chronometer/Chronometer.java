@@ -26,13 +26,13 @@ public final class Chronometer {
 
     public String getLogString() {
         if(startTime < 0) {
-            return "Chronometer [taskName=" + taskName + ", not started]";
+            return "Chronometer [taskName=" + taskName + ", (not started) ]";
         }
         else if(startTime < 0) {
-            return "Chronometer [taskName=" + taskName + ", not stopped]";
+            return "Chronometer [taskName=" + taskName + ", )not stopped) ]";
         }
         else {
-        return "Chronometer [taskName=" + taskName + ", elapsedTime="+getElapsedTime()+"]";
+        return "Chronometer [taskName=" + taskName + ", elapsedTime="+getElapsedTime()+"ms]";
         }
     }
 
