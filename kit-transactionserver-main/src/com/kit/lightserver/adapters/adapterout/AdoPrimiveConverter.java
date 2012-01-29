@@ -19,11 +19,11 @@ import com.kit.lightserver.types.response.ClientResponseRSTY;
 import com.kit.lightserver.types.response.FormContentFullRSTY;
 import com.kit.lightserver.types.response.FormOperationRSTY;
 
-final class ToSendPrimiveConverter {
+final class AdoPrimiveConverter {
 
-    static private final Logger LOGGER = LoggerFactory.getLogger(ToSendPrimiveConverter.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(AdoPrimiveConverter.class);
 
-    static public AdapterOutConverterResult<Primitive> convert(final ClientResponseRSTY clientResponseRSTY) {
+    static public AdoConverterResult<Primitive> convert(final ClientResponseRSTY clientResponseRSTY) {
 
         final ConverterResult converterResult;
         if (clientResponseRSTY instanceof ChannelNotificationEndConversationRSTY) {
@@ -76,7 +76,7 @@ final class ToSendPrimiveConverter {
         }
         else if (clientResponseRSTY instanceof FormContentFullRSTY) {
             final FormContentFullRSTY formContentFullRSTY = (FormContentFullRSTY) clientResponseRSTY;
-            converterResult = FormContentFullConverter.convert2(formContentFullRSTY);
+            converterResult = FormContentFullConverter.convertForm(formContentFullRSTY);
         }
         else {
             converterResult = new ConverterResult();
@@ -86,7 +86,7 @@ final class ToSendPrimiveConverter {
 
             final boolean success = true;
             final Primitive primitiveToSend = converterResult.getPrimitiveToSend();
-            final AdapterOutConverterResult<Primitive> result = new AdapterOutConverterResult<Primitive>(success, primitiveToSend);
+            final AdoConverterResult<Primitive> result = new AdoConverterResult<Primitive>(success, primitiveToSend);
 
             return result;
 
@@ -96,7 +96,7 @@ final class ToSendPrimiveConverter {
             final boolean success = false;
             final ChannelNotification channelNotification = new ChannelNotification();
             channelNotification.type = ChannelNotification.ERROR_SERVER;
-            final AdapterOutConverterResult<Primitive> result = new AdapterOutConverterResult<Primitive>(success, channelNotification);
+            final AdoConverterResult<Primitive> result = new AdoConverterResult<Primitive>(success, channelNotification);
 
             return result;
 

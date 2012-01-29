@@ -2,13 +2,13 @@ package com.kit.lightserver.adapters.adapterout;
 
 import kit.primitives.base.Primitive;
 
-final class AdapterOutConverterResult<T extends Primitive> {
+final class AdoConverterResult<T extends Primitive> {
 
 	private final boolean success;
 
 	private final T primitiveToSend;
 
-	public AdapterOutConverterResult(final boolean success, final T primitiveToSend) {
+	public AdoConverterResult(final boolean success, final T primitiveToSend) {
 		this.success = success;
 		this.primitiveToSend = primitiveToSend;
 	}// constructor

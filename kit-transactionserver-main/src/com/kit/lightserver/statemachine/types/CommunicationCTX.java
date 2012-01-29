@@ -15,7 +15,7 @@ public final class CommunicationCTX {
         formsToSendOrderedList.add(formSTY);
     }
 
-    public int getFormsToSendOrderedListSize() {
+    public int getAllFormsListSize() {
         return formsToSendOrderedList.size();
     }
 

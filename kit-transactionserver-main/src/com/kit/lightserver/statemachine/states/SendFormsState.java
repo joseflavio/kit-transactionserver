@@ -15,7 +15,6 @@ import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.be.forms.FormServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormOperationClientSuccessEventSME;
-import com.kit.lightserver.statemachine.events.FormOperationUpdateFormsCompleteEventSME;
 import com.kit.lightserver.statemachine.types.CommunicationCTX;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.ChannelProgressRSTY;
@@ -52,8 +51,11 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
         /*
          * The number of steps for the mobile progress bar
          */
-        final int totalNumberOfFormsToSend = communicationCTX.getFormsToSendOrderedListSize();
+        final int totalNumberOfFormsToSend = communicationCTX.getAllFormsListSize();
         LOGGER.info("totalNumberOfFormsToSend=" + totalNumberOfFormsToSend);
+
+
+        ProcessingResult<KitEventSME> result;
         if( totalNumberOfFormsToSend > 0 ) {
 
             final ChannelProgressRSTY channelProgress = new ChannelProgressRSTY(totalNumberOfFormsToSend);
@@ -62,15 +64,23 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
             /*
              * Getting the first *bunch* of forms and sending
              */
-            sendFormsAndRequestClientStatus();
+            final List<FormSTY> formsToSend = communicationCTX.extractFormsToSendInOrder(MAX_FORMS_TO_SEND_UNTIL_CONFIRMATION);
+            sendFormsAndRequestClientStatus(formsToSend);
+
+            result = new ResultWaitEvent<KitEventSME>();
         }
         else {
-            FormOperationGetStatusRSTY formOperationGetStatusRSTY = new FormOperationGetStatusRSTY();
-            context.getClientAdapterOut().sendBack(formOperationGetStatusRSTY);
+            result = getRetrieveUpdatedFormsState();
         }
 
-        return new ResultWaitEvent<KitEventSME>();
+        return result;
 
+    }
+
+    private ProcessingResult<KitEventSME> getRetrieveUpdatedFormsState() {
+        LOGGER.info("communicationCTX.getFormsToSendOrderedListSize()=" + communicationCTX.getAllFormsListSize());
+        final RetrieveUpdatedFormsState retrieveUpdatedFormsState = new RetrieveUpdatedFormsState(context);
+        return new ResultStateTransition<KitEventSME>(retrieveUpdatedFormsState);
     }
 
     @Override
@@ -78,35 +88,45 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
 
         if (event instanceof FormOperationClientSuccessEventSME) {
 
-            if( communicationCTX.getFormsSentWaitingForConfirmationList().size() == 0 ) {
+            if( communicationCTX.getFormsSentWaitingForConfirmationList().size() == 0 ) { // Sanity
                 LOGGER.error("Investigate. getFormsSentWaitingForConfirmationList().size()=0");
                 return getRetrieveUpdatedFormsState();
             }
 
+            /*
+             * Flags the the forms were successful received
+             */
             final String ktClientId = context.getClientInfo().getKtClientId();
             final boolean serviceSuccess = FormServices.flagFormsAsReceived(ktClientId, communicationCTX.getFormsSentWaitingForConfirmationList());
             if (serviceSuccess == false) {
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
                 return new ResultStateTransition<KitEventSME>(errorState);
             }
-
-            // Success
             communicationCTX.clearSentListWaitingForConfirmation();
-            sendFormsAndRequestClientStatus();
-            return new ResultWaitEvent<KitEventSME>();
+
+            /*
+             * Getting the next forms to send
+             */
+            final List<FormSTY> formsToSend = communicationCTX.extractFormsToSendInOrder(MAX_FORMS_TO_SEND_UNTIL_CONFIRMATION);
+            if( formsToSend.size() > 0) {
+                sendFormsAndRequestClientStatus(formsToSend);
+                return new ResultWaitEvent<KitEventSME>();
+            }
+            else {
+                LOGGER.info("Client Status is ok. All Forms successfully sent.");
+                return getRetrieveUpdatedFormsState();
+            }
+
 
         }
-        else if (event instanceof FormOperationUpdateFormsCompleteEventSME) {
-            return getRetrieveUpdatedFormsState();
-        }
+
         else {
 
             /*
              * ERROR
              */
-            if (communicationCTX.getFormsToSendOrderedListSize() > 0) {
-                LOGGER.error("Something went wrong. We still had forms to send. communicationCTX.getFormsToSendOrderedListSize()="
-                        + communicationCTX.getFormsToSendOrderedListSize());
+            if (communicationCTX.getAllFormsListSize() > 0) {
+                LOGGER.error("There are still forms to be sent. communicationCTX.getAllFormsListSize()="+communicationCTX.getAllFormsListSize());
             }
             LOGGER.error("Invalid event. event=" + event);
             final StateSME<KitEventSME> newState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_ERROR_UNEXPECTED_EVENT);
@@ -117,19 +137,15 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
 
     }// processEvent
 
-    private ProcessingResult<KitEventSME> getRetrieveUpdatedFormsState() {
-        LOGGER.info("communicationCTX.getFormsToSendOrderedListSize()=" + communicationCTX.getFormsToSendOrderedListSize());
-        LOGGER.info("Client Status is ok. All Forms successfully sent.");
-        final RetrieveUpdatedFormsState retrieveUpdatedFormsState = new RetrieveUpdatedFormsState(context);
-        return new ResultStateTransition<KitEventSME>(retrieveUpdatedFormsState);
-    }
 
-    private void sendFormsAndRequestClientStatus() {
 
-        final List<FormSTY> formsToSend = communicationCTX.extractFormsToSendInOrder(MAX_FORMS_TO_SEND_UNTIL_CONFIRMATION);
+    private void sendFormsAndRequestClientStatus(final List<FormSTY> formsToSend) {
 
-        LOGGER.info("Client Status is ok. Sending forms. formsToSend.size()=" + formsToSend.size() + ", formsToSendOrderedListSize()="
-                + communicationCTX.getFormsToSendOrderedListSize());
+        LOGGER.info("Sending forms. formsToSend.size()=" + formsToSend.size());
+
+        if (formsToSend.size() == 0) { // Sanity
+            LOGGER.error("Investigate. formsToSend.size() == 0");
+        }
 
         if (formsToSend.size() > 0) {
 
@@ -157,9 +173,6 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
 
         }
 
-        /*
-         * Pergunta para o cliente se esta tudo bem
-         */
         FormOperationGetStatusRSTY formOperationGetStatusRSTY = new FormOperationGetStatusRSTY();
         context.getClientAdapterOut().sendBack(formOperationGetStatusRSTY);
 

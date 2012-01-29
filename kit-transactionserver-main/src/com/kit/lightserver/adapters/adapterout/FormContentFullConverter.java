@@ -15,7 +15,7 @@ import com.kit.lightserver.types.response.FormContentFullRSTY;
 
 public final class FormContentFullConverter {
 
-    static public ConverterResult convert2(final FormContentFullRSTY formContentFullRSTY) {
+    static public ConverterResult convertForm(final FormContentFullRSTY formContentFullRSTY) {
 
         final FormContentFull formContentFull;
         if (formContentFullRSTY instanceof FormContentFullNotafiscalRSTY) {
@@ -39,7 +39,7 @@ public final class FormContentFullConverter {
 
     }
 
-    static public FormContentFull convertConhecimento(final FormContentFullConhecimentoRSTY formContentFullConhecimentoRSTY) {
+    static private FormContentFull convertConhecimento(final FormContentFullConhecimentoRSTY formContentFullConhecimentoRSTY) {
 
         final ConhecimentoSTY form = formContentFullConhecimentoRSTY.getConhecimentoSTY();
 
@@ -67,9 +67,9 @@ public final class FormContentFullConverter {
         final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", statusEntregaStr);
         response.add(statusEntregaBean);
 
-        //final String dataEntregaStr = DataEntregaConverter.convert(form.getDataEntrega());
-        //final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", dataEntregaStr);
-        //response.add(dataEntregaBean);
+        final String dataEntregaStr = DataEntregaConverter.convert(new Date()); // Mandatory, the mobile crashes without it
+        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", dataEntregaStr);
+        response.add(dataEntregaBean);
 
         final String remetenteCNPJ = form.getRemetenteCNPJ();
         final FieldAndContentBean remetenteCNPJBean = new FieldAndContentBean("remetenteCNPJ", remetenteCNPJ);

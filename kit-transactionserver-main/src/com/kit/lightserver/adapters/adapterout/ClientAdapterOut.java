@@ -33,7 +33,7 @@ public final class ClientAdapterOut {
         }
         else {
 
-            final AdapterOutConverterResult<Primitive> converterResult = ToSendPrimiveConverter.convert(clientResponse);
+            final AdoConverterResult<Primitive> converterResult = AdoPrimiveConverter.convert(clientResponse);
             //LOGGER.debug("Processing " + clientResponse + " to " + converterResult);
 
             if( !converterResult.isSuccess() ) {
