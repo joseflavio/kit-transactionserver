@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.adapters.logger.AdaptersLogger;
-import com.kit.lightserver.domain.types.ConnectionId;
+import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.statemachine.KITStateMachineRunnable;
 import com.kit.lightserver.statemachine.events.AdapterInDataInputClosedSME;
 import com.kit.lightserver.statemachine.events.AdapterInErrorTimeOutSME;
@@ -33,7 +33,7 @@ public final class ClientAdapterInListenerThread implements Runnable {
 
     private final Thread kitStateMachineThread;
 
-    public ClientAdapterInListenerThread(final Socket givenSocket, final ConnectionId connectionId) {
+    public ClientAdapterInListenerThread(final Socket givenSocket, final ConnectionInfo connectionId) {
         this.socket = givenSocket;
         this.kitStateMachineRunnable = new KITStateMachineRunnable(givenSocket, connectionId);
         this.kitStateMachineThread = new Thread(kitStateMachineRunnable);

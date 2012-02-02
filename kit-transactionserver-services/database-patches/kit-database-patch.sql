@@ -16,15 +16,10 @@ EXEC sp_rename 'LogConexoes.idA', 'KTCelularIdA', 'COLUMN';
 EXEC sp_rename 'LogConexoes.idB', 'KTCelularIdB', 'COLUMN';
 EXEC sp_rename 'LogConexoes.status', 'KTStatusDaConexao', 'COLUMN';
 ALTER TABLE dbo.LogConexoes ADD KTCelularIdAB nchar(33) NULL DEFAULT NULL;
-ALTER TABLE dbo.LogConexoes ADD KTConexaoID nchar(96) NULL DEFAULT NULL;
-ALTER TABLE dbo.LogConexoes ADD KTRowInsertJDateAno int NULL DEFAULT NULL;
-ALTER TABLE dbo.LogConexoes ADD KTRowInsertJDateMes int NULL DEFAULT NULL;
-ALTER TABLE dbo.LogConexoes ADD KTRowInsertJDateDia int NULL DEFAULT NULL;
-ALTER TABLE dbo.LogConexoes ADD KTRowInsertJDateTimeString nchar(48) NULL DEFAULT NULL;
-ALTER TABLE dbo.LogConexoes ADD KTRowInsertJDateTimeNative datetime NULL; -- TIMESTAMP NAO ACEITA DEFAULT
-CREATE NONCLUSTERED INDEX Index_KTRowInsertJDateAno ON dbo.LogConexoes(KTRowInsertJDateAno);
-CREATE NONCLUSTERED INDEX Index_KTRowInsertJDateMes ON dbo.LogConexoes(KTRowInsertJDateMes);
-CREATE NONCLUSTERED INDEX Index_KTRowInsertJDateDia ON dbo.LogConexoes(KTRowInsertJDateDia);
+ALTER TABLE dbo.LogConexoes ADD KTConexaoID nchar(19) NULL DEFAULT NULL;
+ALTER TABLE dbo.LogConexoes ADD KTCelularNetworkAddress nchar(15) NULL DEFAULT NULL;
+
+
 CREATE NONCLUSTERED INDEX Index_KTConexaoID ON dbo.LogConexoes(KTConexaoID);
 CREATE NONCLUSTERED INDEX Index_KTCelularIdAB ON dbo.LogConexoes(KTCelularIdAB);
 CREATE NONCLUSTERED INDEX Index_KTClientID ON dbo.LogConexoes(KTClientID);
@@ -32,7 +27,11 @@ CREATE NONCLUSTERED INDEX Index_KTStatusDaConexao ON dbo.LogConexoes(KTStatusDaC
 
 UPDATE [dbo].[LogConexoes] SET [KTCelularIdAB] = [KTCelularIdA]+':'+[KTCelularIdB]
 
-
+ALTER TABLE dbo.LogConexoes DROP COLUMN KTCelularIdA;
+ALTER TABLE dbo.LogConexoes DROP COLUMN KTCelularIdB;
+ALTER TABLE dbo.LogConexoes DROP COLUMN tempIdAB;
+ALTER TABLE dbo.LogConexoes DROP COLUMN tempValidoParaFaturar;
+ALTER TABLE dbo.LogConexoes DROP COLUMN tempRowId;
 
 -- ----------------------------------------------------------------------------------------------------------
 -- ----------------------------------------------------------------------------------------------------------

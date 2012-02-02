@@ -13,7 +13,13 @@ public final class ConnectionIdGenerator {
         long shortUuid = least ^ most;
         String shortUuidString = Long.toHexString(shortUuid).toUpperCase();
 
-        return shortUuidString;
+        String separatedId =
+                    shortUuidString.substring(0, 4) + "-" +
+                    shortUuidString.substring(4, 8) + "-" +
+                    shortUuidString.substring(8, 12) + "-" +
+                    shortUuidString.substring(12, 16);
+
+        return separatedId;
 
     }
 

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jfap.framework.exception.LogUncaughtExceptionHandler;
 import com.kit.lightserver.adapters.adapterin.ClientAdapterInListenerThread;
-import com.kit.lightserver.domain.types.ConnectionId;
+import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 
 public final class KITLightServer {
@@ -79,8 +79,8 @@ public final class KITLightServer {
         try {
             final Socket clientSocket = serverSocket.accept(); // Blocks waiting to a Client connect
             final InetAddress clientAddress = clientSocket.getInetAddress();
-            final ConnectionId connectionId = ConnectionIdGenerator.createNewConnectionId(clientAddress); // Socket starts so we create a unique ID for it
             LOGGER.info("Connection accepted. clientAddress=" + clientAddress);
+            final ConnectionInfo connectionId = ConnectionInfoFactory.getInstance(clientAddress); // Socket starts so we create a unique ID for it
             final ClientAdapterInListenerThread clientListenerThread = new ClientAdapterInListenerThread(clientSocket, connectionId);
             final Thread thread = new Thread(clientListenerThread);
             thread.start();

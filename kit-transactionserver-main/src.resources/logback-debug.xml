@@ -37,7 +37,13 @@
       <pattern>[%date] [%level] [%thread] [%logger{64}:%method] [%file:%line] %msg%n%caller{16}%throwable{full}%n%n</pattern>
     </encoder>
     <file>logs/error.log</file>
-  </appender>     
+  </appender>
+      
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>[%date{HH:mm:ss.SSS}] [%thread] [%level] [%file:%line] %msg%n</pattern>
+    </encoder>
+  </appender>
 
   <logger name="com.kit.lightserver.services.db.logger" level="TRACE" additivity="false">
     <appender-ref ref="FILE-DATABASE" />
@@ -50,6 +56,7 @@
   <root level="info">
     <appender-ref ref="FILE-MAIN" />
     <appender-ref ref="FILE-ERROR" />   
+    <appender-ref ref="STDOUT" />
   </root>
   
 </configuration>

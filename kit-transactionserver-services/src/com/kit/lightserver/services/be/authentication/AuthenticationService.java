@@ -5,7 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kit.lightserver.domain.types.ConnectionId;
+import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.InsertQueryResult;
 import com.kit.lightserver.services.db.SelectQueryResult;
@@ -43,7 +43,7 @@ public final class AuthenticationService {
 
     }
 
-    static public AuthenticationServiceResponse authenticate(final ConnectionId connectionId, final String userClientId, final String password,
+    static public AuthenticationServiceResponse authenticate(final ConnectionInfo connectionId, final String userClientId, final String password,
             final InstallationIdSTY installationId) {
 
         final AuthenticationServiceResponse authenticationResponse = AuthenticationService.checkAuthentication(userClientId, password);

@@ -3,12 +3,9 @@ package com.kit.lightserver.services.db.authenticate;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.joda.time.DateTime;
-
-import com.kit.lightserver.domain.types.ConnectionId;
+import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.InsertQueryInterface;
-import com.kit.lightserver.services.db.QueryJodaDateTimeParameter;
 import com.kit.lightserver.services.db.QueryIntegerParameter;
 import com.kit.lightserver.services.db.QueryParameter;
 import com.kit.lightserver.services.db.QueryStringParameter;
@@ -17,36 +14,35 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public InsertLogConexoesQuery(final ConnectionId connectionId, final InstallationIdSTY installationIdSTY, final String ktClientId, final int status,
-            final int ano, final int mes, final int dia, final DateTime dateTime, final String localDateStr) {
+    public InsertLogConexoesQuery(final InstallationIdSTY installationIdSTY, final String ktClientId, final int status,
+            final ConnectionInfo connectionInfo) {
 
         final String idAStr = Long.toHexString(installationIdSTY.getInstallationId1());
         final String idBStr = Long.toHexString(installationIdSTY.getInstallationId2());
         final String idABStr = idAStr + ":" + idBStr;
 
-        final QueryStringParameter ktConexaoIdParam = new QueryStringParameter(connectionId.getConnectionIdStr());
-        final QueryStringParameter idAParam = new QueryStringParameter(idAStr);
-        final QueryStringParameter idBParam = new QueryStringParameter(idBStr);
+        final String mobileNetworkAddress = connectionInfo.getClientHostAddress();
+        final String properMobileNetworkAddress;
+        if( mobileNetworkAddress.length() > 15 ) {
+            properMobileNetworkAddress = mobileNetworkAddress.substring(0, 15);
+        }
+        else {
+            properMobileNetworkAddress = mobileNetworkAddress;
+        }
+
+        final String connectionUniqueId = connectionInfo.getConnectionUniqueId();
+
+        final QueryStringParameter ktConexaoIdParam = new QueryStringParameter(connectionUniqueId);
         final QueryStringParameter idABParam = new QueryStringParameter(idABStr);
         final QueryStringParameter ktClientIdParam = new QueryStringParameter(ktClientId);
         final QueryIntegerParameter statusParam = new QueryIntegerParameter(status);
-        final QueryIntegerParameter ktDataAnoParam = new QueryIntegerParameter(ano);
-        final QueryIntegerParameter ktDataMesParam = new QueryIntegerParameter(mes);
-        final QueryIntegerParameter ktDataDiaParam = new QueryIntegerParameter(dia);
-        final QueryJodaDateTimeParameter ktDataJavaServerNative = new QueryJodaDateTimeParameter(dateTime);
-        final QueryStringParameter ktDataJavaServerString = new QueryStringParameter(localDateStr);
+        final QueryStringParameter networkAddressParam = new QueryStringParameter(properMobileNetworkAddress);
 
-        queryParameters.add(ktConexaoIdParam);
-        queryParameters.add(idAParam);
-        queryParameters.add(idBParam);
         queryParameters.add(idABParam);
         queryParameters.add(ktClientIdParam);
         queryParameters.add(statusParam);
-        queryParameters.add(ktDataAnoParam);
-        queryParameters.add(ktDataMesParam);
-        queryParameters.add(ktDataDiaParam);
-        queryParameters.add(ktDataJavaServerNative);
-        queryParameters.add(ktDataJavaServerString);
+        queryParameters.add(ktConexaoIdParam);
+        queryParameters.add(networkAddressParam);
 
     }// constructor
 
@@ -56,7 +52,7 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
 
         final String queryStr =
                 "INSERT INTO " + TableLogConexoesConstants.TABLE_LOG_CONEXOES
-                + " (KTRowInsertDbDateTime, KTConexaoID, KTCelularIdA, KTCelularIdB, KTCelularIdAB, KTClientID, KTStatusDaConexao, KTRowInsertJDateAno, KTRowInsertJDateMes, KTRowInsertJDateDia, KTRowInsertJDateTimeNative, KTRowInsertJDateTimeString) values (GETDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + " (KTRowInsertDbDateTime, KTCelularIdAB, KTClientID, KTStatusDaConexao, KTConexaoID, KTCelularNetworkAddress) values (GETDATE(), ?, ?, ?, ?, ?)";
 
         return queryStr;
 

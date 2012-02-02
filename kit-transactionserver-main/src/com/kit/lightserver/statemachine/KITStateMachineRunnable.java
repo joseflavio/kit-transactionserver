@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.jfap.framework.statemachine.StateMachine;
 import com.jfap.framework.statemachine.StateSME;
 import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
-import com.kit.lightserver.domain.types.ConnectionId;
+import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.statemachine.states.InitialState;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 import com.kit.lightserver.types.response.ClientResponseRSTY;
@@ -26,13 +26,13 @@ public final class KITStateMachineRunnable implements Runnable {
 
     private final StateMachine<KitEventSME> kitStateState;
 
-    private final ConnectionId connectionId;
+    private final ConnectionInfo connectionId;
 
     private final ClientAdapterOut clientAdapterOut;
 
     private boolean canEnqueue = false; // In the runnable I can not access thread.isAlive()
 
-    public KITStateMachineRunnable(final Socket socket, final ConnectionId connectionId) {
+    public KITStateMachineRunnable(final Socket socket, final ConnectionInfo connectionId) {
         this.connectionId = connectionId;
         this.clientAdapterOut = new ClientAdapterOut(socket);
         this.kitStateState = new StateMachine<KitEventSME>();
