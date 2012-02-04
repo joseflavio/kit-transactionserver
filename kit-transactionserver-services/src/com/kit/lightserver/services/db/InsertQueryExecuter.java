@@ -43,13 +43,13 @@ public final class InsertQueryExecuter {
 
     }
 
-    static private InsertQueryResult executeInsertQuery(final Connection databaseConnection, final InsertQueryInterface updateQuery) {
+    static private InsertQueryResult executeInsertQuery(final Connection databaseConnection, final InsertQueryInterface insertQuery) {
 
         try {
 
-            final String insertQueryStr = updateQuery.getPreparedInsertQueryString();
+            final String insertQueryStr = insertQuery.getPreparedInsertQueryString();
             final PreparedStatement st = databaseConnection.prepareStatement(insertQueryStr);
-            final List<QueryParameter> insertQueryParameterList = updateQuery.getInsertQueryParameters();
+            final List<QueryParameter> insertQueryParameterList = insertQuery.getInsertQueryParameters();
             PreparedParametersUtil.fillParameters(st, insertQueryParameterList);
 
             final int rowsInserted = st.executeUpdate();
@@ -63,7 +63,8 @@ public final class InsertQueryExecuter {
 
         }
         catch (final SQLException e) {
-            LOGGER.error("Error executing the query.", e);
+            final String queryToString = QueryPrinter.toString(insertQuery);
+            LOGGER.error("Error executing the query. queryToString="+queryToString, e);
             return new InsertQueryResult();
         }// try-catch
 

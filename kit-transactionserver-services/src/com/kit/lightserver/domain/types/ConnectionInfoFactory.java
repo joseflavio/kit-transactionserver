@@ -1,13 +1,12 @@
-package com.kit.lightserver;
+package com.kit.lightserver.domain.types;
 
 import java.net.InetAddress;
 
 import com.jfap.framework.connectionid.ConnectionIdGenerator;
-import com.kit.lightserver.domain.types.ConnectionInfo;
 
-final class ConnectionInfoFactory {
+public final class ConnectionInfoFactory {
 
-    public static ConnectionInfo getInstance(final InetAddress clientAddress) {
+    static public ConnectionInfo getInstance(final InetAddress clientAddress) {
         final String connectionUniqueId = ConnectionIdGenerator.generateRandomConnectionId();
         final String clientHostAddress = clientAddress.getHostAddress();
         return new ConnectionInfo(connectionUniqueId, clientHostAddress);

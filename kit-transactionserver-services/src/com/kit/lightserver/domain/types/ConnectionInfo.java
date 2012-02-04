@@ -6,7 +6,7 @@ public final class ConnectionInfo {
     private final String connectionUniqueId;
     private final String clientHostAddress;
 
-    public ConnectionInfo(final String connectionUniqueId, final String clientHostAddress) {
+    ConnectionInfo(final String connectionUniqueId, final String clientHostAddress) {
         this.connectionUniqueId = connectionUniqueId;
         this.clientHostAddress = clientHostAddress;
     }

@@ -20,7 +20,7 @@ public final class InstallationIdSTY {
 
 	@Override
 	public String toString() {
-		return "InstallationIdSTY [installationId1=" + installationId1 + ", installationId2=" + installationId2 + "]";
+		return "InstallationIdSTY [" + Long.toHexString(installationId1) + ":" + Long.toHexString(installationId2) + "]";
 	}
 
 }// class

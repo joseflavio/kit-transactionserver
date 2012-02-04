@@ -26,19 +26,19 @@ public final class DatabaseLogger {
 
     static public void logSelectQuery(final SelectQueryInterface selectQuery) {
         final String queryName = selectQuery.getClass().getCanonicalName();
-        final String printedSelectQuery = QueryPrinter.printQuery(selectQuery);
+        final String printedSelectQuery = QueryPrinter.printSelectQuery(selectQuery);
         LOGGER.trace("[DB SELECT QUERY ] [queryName="+ queryName + "] query=" + printedSelectQuery);
     }
 
     static public void logUpdateQuery(final UpdateQueryInterface updateQuery) {
         final String queryName = updateQuery.getClass().getCanonicalName();
-        final String printedSelectQuery = QueryPrinter.printQuery(updateQuery);
+        final String printedSelectQuery = QueryPrinter.printUpdateQuery(updateQuery);
         LOGGER.trace("[DB UPDATE QUERY ] [queryName="+ queryName + "] query=" + printedSelectQuery);
     }
 
     static public void logInsertQuery(final InsertQueryInterface insertQuery) {
         final String queryName = insertQuery.getClass().getCanonicalName();
-        final String printedSelectQuery = QueryPrinter.printQuery(insertQuery);
+        final String printedSelectQuery = QueryPrinter.printInsertQuery(insertQuery);
         LOGGER.trace("[DB INSERT QUERY ] [queryName="+ queryName + "] query=" + printedSelectQuery);
     }
 

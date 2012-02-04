@@ -3,6 +3,9 @@ package com.kit.lightserver.services.db.authenticate;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.InsertQueryInterface;
@@ -11,6 +14,8 @@ import com.kit.lightserver.services.db.QueryParameter;
 import com.kit.lightserver.services.db.QueryStringParameter;
 
 final class InsertLogConexoesQuery implements InsertQueryInterface {
+
+    static private final Logger LOGGER = LoggerFactory.getLogger(InsertLogConexoesQuery.class);
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
@@ -24,6 +29,7 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
         final String mobileNetworkAddress = connectionInfo.getClientHostAddress();
         final String properMobileNetworkAddress;
         if( mobileNetworkAddress.length() > 15 ) {
+            LOGGER.error("mobileNetworkAddress is too long. mobileNetworkAddress="+mobileNetworkAddress);
             properMobileNetworkAddress = mobileNetworkAddress.substring(0, 15);
         }
         else {
@@ -52,7 +58,7 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
 
         final String queryStr =
                 "INSERT INTO " + TableLogConexoesConstants.TABLE_LOG_CONEXOES
-                + " (KTRowInsertDbDateTime, KTCelularIdAB, KTClientID, KTStatusDaConexao, KTConexaoID, KTCelularNetworkAddress) values (GETDATE(), ?, ?, ?, ?, ?)";
+                + " (KTConexaoDBTime, KTCelularIdAB, KTClientID, KTStatusDaConexao, KTConexaoID, KTCelularNetworkAddress) values (GETDATE(), ?, ?, ?, ?, ?)";
 
         return queryStr;
 

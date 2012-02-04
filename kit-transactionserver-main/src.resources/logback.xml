@@ -27,16 +27,18 @@
     </encoder>
   </appender>    
     
-  <appender name="FILE-ERROR" class="ch.qos.logback.core.FileAppender">      
+  <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">      
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>ERROR</level>
       <onMatch>ACCEPT</onMatch>
       <onMismatch>DENY</onMismatch>
     </filter>   
-    <encoder>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <pattern>[%date] [%level] [%thread] [%logger{64}:%method] [%file:%line] %msg%n%caller{16}%throwable{full}%n%n</pattern>
     </encoder>
-    <file>logs/error.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>logs/logs-%d{yyyy-MM}/errors.%d{yyyy-MM}.log</fileNamePattern>
+    </rollingPolicy>
   </appender>     
 
   <logger name="com.kit.lightserver.services.db.logger" level="TRACE" additivity="false">

@@ -11,7 +11,8 @@ SELECT KTStatus, count(KTRowId) FROM dbo.Conhecimentos GROUP BY KTStatus
 -- ----------------------------------------------------------------------------------------------------------
 -- Tabela LogConexoes
 -- ----------------------------------------------------------------------------------------------------------
-EXEC sp_rename 'LogConexoes.DataHora', 'KTRowInsertDbDateTime', 'COLUMN';
+EXEC sp_rename 'LogConexoes.DataHora', 'KTConexaoDBTime', 'COLUMN';
+
 EXEC sp_rename 'LogConexoes.idA', 'KTCelularIdA', 'COLUMN';
 EXEC sp_rename 'LogConexoes.idB', 'KTCelularIdB', 'COLUMN';
 EXEC sp_rename 'LogConexoes.status', 'KTStatusDaConexao', 'COLUMN';

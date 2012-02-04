@@ -12,6 +12,12 @@ public final class ConnectionIdGenerator {
 
         long shortUuid = least ^ most;
         String shortUuidString = Long.toHexString(shortUuid).toUpperCase();
+        if( shortUuidString.length() < 16 ) {
+            System.err.println("UUID too short. most="+most);
+            System.err.println("UUID too short. least="+least);
+            System.err.println("UUID too short. shortUuid="+shortUuid);
+            System.err.println("UUID too short. shortUuidString="+shortUuidString);
+        }
 
         String separatedId =
                     shortUuidString.substring(0, 4) + "-" +

@@ -7,7 +7,7 @@ public final class QueryPrinter {
     private QueryPrinter() {
     }
 
-    static public String printQuery(final UpdateQueryInterface updateQuery) {
+    static public String printUpdateQuery(final UpdateQueryInterface updateQuery) {
 
         final String queryString = updateQuery.getPreparedUpdateQueryString();
         final List<QueryParameter> queryParameters = updateQuery.getUpdateQueryParameters();
@@ -21,7 +21,7 @@ public final class QueryPrinter {
 
     }
 
-    static public String printQuery(final SelectQueryInterface selectQuery) {
+    static public String printSelectQuery(final SelectQueryInterface selectQuery) {
 
         final String queryString = selectQuery.getPreparedSelectQueryString();
         final List<QueryParameter> queryParameters = selectQuery.getSelectQueryParameters();
@@ -35,7 +35,7 @@ public final class QueryPrinter {
 
     }
 
-    static public String printQuery(final InsertQueryInterface insertQuery) {
+    static public String printInsertQuery(final InsertQueryInterface insertQuery) {
 
         final String queryString = insertQuery.getPreparedInsertQueryString();
         final List<QueryParameter> queryParameters = insertQuery.getInsertQueryParameters();
@@ -58,6 +58,12 @@ public final class QueryPrinter {
 
         return replacedQueryString;
 
+    }
+
+    static public String toString(final InsertQueryInterface insertQuery) {
+        final String printedQuery = QueryPrinter.printInsertQuery(insertQuery);
+        final String queryName = insertQuery.getClass().getCanonicalName();
+        return queryName + "[ " + printedQuery + " ]";
     }
 
 }// class
