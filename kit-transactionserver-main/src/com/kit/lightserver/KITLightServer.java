@@ -11,9 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jfap.framework.exception.LogUncaughtExceptionHandler;
-import com.kit.lightserver.adapters.adapterin.ClientAdapterInListenerThread;
+import com.kit.lightserver.adapters.adapterin.AdiClientListenerRunnable;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.ConnectionInfoFactory;
+import com.kit.lightserver.loggers.connectionlogger.ConnectionsLogger;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 
 public final class KITLightServer {
@@ -78,13 +79,23 @@ public final class KITLightServer {
 
     public void listenForNewConnections() {
         try {
-            final Socket clientSocket = serverSocket.accept(); // Blocks waiting to a Client connect
-            final InetAddress clientAddress = clientSocket.getInetAddress();
-            final ConnectionInfo connectionInfo = ConnectionInfoFactory.getInstance(clientAddress); //It creates a unique ID for the connection
+
+            Socket clientSocket = serverSocket.accept(); // Blocks waiting to a Client connect
+            InetAddress clientInetAddress = clientSocket.getInetAddress();
+
+            final ConnectionInfo connectionInfo = ConnectionInfoFactory.getInstance(clientInetAddress); //It creates a unique ID for the connection
             LOGGER.info("Connection accepted. connectionInfo=" + connectionInfo);
-            final ClientAdapterInListenerThread clientListenerThread = new ClientAdapterInListenerThread(clientSocket, connectionInfo);
-            final Thread thread = new Thread(clientListenerThread);
+            ConnectionsLogger.logConnection(connectionInfo, clientInetAddress);
+
+
+            /*
+             * Forking a thread to deal with the external connection
+             */
+            String threadName = "T1:" + connectionInfo.getConnectionUniqueId();
+            AdiClientListenerRunnable clientListenerThread = new AdiClientListenerRunnable(clientSocket, connectionInfo);
+            Thread thread = new Thread(clientListenerThread, threadName);
             thread.start();
+
             isAlive = false;
         }
         catch (final SocketTimeoutException e) {

@@ -21,9 +21,9 @@ import com.kit.lightserver.statemachine.events.ServerErrorConvertingPrimitiveSME
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
 
-public final class ClientAdapterInListenerThread implements Runnable {
+public final class AdiClientListenerRunnable implements Runnable {
 
-    static private final Logger LOGGER = LoggerFactory.getLogger(ClientAdapterInListenerThread.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(AdiClientListenerRunnable.class);
 
     static private final int ADAPTER_IN_TIMEOUT_IN_MILLIS = 30000; //180000;// 180000=180s in production and 7000=7s in tests
 
@@ -33,10 +33,11 @@ public final class ClientAdapterInListenerThread implements Runnable {
 
     private final Thread kitStateMachineThread;
 
-    public ClientAdapterInListenerThread(final Socket givenSocket, final ConnectionInfo connectionId) {
+    public AdiClientListenerRunnable(final Socket givenSocket, final ConnectionInfo connectionInfo) {
         this.socket = givenSocket;
-        this.kitStateMachineRunnable = new KITStateMachineRunnable(givenSocket, connectionId);
-        this.kitStateMachineThread = new Thread(kitStateMachineRunnable);
+        this.kitStateMachineRunnable = new KITStateMachineRunnable(givenSocket, connectionInfo);
+        final String threadName = "T2:" + connectionInfo.getConnectionUniqueId();
+        this.kitStateMachineThread = new Thread(kitStateMachineRunnable, threadName);
     }// constructor
 
     @Override

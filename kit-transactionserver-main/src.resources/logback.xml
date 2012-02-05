@@ -26,6 +26,15 @@
       <Pattern>[%date{HH:mm:ss.SSS}] [%thread] [%level] [%class{0}] %msg%n</Pattern>
     </encoder>
   </appender>    
+  
+  <appender name="FILE-CONNECTIONS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/logs-%d{yyyy-MM}/logs-%d{yyyy-MM-dd}/connections.log</fileNamePattern>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>[%date{HH:mm:ss.SSS}] [%thread] [%level] [%class{0}] %msg%n</Pattern>
+    </encoder>
+  </appender>   
     
   <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">      
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -41,6 +50,12 @@
     </rollingPolicy>
   </appender>     
 
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>[%date{HH:mm:ss.SSS}] [%thread] [%level] [%file:%line] %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <logger name="com.kit.lightserver.services.db.logger" level="TRACE" additivity="false">
     <appender-ref ref="FILE-DATABASE" />
   </logger>
@@ -49,9 +64,14 @@
     <appender-ref ref="FILE-ADAPTERS" />
   </logger>
   
+  <logger name="com.kit.lightserver.loggers.connectionlogger" level="TRACE" additivity="false">
+    <appender-ref ref="FILE-CONNECTIONS" />
+  </logger>
+  
   <root level="info">
     <appender-ref ref="FILE-MAIN" />
-    <appender-ref ref="FILE-ERROR" />   
+    <appender-ref ref="FILE-ERROR" />
+    <appender-ref ref="STDOUT" />   
   </root>
   
 </configuration>
