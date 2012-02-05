@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.adapters.logger.AdaptersLogger;
 import com.kit.lightserver.domain.types.ConnectionInfo;
+import com.kit.lightserver.loggers.connectionlogger.ConnectionsLogger;
 import com.kit.lightserver.statemachine.KITStateMachineRunnable;
 import com.kit.lightserver.statemachine.events.AdapterInDataInputClosedSME;
 import com.kit.lightserver.statemachine.events.AdapterInErrorTimeOutSME;
@@ -20,14 +21,15 @@ import com.kit.lightserver.statemachine.events.AdapterInInterrupedSME;
 import com.kit.lightserver.statemachine.events.ServerErrorConvertingPrimitiveSME;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
-
 public final class AdiClientListenerRunnable implements Runnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(AdiClientListenerRunnable.class);
 
-    static private final int ADAPTER_IN_TIMEOUT_IN_MILLIS = 30000; //180000;// 180000=180s in production and 7000=7s in tests
+    static private final int ADAPTER_IN_TIMEOUT_IN_MILLIS = 30000; // 180000;// 180000=180s in production and 7000=7s in tests
 
     private final Socket socket;
+
+    private final ConnectionInfo connectionInfo;
 
     private final KITStateMachineRunnable kitStateMachineRunnable;
 
@@ -35,6 +37,7 @@ public final class AdiClientListenerRunnable implements Runnable {
 
     public AdiClientListenerRunnable(final Socket givenSocket, final ConnectionInfo connectionInfo) {
         this.socket = givenSocket;
+        this.connectionInfo = connectionInfo;
         this.kitStateMachineRunnable = new KITStateMachineRunnable(givenSocket, connectionInfo);
         final String threadName = "T2:" + connectionInfo.getConnectionUniqueId();
         this.kitStateMachineThread = new Thread(kitStateMachineRunnable, threadName);
@@ -44,6 +47,35 @@ public final class AdiClientListenerRunnable implements Runnable {
     public void run() {
 
         LOGGER.info("Thread Started");
+
+        try {
+            runInternal();
+        }
+        catch (Throwable t) {
+            LOGGER.error("Unexpected error.", t);
+        }
+
+
+        try {
+            Thread.sleep(2000);
+        }
+        catch (InterruptedException e1) {
+            LOGGER.error("Unexpected error.", e1);
+        }
+
+        try {
+            socket.close();
+        }
+        catch (IOException e) {
+            LOGGER.error("Unexpected error.", e);
+        }
+
+        ConnectionsLogger.logConnectionClosed(connectionInfo, socket);
+
+        LOGGER.info("Thread Finished");
+    }
+
+    private void runInternal() {
 
         kitStateMachineThread.start();
 
@@ -60,9 +92,10 @@ public final class AdiClientListenerRunnable implements Runnable {
             return;
         }
 
+        DataInputStream dataInputStream = null;
         try {
 
-            final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+            dataInputStream = new DataInputStream(socket.getInputStream());
             boolean dataInputAlive = true;
 
             long lastEventTime = System.currentTimeMillis();
@@ -77,7 +110,7 @@ public final class AdiClientListenerRunnable implements Runnable {
                     final ReceivedPrimitiveConverterResult<KitEventSME> converterResult = ReceivedPrimitiveConverter.convert(clientPrimitive);
 
                     final KitEventSME eventSME;
-                    if( converterResult.isSuccess() ) {
+                    if (converterResult.isSuccess()) {
                         eventSME = converterResult.getEvent();
                     }
                     else {
@@ -121,7 +154,14 @@ public final class AdiClientListenerRunnable implements Runnable {
         final AdapterInDataInputClosedSME eventSME = new AdapterInDataInputClosedSME();
         kitStateMachineRunnable.enqueueReceived(eventSME);
 
-        LOGGER.info("Thread Finished");
+        if( dataInputStream != null ) {
+            try {
+                dataInputStream.close();
+            }
+            catch (IOException e) {
+                LOGGER.error("Unexpected error.", e);
+            }
+        }
 
     }
 

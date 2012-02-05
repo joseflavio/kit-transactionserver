@@ -4,6 +4,8 @@ import java.util.UUID;
 
 public final class ConnectionIdGenerator {
 
+    static private final String LEADING_ZEROS = "0000000000000000";
+
     static public String generateRandomConnectionId() {
 
         UUID uuid = UUID.randomUUID();
@@ -12,11 +14,11 @@ public final class ConnectionIdGenerator {
 
         long shortUuid = least ^ most;
         String shortUuidString = Long.toHexString(shortUuid).toUpperCase();
-        if( shortUuidString.length() < 16 ) {
-            System.err.println("UUID too short. most="+most);
-            System.err.println("UUID too short. least="+least);
-            System.err.println("UUID too short. shortUuid="+shortUuid);
-            System.err.println("UUID too short. shortUuidString="+shortUuidString);
+
+        int diff = 16 - shortUuidString.length();
+
+        if( diff > 0 ) {
+            shortUuidString = LEADING_ZEROS.substring(0, diff) + shortUuidString;
         }
 
         String separatedId =
