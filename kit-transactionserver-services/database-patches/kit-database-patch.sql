@@ -103,6 +103,8 @@ ALTER TABLE dbo.Conhecimentos ADD KTFlagEditadoUpdateDBTime datetime NULL;
 ALTER TABLE dbo.Conhecimentos ADD KTFlagHistorico bit NOT NULL DEFAULT 0;
 ALTER TABLE dbo.Conhecimentos ADD KTFlagHistoricoUpdateDBTime datetime NULL;
 
+ALTER TABLE dbo.Conhecimentos ADD KTFormVersion int NOT NULL DEFAULT 0;
+
 CREATE NONCLUSTERED INDEX Index_KTClientId ON dbo.Conhecimentos(KTClientId);
 CREATE NONCLUSTERED INDEX Index_KTClientId_KTFlagHistorico_KTControleProntoParaEnviar ON dbo.Conhecimentos(KTClientId, KTFlagHistorico, KTControleProntoParaEnviar);
 
@@ -156,6 +158,9 @@ ALTER TABLE dbo.NotasFiscais ADD KTFlagRecebidoUpdateDBTime datetime NULL;
 ALTER TABLE dbo.NotasFiscais ADD KTFlagHistorico bit NOT NULL DEFAULT 0;
 ALTER TABLE dbo.NotasFiscais ADD KTFlagHistoricoUpdateDBTime datetime NULL;
 
+ALTER TABLE dbo.NotasFiscais ADD KTFormVersion int NOT NULL DEFAULT 0;
+
+-- Indexes
 CREATE NONCLUSTERED INDEX Index_KTParentConhecimentoRowId ON dbo.NotasFiscais(KTParentConhecimentoRowId);
 
 UPDATE dbo.NotasFiscais SET KTFlagHistorico=1, KTStatus='moved_to_new_version' WHERE KTStatus='historic'

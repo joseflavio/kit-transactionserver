@@ -48,7 +48,7 @@ public final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface
         final String flagColumnDbUpdateTime = "KTFlag" + flagName + "UpdateDBTime";
 
         final String queryStr =
-                "UPDATE " + tableName + " SET "+ flagColumn + "=1, "+ flagColumnDbUpdateTime + "=GETDATE() WHERE KTClientId=? AND " + rowIdsOrClause;
+                "UPDATE " + tableName + " SET "+ flagColumn + "=1, "+ flagColumnDbUpdateTime + "=GETDATE(), KTFormVersion=KTFormVersion+1 WHERE KTClientId=? AND " + rowIdsOrClause;
 
         return queryStr;
     }

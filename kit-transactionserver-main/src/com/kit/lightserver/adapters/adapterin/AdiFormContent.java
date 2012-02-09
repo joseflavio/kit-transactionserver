@@ -28,6 +28,8 @@ final class AdiFormContent {
 		    final int ktRowId = Integer.parseInt( splitedFormIdArray[1] );
 		    final String formType = splitedFormIdArray[0];
 		    final Date firstReadDate = primitive.firstReadDate;
+
+		    LOGGER.warn("formType="+formType);
 		    if( "conhecimentos".equals(formType) ) {
 		        ConhecimentoIdSTY conhecimentoId = new ConhecimentoIdSTY(ktRowId);
 		        FormContentConhecimentoReadSME event = new FormContentConhecimentoReadSME(conhecimentoId, firstReadDate);

@@ -60,7 +60,7 @@ public final class FormContentFullConverter {
         response.templateId = templateStr;
         response.category = anchorCategoryId;
         response.title = form.getTitle();
-        response.showFlags = 32; // because it is knowledge template
+        response.showFlags = 32; // because it is "Conhecimento" template
         response.firstReadDate = new Date(); // new Date(0L) didn't work, need to discuss
         response.lastEditDate = new Date(); // new Date(0L);
 
