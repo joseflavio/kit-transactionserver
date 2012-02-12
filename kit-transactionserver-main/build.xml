@@ -1,24 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="kit-transactionserver" default="compile" basedir=".">
+<project name="kit-transactionserver-main" default="compile" basedir=".">
 
-    <target name="compile">
-        <mkdir dir="tmp"/>
-        <javac srcdir="src" destdir="tmp" debug="off" deprecation="on" >
-        </javac>
-    </target>
+	<property name="jar.name" value="kit-transactionserver-main"/>
 
-    <target name="GenerateJar" depends="compile">
+	<property name="resources.jar.name" value="kit-transactionserver-resources"/>
+	
+	<property file="version.properties"/>
 
-        <manifest file="MANIFEST.MF">
-            <attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
-            <attribute name="Main-Class" value="TestDatabaseConnection"/>
-            <attribute name="Class-Path" value="lib/sqljdbc_1.2/enu/sqljdbc.jar"/>
-        </manifest>
+	<property name="lib.main.dir" value="../kit-transactionserver-main/"/>
 
-        <mkdir dir="build"/>
+	<path id="project.classpath">
+		<fileset dir="${lib.main.dir}/lib">
+			<include name="slf4j-api-1.6.2.jar"/>
+			<include name="primitives_v1-2_mira_rev51a.jar"/>
+		</fileset>
+		<fileset dir="../kit-transactionserver-services/build">
+			<include name="kit-transactionserver-services-1.0.0.jar"/>
+		</fileset>
+		<fileset dir="../kit-transactionserver-simplestatemachine/build">
+			<include name="kit-transactionserver-simplestatemachine-1.0.0.jar"/>
+		</fileset>
+	</path>
 
-        <jar jarfile="build/testconnection.jar" manifest="MANIFEST.MF" basedir="tmp"/>
+	<target name="compile">
+		<mkdir dir="tmp/compiled"/>
 
-    </target>
+		<javac destdir="tmp/compiled" debug="off" deprecation="on">
+			<src path="src"/>
+			<src path="src.resources"/>
+			<src path="src.test"/>
+			<classpath refid="project.classpath"/>
+		</javac>
+	</target>
+
+	<target name="jar-resources">
+		<mkdir dir="tmp/manifest"/>
+		<manifest file="tmp/manifest/MANIFEST.MF">
+			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
+		</manifest>
+		<mkdir dir="build"/>
+		<jar jarfile="build/${resources.jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="src.resources"/>
+
+	</target>
+
+	<target name="jar" depends="compile,jar-resources">
+		<mkdir dir="tmp/manifest"/>
+		<manifest file="tmp/manifest/MANIFEST.MF">
+			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
+			<attribute name="Main-Class" value="com.kit.lightserver.KITLightServerBootstrap"/>
+			<attribute name="Class-Path" value="slf4j-api-1.6.2.jar kit-transactionserver-resources-1.0.0.jar logback-core-1.0.0.jar logback-classic-1.0.0.jar primitives_v1-2_mira_rev51a.jar"/>
+		</manifest>
+
+		<mkdir dir="build"/>
+
+		<jar jarfile="build/${jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="tmp/compiled"/>
+
+	</target>
 
 </project>
