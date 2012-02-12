@@ -4,9 +4,9 @@ import com.kit.lightserver.domain.types.TemplateEnumSTY;
 
 final class TemplateEnumSTYConverter {
 
-    static private final String CONHECIMENTOS_STRING = "xyz";
+    static private final String CONHECIMENTOS_STRING = "conhecimentos";
 
-    static private final String NOTAS_FISCAIS_STRING = "abc";
+    static private final String NOTAS_FISCAIS_STRING = "notasFiscais";
 
     static String convert(final TemplateEnumSTY templateEnumSTY) {
         final String result;

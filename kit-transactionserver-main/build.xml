@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="kit-transactionserver" default="compile" basedir=".">
+
+    <target name="compile">
+        <mkdir dir="tmp"/>
+        <javac srcdir="src" destdir="tmp" debug="off" deprecation="on" >
+        </javac>
+    </target>
+
+    <target name="GenerateJar" depends="compile">
+
+        <manifest file="MANIFEST.MF">
+            <attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
+            <attribute name="Main-Class" value="TestDatabaseConnection"/>
+            <attribute name="Class-Path" value="lib/sqljdbc_1.2/enu/sqljdbc.jar"/>
+        </manifest>
+
+        <mkdir dir="build"/>
+
+        <jar jarfile="build/testconnection.jar" manifest="MANIFEST.MF" basedir="tmp"/>
+
+    </target>
+
+</project>

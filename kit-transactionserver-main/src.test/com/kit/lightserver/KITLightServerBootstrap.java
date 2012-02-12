@@ -1,19 +1,26 @@
 package com.kit.lightserver;
 
-import br.pro.danielferber.bootstrap.BootstrapHandler;
 
-public final class KITLightServerBootstrap implements BootstrapHandler {
+public final class KITLightServerBootstrap {
 
-    private final KITLightServer kitLightServer = new KITLightServer(500);
+    static public void main(final String[] args) {
 
-    @Override
-    public void startServer() throws Exception {
+        KITLightServer kitLightServer = new KITLightServer(1000);
         kitLightServer.startServer();
+
+        Runtime.getRuntime().addShutdownHook(new ShutdownThread(kitLightServer));
+
     }
 
-    @Override
-    public void stopServer() throws Exception {
-        kitLightServer.stopServer();
-    }
+    static final class ShutdownThread extends Thread {
+        private final KITLightServer kitLightServer;
+        public ShutdownThread(final KITLightServer kitLightServer) {
+            this.kitLightServer = kitLightServer;
+        }
+        @Override
+        public void run() {
+            kitLightServer.stopServer();
+        }
+    }// class
 
 }// class

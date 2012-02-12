@@ -27,7 +27,7 @@ public final class KITLightServer {
 
     private final ServerSocket serverSocket;
 
-    public KITLightServer(final int poolingTimeOutInMillis) {
+    public KITLightServer(final int socketTimeout) {
 
         /*
          * TO log any unexpected exception
@@ -46,8 +46,8 @@ public final class KITLightServer {
 
         try {
             this.serverSocket = new ServerSocket(serverPort);
-            this.serverSocket.setSoTimeout(poolingTimeOutInMillis);
-            LOGGER.info("Server socket created. serverPort="+serverPort);
+            this.serverSocket.setSoTimeout(socketTimeout);
+            LOGGER.info("Server socket created. serverPort="+serverPort+", socketTimeout="+socketTimeout);
         }
         catch (final IOException e) {
             LOGGER.error("Unexpected error! Could not start the server. serverPort=" + serverPort, e);
@@ -111,6 +111,7 @@ public final class KITLightServer {
     }
 
     public void stopServer() {
+        LOGGER.info("Server is stopping.");
         isAlive = false;
     }
 
