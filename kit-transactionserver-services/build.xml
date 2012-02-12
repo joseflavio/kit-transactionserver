@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="kit-transactionserver-simplestatemachine" default="compile" basedir=".">
+<project name="kit-transactionserver-services" default="compile" basedir=".">
 
-	<property name="jar.name" value="kit-transactionserver-simplestatemachine"/>
+	<property name="jar.name" value="kit-transactionserver-services"/>
 
 	<property file="version.properties"/>
-	
-	<property name="lib.dir" value="../kit-transactionserver-main/"/>
+
+	<property name="lib.main.dir" value="../kit-transactionserver-main/"/>
 
 	<path id="project.classpath">
-		<fileset dir="${lib.dir}/lib">
+		<fileset dir="${lib.main.dir}/lib">
 			<include name="slf4j-api-1.6.2.jar"/>
+			<include name="joda-time-2.0.jar"/>
+			<include name="sqljdbc-1.2.jar"/>
+		</fileset>
+		<fileset dir="../kit-transactionserver-simplestatemachine/build">
+			<include name="kit-transactionserver-simplestatemachine-1.0.0.jar"/>
 		</fileset>
 	</path>
-	
+
 	<target name="compile">
 		<mkdir dir="tmp/compiled"/>
-		
+
 		<javac destdir="tmp/compiled" debug="off" deprecation="on">
 			<src path="src"/>
+			<src path="src.util"/>
 			<classpath refid="project.classpath"/>
 		</javac>
 	</target>
@@ -26,7 +32,6 @@
 		<mkdir dir="tmp/manifest"/>
 		<manifest file="tmp/manifest/MANIFEST.MF">
 			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>			
-			<attribute name="Class-Path" value="lib/slf4j-api-1.6.2.jar"/>
 		</manifest>
 
 		<mkdir dir="build"/>
