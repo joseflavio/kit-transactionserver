@@ -7,3 +7,4 @@
 2012-01-29 10:38:58,976 INFO [main] c.k.l.s.d.SelectQueryExecuter [SelectQueryExecuter.java:43] Query executed. elapsedTime=0.357486612s, result=QueryResultContainer [success=true, result=[]]
 2012-01-29 10:38:58,976 INFO [main] c.k.l.KITLightServer [KITLightServer.java:39] Server socket created. serverPort=3003
 /logs
+/lib
