@@ -1,0 +1,1 @@
+Para iniciar o servidor execute o comando 'start.cmd' dentro do diretório '/bin'.

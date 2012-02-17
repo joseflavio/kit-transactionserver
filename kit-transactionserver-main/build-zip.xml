@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="kit-transactionserver-zip" default="copy-dependencies" basedir=".">
+
+	<property name="tmp.dir" value="tmp/zip"/>
+
+	<target name="clean">
+		<delete dir="${tmp.dir}"/>
+	</target>
+
+	<target name="copy-dependencies" depends="clean">
+
+		<mkdir dir="${tmp.dir}/logs"/>
+		
+		<copy todir="${tmp.dir}/">
+			<fileset dir="working-dir" includes="**/*" />
+		</copy>
+
+		<copy todir="${tmp.dir}/lib/">
+			<fileset dir="build/" includes="*.jar" />
+		</copy>
+
+		<copy todir="${tmp.dir}/lib/">
+			<fileset dir="../kit-transactionserver-services/build" includes="*.jar" />
+		</copy>
+
+		<copy todir="${tmp.dir}/lib/">
+			<fileset dir="../kit-transactionserver-simplestatemachine/build" includes="*.jar" />
+		</copy>
+
+		<copy todir="${tmp.dir}/lib/">
+			<fileset dir="lib" includes="**/*.jar" />
+		</copy>
+
+	</target>
+
+</project>

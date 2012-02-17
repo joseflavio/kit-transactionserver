@@ -1,10 +1,2 @@
-2012-01-29 10:38:57,315 INFO [main] c.j.f.c.ConfigurationReader [ConfigurationReader.java:23] New configuration instance. source=class com.kit.lightserver.services.be.authentication.DatabaseConfiguration
-2012-01-29 10:38:57,315 INFO [main] c.k.l.s.b.a.DatabaseConnectionUtil [DatabaseConnectionUtil.java:28] Database configuration loaded. dbUrl=jdbc:sqlserver://srvkit.tinet.com.br:1433;databaseName=TESTDEV_JOSEFLAVIO_KEEPIN3_MIRA_DBV20111129        
-2012-01-29 10:38:57,355 INFO [main] c.k.l.s.b.a.DatabaseConnectionUtil [DatabaseConnectionUtil.java:35] Success loading jdbc driver class. driverClassName=com.microsoft.sqlserver.jdbc.SQLServerDriver
-2012-01-29 10:38:58,615 INFO [main] c.k.l.s.b.a.DatabaseConnectionUtil [DatabaseConnectionUtil.java:48] Connection open. openConnectionsCount=1
-2012-01-29 10:38:58,615 INFO [main] c.k.l.s.d.SelectQueryExecuter [SelectQueryExecuter.java:34] Executing query. queryName=com.kit.lightserver.services.db.authenticate.SelectLoggedInClientIdsQuery, printedSelectQuery=SELECT KTClientId FROM dbo.Authenticate WHERE KTUsuarioConectado=1
-2012-01-29 10:38:58,976 INFO [main] c.k.l.s.b.a.DatabaseConnectionUtil [DatabaseConnectionUtil.java:62] Connection closed. openConnectionsCount=0
-2012-01-29 10:38:58,976 INFO [main] c.k.l.s.d.SelectQueryExecuter [SelectQueryExecuter.java:43] Query executed. elapsedTime=0.357486612s, result=QueryResultContainer [success=true, result=[]]
-2012-01-29 10:38:58,976 INFO [main] c.k.l.KITLightServer [KITLightServer.java:39] Server socket created. serverPort=3003
-/logs
 /lib
+/logs
