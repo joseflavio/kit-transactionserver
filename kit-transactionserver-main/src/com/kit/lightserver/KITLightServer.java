@@ -10,6 +10,7 @@ import java.net.SocketTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.exception.LogUncaughtExceptionHandler;
 import com.kit.lightserver.adapters.adapterin.AdiClientListenerRunnable;
 import com.kit.lightserver.domain.types.ConnectionInfo;
@@ -21,13 +22,17 @@ public final class KITLightServer {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(KITLightServer.class);
 
+    private final ConfigAccessor configAccessor;
+
     private final int serverPort = 3003;
 
     private boolean isAlive = true;
 
     private final ServerSocket serverSocket;
 
-    public KITLightServer(final int socketTimeout) {
+    public KITLightServer(final int socketTimeout, final ConfigAccessor configAccessor) {
+
+        this.configAccessor = configAccessor;
 
         /*
          * TO log any unexpected exception
@@ -37,7 +42,9 @@ public final class KITLightServer {
         /*
          * Init services
          */
-        boolean authenticationServiceInitSuccess = AuthenticationService.initAndRecoverIfNecessary();
+        AuthenticationService authenticationService = AuthenticationService.getInstance(configAccessor);
+
+        boolean authenticationServiceInitSuccess = authenticationService.initAndRecoverIfNecessary();
         if( authenticationServiceInitSuccess == false ) {
             final String errorMessage = "An essencial service could not init. authenticationServiceInitSuccess="+authenticationServiceInitSuccess;
             LOGGER.error(errorMessage);
@@ -62,7 +69,7 @@ public final class KITLightServer {
     public void startServer() {
 
         while (isAlive) {
-            listenForNewConnections();
+            waitConnection();
         }// while
 
         try {
@@ -77,7 +84,7 @@ public final class KITLightServer {
 
     }
 
-    public void listenForNewConnections() {
+    public void waitConnection() {
         try {
 
             Socket clientSocket = serverSocket.accept(); // Blocks waiting to a Client connect
@@ -87,16 +94,14 @@ public final class KITLightServer {
             LOGGER.info("Connection accepted. connectionInfo=" + connectionInfo);
             ConnectionsLogger.logConnection(connectionInfo, clientInetAddress);
 
-
             /*
              * Forking a thread to deal with the external connection
              */
             String threadName = "T1:" + connectionInfo.getConnectionUniqueId();
-            AdiClientListenerRunnable clientListenerThread = new AdiClientListenerRunnable(clientSocket, connectionInfo);
+            AdiClientListenerRunnable clientListenerThread = new AdiClientListenerRunnable(clientSocket, configAccessor, connectionInfo);
             Thread thread = new Thread(clientListenerThread, threadName);
             thread.start();
 
-            isAlive = false;
         }
         catch (final SocketTimeoutException e) {
             // Expected exception

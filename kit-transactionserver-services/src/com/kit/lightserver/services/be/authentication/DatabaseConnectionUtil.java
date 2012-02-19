@@ -13,21 +13,17 @@ public final class DatabaseConnectionUtil {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(DatabaseConnectionUtil.class);
 
-    static private final DatabaseConnectionUtil INSTANCE = new DatabaseConnectionUtil();
-
     static private final String driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
-    static public DatabaseConnectionUtil getInstance() {
+    static private final DatabaseConnectionUtil INSTANCE = new DatabaseConnectionUtil();
+
+    static public DatabaseConnectionUtil getInstance2() {
         return INSTANCE;
     }
-
-    private final DatabaseConfiguration dbConfig = new DatabaseConfiguration();
 
     private int openConnectionsCount = 0;
 
     private DatabaseConnectionUtil() {
-
-        LOGGER.info("Database configuration loaded. dbUrl="+dbConfig.getDbUrl());
 
         /*
          * Loads Microsoft SQLServer Database Driver
@@ -41,7 +37,7 @@ public final class DatabaseConnectionUtil {
 
     }// constructor
 
-    public synchronized Connection getConnection() {
+    public synchronized Connection getConnection(final DatabaseConfiguration dbConfig) {
 
         try {
             final Connection connection = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getDbPassword());
@@ -53,7 +49,6 @@ public final class DatabaseConnectionUtil {
             LOGGER.error("Could not open a new connection. openConnectionsCount=" + openConnectionsCount, e);
             return null;
         }
-
 
     }
 

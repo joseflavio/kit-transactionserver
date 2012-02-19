@@ -62,7 +62,8 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         final InstallationIdSTY installationId = authenticationRequestSME.getInstallationIdSTY();
 
 
-        final AuthenticationServiceResponse authenticationResponse = AuthenticationService.authenticate(context.getConnectionId(), userClientId, password,
+        final AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
+        final AuthenticationServiceResponse authenticationResponse = authenticationService.authenticate(context.getConnectionInfo(), userClientId, password,
                 installationId);
 
         LOGGER.info("Authentication complete. authenticationResponse=" + authenticationResponse);
@@ -99,24 +100,6 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         context.setClientInfo(clientInfo);
 
         return newState;
-
-        // final boolean requestClientToBeReseted;
-        // if (databaseRequestReset || clientNewLogin) {
-        // requestClientToBeReseted = true;
-        // } else {
-        // requestClientToBeReseted = false;
-        // }
-
-        // FormOperation resetClient = MobilePrimitiveFactory.createFormOperation_Reset();
-
-        // ChannelProgress progress = MobilePrimitiveFactory.createChannelProgress(currentForms, preSteps);
-
-        // FormContentFull currentForm = getDataResponse(controlBean);
-
-        // AuthenticationResponseFailedRSTY authenticationResponseErrorSTY = new AuthenticationResponseFailedRSTY();
-        // kitStateStateThread.enqueueToSend(authenticationResponseErrorSTY);
-        // ChannelNotificationEndConversationRSTY end = new ChannelNotificationEndConversationRSTY();
-        // kitStateStateThread.enqueueToSend(end);
 
     }
 

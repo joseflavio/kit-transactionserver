@@ -6,14 +6,21 @@ import java.util.List;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.db.SelectQueryResult;
+import com.kit.lightserver.services.be.authentication.DatabaseConfiguration;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
+import com.kit.lightserver.services.db.SelectQueryResult;
 import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQuery;
 import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQueryResultAdapter;
 
-final class NotasfiscaisServices {
+final class FormNotasfiscaisOperations {
 
-    static SimpleServiceResponse<List<NotafiscalSTY>> retrieveNotasfiscais(final List<ConhecimentoSTY> conhecimentoList,
+    private final DatabaseConfiguration dbConfig;
+
+    FormNotasfiscaisOperations(final DatabaseConfiguration dbConfig) {
+        this.dbConfig = dbConfig;
+    }
+
+    SimpleServiceResponse<List<NotafiscalSTY>> retrieveNotasfiscais(final List<ConhecimentoSTY> conhecimentoList,
             final boolean retrieveSomenteNaoRecebidos) {
 
         /*
@@ -34,7 +41,7 @@ final class NotasfiscaisServices {
 
         if (parentKnowledgeRowIdList.size() > 0) {
             final SelectNotasfiscaisQuery notasfiscaisQuery = new SelectNotasfiscaisQuery(parentKnowledgeRowIdList, retrieveSomenteNaoRecebidos);
-            final SelectQueryResult<List<NotafiscalSTY>> notasfiscaisQueryResult = notasfiscaisQueryExecuter.executeSelectQuery(notasfiscaisQuery);
+            final SelectQueryResult<List<NotafiscalSTY>> notasfiscaisQueryResult = notasfiscaisQueryExecuter.executeSelectQuery(dbConfig, notasfiscaisQuery);
             if (notasfiscaisQueryResult.isQuerySuccessful() == false) {
                 final SimpleServiceResponse<List<NotafiscalSTY>> errorServiceResponse = new SimpleServiceResponse<List<NotafiscalSTY>>();
                 return errorServiceResponse;

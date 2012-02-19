@@ -4,7 +4,7 @@
 	<property name="jar.name" value="kit-transactionserver-main"/>
 
 	<property name="resources.jar.name" value="kit-transactionserver-resources"/>
-	
+
 	<property file="version.properties"/>
 
 	<property name="lib.main.dir" value="../kit-transactionserver-main/"/>
@@ -33,14 +33,19 @@
 		</javac>
 	</target>
 
+	<target name="jar-all-local" depends="compile">
+		<antcall target="jar">
+			<param name="build.dest.dir" value="build"/>
+		</antcall>
+	</target>
+
 	<target name="jar-resources">
 		<mkdir dir="tmp/manifest"/>
 		<manifest file="tmp/manifest/MANIFEST.MF">
 			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
 		</manifest>
-		<mkdir dir="build"/>
-		<jar jarfile="build/${resources.jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="src.resources"/>
-
+		<mkdir dir="${build.dest.dir}"/>
+		<jar jarfile="${build.dest.dir}/${resources.jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="src.resources"/>
 	</target>
 
 	<target name="jar" depends="compile,jar-resources">
@@ -50,11 +55,8 @@
 			<attribute name="Main-Class" value="com.kit.lightserver.KITLightServerBootstrap"/>
 			<attribute name="Class-Path" value="slf4j-api-1.6.2.jar logback-core-1.0.0.jar logback-classic-1.0.0.jar sqljdbc-1.2.jar primitives_v1-2_mira_rev51a.jar kit-transactionserver-resources-1.0.0.jar kit-transactionserver-services-1.0.0.jar kit-transactionserver-simplestatemachine-1.0.0.jar"/>
 		</manifest>
-
-		<mkdir dir="build"/>
-
-		<jar jarfile="build/${jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="tmp/compiled"/>
-
+		<mkdir dir="${build.dest.dir}"/>
+		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="tmp/compiled"/>
 	</target>
 
 </project>

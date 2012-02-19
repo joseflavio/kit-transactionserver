@@ -11,6 +11,7 @@ import kit.primitives.factory.PrimitiveStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.adapters.logger.AdaptersLogger;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.loggers.connectionlogger.ConnectionsLogger;
@@ -25,7 +26,7 @@ public final class AdiClientListenerRunnable implements Runnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(AdiClientListenerRunnable.class);
 
-    static private final int ADAPTER_IN_TIMEOUT_IN_MILLIS = 30000; // 180000;// 180000=180s in production and 7000=7s in tests
+    static private final int ADAPTER_IN_TIMEOUT_IN_MILLIS = 180000; // 30s in tests
 
     private final Socket socket;
 
@@ -35,10 +36,10 @@ public final class AdiClientListenerRunnable implements Runnable {
 
     private final Thread kitStateMachineThread;
 
-    public AdiClientListenerRunnable(final Socket givenSocket, final ConnectionInfo connectionInfo) {
+    public AdiClientListenerRunnable(final Socket givenSocket, final ConfigAccessor configAccessor, final ConnectionInfo connectionInfo) {
         this.socket = givenSocket;
         this.connectionInfo = connectionInfo;
-        this.kitStateMachineRunnable = new KITStateMachineRunnable(givenSocket, connectionInfo);
+        this.kitStateMachineRunnable = new KITStateMachineRunnable(givenSocket, configAccessor, connectionInfo);
         final String threadName = "T2:" + connectionInfo.getConnectionUniqueId();
         this.kitStateMachineThread = new Thread(kitStateMachineRunnable, threadName);
     }// constructor

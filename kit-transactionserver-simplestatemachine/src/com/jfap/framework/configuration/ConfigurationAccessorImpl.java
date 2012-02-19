@@ -2,11 +2,11 @@ package com.jfap.framework.configuration;
 
 import java.util.Properties;
 
-public final class ConfigurationAccessor {
+public final class ConfigurationAccessorImpl implements ConfigAccessor {
 
     private final Properties properties;
 
-    ConfigurationAccessor(final Properties properties) {
+    public ConfigurationAccessorImpl(final Properties properties) {
         this.properties = properties;
     }
 
@@ -18,6 +18,7 @@ public final class ConfigurationAccessor {
         return true;
     }
 
+    @Override
     public String getMandatoryProperty(final String propertyName) {
         final String propertyValue = properties.getProperty(propertyName);
         if (propertyValue == null) {

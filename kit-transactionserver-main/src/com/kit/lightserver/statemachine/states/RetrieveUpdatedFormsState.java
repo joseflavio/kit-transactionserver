@@ -40,8 +40,11 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
 
             LOGGER.error("Unimplemented event. event=" + event);
 
+            FormServices formServices = FormServices.getInstance(context.getConfigAccessor());
+
             final String ktClientId = context.getClientInfo().getKtClientId();
-            final boolean serviceSuccess = FormServices.flagFormsAsRead(ktClientId);
+            final boolean serviceSuccess = formServices.flagFormsAsRead(ktClientId);
+
             if (serviceSuccess == false) {
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
                 result = new ResultStateTransition<KitEventSME>(errorState);

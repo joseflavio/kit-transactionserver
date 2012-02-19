@@ -1,11 +1,21 @@
 package com.kit.lightserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.jfap.framework.configuration.ConfigAccessor;
+import com.jfap.framework.configuration.ConfigurationReader;
+
 
 public final class KITLightServerBootstrap {
 
+    static private final Logger LOGGER = LoggerFactory.getLogger(KITLightServerBootstrap.class);
+
     static public void main(final String[] args) {
 
-        KITLightServer kitLightServer = new KITLightServer(1000);
+        ConfigAccessor configAccessor = ConfigurationReader.getConfiguration();
+
+        KITLightServer kitLightServer = new KITLightServer(1000, configAccessor);
         kitLightServer.startServer();
 
         Runtime.getRuntime().addShutdownHook(new ShutdownThread(kitLightServer));
@@ -19,6 +29,7 @@ public final class KITLightServerBootstrap {
         }
         @Override
         public void run() {
+            LOGGER.warn("Shutdown hook triggered.");
             kitLightServer.stopServer();
         }
     }// class

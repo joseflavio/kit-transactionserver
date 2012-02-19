@@ -41,7 +41,9 @@ public final class MachineEndedState implements StateSME<KitEventSME> {
                     clientMustResetInNextConnection = true; // If any problem occurred the client will be reset in the next time
                 }
 
-                final boolean logOffSuccessfull = AuthenticationService.logOff(clientInfo.getKtClientId(), clientMustResetInNextConnection);
+                final AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
+                final boolean logOffSuccessfull = authenticationService.logOff(clientInfo.getKtClientId(), clientMustResetInNextConnection);
+
                 if (logOffSuccessfull == true) {
                     LOGGER.info("Success logging off. clientInfo=" + clientInfo);
                 } else {

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jfap.chronometer.Chronometer;
+import com.kit.lightserver.services.be.authentication.DatabaseConfiguration;
 import com.kit.lightserver.services.be.authentication.DatabaseConnectionUtil;
 import com.kit.lightserver.services.db.logger.DatabaseLogger;
 
@@ -16,9 +17,9 @@ public final class UpdateQueryExecuter {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(UpdateQueryExecuter.class);
 
-    static public UpdateQueryResult executeUpdateQuery(final UpdateQueryInterface updateQuery) {
+    static public UpdateQueryResult executeUpdateQuery(final DatabaseConfiguration dbConfig, final UpdateQueryInterface updateQuery) {
 
-        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection();
+        final Connection connection = DatabaseConnectionUtil.getInstance2().getConnection(dbConfig);
         if (connection == null) {
             final UpdateQueryResult failResult = new UpdateQueryResult();
             return failResult;
@@ -33,7 +34,7 @@ public final class UpdateQueryExecuter {
 
         DatabaseLogger.logUpdateResult(chronometer, result);
 
-        DatabaseConnectionUtil.getInstance().closeConnection(connection);
+        DatabaseConnectionUtil.getInstance2().closeConnection(connection);
 
         return result;
 

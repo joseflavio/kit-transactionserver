@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.statemachine.StateMachine;
 import com.jfap.framework.statemachine.StateSME;
 import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
@@ -26,16 +27,18 @@ public final class KITStateMachineRunnable implements Runnable {
 
     private final StateMachine<KitEventSME> kitStateState;
 
-    private final ConnectionInfo connectionId;
-
-    private final ClientAdapterOut clientAdapterOut;
+    private final StateMachineMainContext stateMachineContext;
 
     private boolean canEnqueue = false; // In the runnable I can not access thread.isAlive()
 
-    public KITStateMachineRunnable(final Socket socket, final ConnectionInfo connectionId) {
-        this.connectionId = connectionId;
+    private final ClientAdapterOut clientAdapterOut;
+
+    public KITStateMachineRunnable(final Socket socket, final ConfigAccessor configAccessor, final ConnectionInfo connectionId) {
+
         this.clientAdapterOut = new ClientAdapterOut(socket);
+        this.stateMachineContext = new StateMachineMainContext(clientAdapterOut, configAccessor, connectionId);
         this.kitStateState = new StateMachine<KitEventSME>();
+
     }// constructor
 
     private synchronized void setCanEnqueue(final boolean canEnqueue) { //TODO: Remove all synchronized and use locks
@@ -63,8 +66,8 @@ public final class KITStateMachineRunnable implements Runnable {
     @Override
     public void run() { // be careful it can never be synchronized can cause deadlocks
 
-        final StateMachineMainContext generalContext = new StateMachineMainContext(clientAdapterOut, connectionId);
-        final StateSME<KitEventSME> initialState = new InitialState(generalContext);
+
+        final StateSME<KitEventSME> initialState = new InitialState(stateMachineContext);
         kitStateState.start(initialState);
 
         setCanEnqueue(true);

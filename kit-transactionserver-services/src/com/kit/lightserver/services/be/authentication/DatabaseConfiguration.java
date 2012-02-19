@@ -1,12 +1,22 @@
 package com.kit.lightserver.services.be.authentication;
 
-import com.jfap.framework.configuration.ConfigurationAccessor;
-import com.jfap.framework.configuration.ConfigurationReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.configuration.IntegerAdapter;
 
-final class DatabaseConfiguration {
+final public class DatabaseConfiguration {
 
-    static private final ConfigurationAccessor CONFIG = ConfigurationReader.getConfiguration(DatabaseConfiguration.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
+
+    static public DatabaseConfiguration getInstance(final ConfigAccessor accessor) {
+        final DatabaseConfiguration dbConfig = new DatabaseConfiguration(accessor);
+        LOGGER.info("Configuration loaded. dbConfig="+dbConfig);
+        return dbConfig;
+    }
+
+    //static private final ConfigurationAccessor CONFIG = ConfigurationReader.getConfiguration(DatabaseConfiguration.class);
 
     private final String dbHost;
     private final int dbPort;
@@ -14,12 +24,12 @@ final class DatabaseConfiguration {
     private final String dbUser;
     private final String dbPassword;
 
-    DatabaseConfiguration() {
-        this.dbHost = CONFIG.getMandatoryProperty("database.host");
-        this.dbPort = CONFIG.getMandatoryProperty("database.port", new IntegerAdapter()).intValue();
-        this.dbName = CONFIG.getMandatoryProperty("database.name");
-        this.dbUser = CONFIG.getMandatoryProperty("database.user");
-        this.dbPassword = CONFIG.getMandatoryProperty("database.password");
+    private DatabaseConfiguration(final ConfigAccessor accessor) {
+        this.dbHost = accessor.getMandatoryProperty("database.host");
+        this.dbPort = accessor.getMandatoryProperty("database.port", new IntegerAdapter()).intValue();
+        this.dbName = accessor.getMandatoryProperty("database.name");
+        this.dbUser = accessor.getMandatoryProperty("database.user");
+        this.dbPassword = accessor.getMandatoryProperty("database.password");
     }
 
     String getDbUrl() {

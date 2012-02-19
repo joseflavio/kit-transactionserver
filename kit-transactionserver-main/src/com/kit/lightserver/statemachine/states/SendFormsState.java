@@ -96,8 +96,10 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
             /*
              * Flags the the forms were successful received
              */
+            final FormServices formServices = FormServices.getInstance(context.getConfigAccessor());
+
             final String ktClientId = context.getClientInfo().getKtClientId();
-            final boolean serviceSuccess = FormServices.flagFormsAsReceived(ktClientId, communicationCTX.getFormsSentWaitingForConfirmationList());
+            final boolean serviceSuccess = formServices.flagFormsAsReceived(ktClientId, communicationCTX.getFormsSentWaitingForConfirmationList());
             if (serviceSuccess == false) {
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
                 return new ResultStateTransition<KitEventSME>(errorState);

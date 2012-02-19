@@ -28,16 +28,25 @@
 		</javac>
 	</target>
 
+	<target name="jar-local" depends="compile">
+		<antcall target="jar">
+			<param name="build.dest.dir" value="build"/>
+		</antcall>
+	</target>
+
 	<target name="jar" depends="compile">
+		
+		<fail message="Missing mandatory property.">
+		    <condition><not><isset property="build.dest.dir"/></not></condition>
+		</fail>
+		
 		<mkdir dir="tmp/manifest"/>
 		<manifest file="tmp/manifest/MANIFEST.MF">
-			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>			
+			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
 		</manifest>
-
-		<mkdir dir="build"/>
-
-		<jar jarfile="build/${jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="tmp/compiled"/>
-
+		<mkdir dir="${build.dest.dir}"/>
+		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="tmp/compiled"/>
+		
 	</target>
 
 </project>

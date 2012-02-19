@@ -7,24 +7,30 @@
 		<delete dir="${tmp.dir}"/>
 	</target>
 
-	<target name="copy-dependencies" depends="clean">
+	<target name="build-all-jars" depends="clean">
+
+		<property name="build.lib.dir" value="../kit-transactionserver-main/${tmp.dir}/lib"/>
+
+		<ant antfile="build.xml" target="jar">
+			<property name="build.dest.dir" value="${build.lib.dir}"/>
+		</ant>
+
+		<ant dir="../kit-transactionserver-services" antfile="build.xml" target="jar">
+			<property name="build.dest.dir" value="${build.lib.dir}"/>
+		</ant>
+
+		<ant dir="../kit-transactionserver-simplestatemachine" antfile="build.xml" target="jar">
+			<property name="build.dest.dir" value="${build.lib.dir}"/>
+		</ant>
+
+	</target>
+
+	<target name="copy-dependencies" depends="build-all-jars">
 
 		<mkdir dir="${tmp.dir}/logs"/>
-		
+
 		<copy todir="${tmp.dir}/">
 			<fileset dir="working-dir" includes="**/*" />
-		</copy>
-
-		<copy todir="${tmp.dir}/lib/">
-			<fileset dir="build/" includes="*.jar" />
-		</copy>
-
-		<copy todir="${tmp.dir}/lib/">
-			<fileset dir="../kit-transactionserver-services/build" includes="*.jar" />
-		</copy>
-
-		<copy todir="${tmp.dir}/lib/">
-			<fileset dir="../kit-transactionserver-simplestatemachine/build" includes="*.jar" />
 		</copy>
 
 		<copy todir="${tmp.dir}/lib/">

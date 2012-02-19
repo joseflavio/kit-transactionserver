@@ -7,14 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jfap.chronometer.Chronometer;
+import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.util.collections.SmartCollections;
 import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.db.SelectQueryResult;
+import com.kit.lightserver.services.be.authentication.DatabaseConfiguration;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
+import com.kit.lightserver.services.db.SelectQueryResult;
 import com.kit.lightserver.services.db.UpdateQueryExecuter;
 import com.kit.lightserver.services.db.UpdateQueryResult;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
@@ -26,13 +28,29 @@ public final class FormServices {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(FormServices.class);
 
-    static public SimpleServiceResponse<FormsParaEnviarCTX> retrieveCurrentForms(final String ktUserClientId, final boolean retrieveSomenteNaoRecebidos) {
+    static public FormServices getInstance(final ConfigAccessor configAccessor) {
+        DatabaseConfiguration dbConfig = DatabaseConfiguration.getInstance(configAccessor);
+        return new FormServices(dbConfig);
+    }
+
+    // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private final DatabaseConfiguration dbConfig;
+
+    private final FormNotasfiscaisOperations formNotasfiscaisOperations;
+
+    private FormServices(final DatabaseConfiguration dbConfig) {
+        this.dbConfig = dbConfig;
+        this.formNotasfiscaisOperations = new FormNotasfiscaisOperations(dbConfig);
+    }
+
+    public SimpleServiceResponse<FormsParaEnviarCTX> retrieveCurrentForms(final String ktUserClientId, final boolean retrieveSomenteNaoRecebidos) {
 
         SelectConhecimentosQueryResultAdapter conhecimentosAdapter = new SelectConhecimentosQueryResultAdapter();
         SelectConhecimentosQuery conhecimentosQuery = new SelectConhecimentosQuery(ktUserClientId, retrieveSomenteNaoRecebidos);
 
         SelectQueryExecuter<List<ConhecimentoSTY>> conhecimentosQueryExecuter = new SelectQueryExecuter<List<ConhecimentoSTY>>(conhecimentosAdapter);
-        SelectQueryResult<List<ConhecimentoSTY>> conhecimentosQueryResult = conhecimentosQueryExecuter.executeSelectQuery(conhecimentosQuery);
+        SelectQueryResult<List<ConhecimentoSTY>> conhecimentosQueryResult = conhecimentosQueryExecuter.executeSelectQuery(dbConfig, conhecimentosQuery);
         if (conhecimentosQueryResult.isQuerySuccessful() == false) {
             final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();
             return errorServiceResponse;
@@ -41,10 +59,11 @@ public final class FormServices {
         List<ConhecimentoSTY> conhecimentosList = conhecimentosQueryResult.getResult();
         FormServices.LOGGER.debug("conhecimentoList.size()=" + conhecimentosList.size());
 
-        //TODO: Usar um método melhor de salvar estatisticas dos serviços
+        // TODO: Usar um método melhor de salvar estatisticas dos serviços
         final Chronometer chronometer = new Chronometer("NotasfiscaisServices.retrieveNotasfiscais");
         chronometer.start();
-        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = NotasfiscaisServices.retrieveNotasfiscais(conhecimentosList, retrieveSomenteNaoRecebidos);
+        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = formNotasfiscaisOperations.retrieveNotasfiscais(conhecimentosList,
+                retrieveSomenteNaoRecebidos);
         chronometer.stop();
         FormServices.LOGGER.info(chronometer.getLogString());
 
@@ -64,7 +83,7 @@ public final class FormServices {
 
     }
 
-    static public boolean flagFormsAsReceived(final String ktClientId, final List<FormSTY> forms) {
+    public boolean flagFormsAsReceived(final String ktClientId, final List<FormSTY> forms) {
 
         final List<ConhecimentoSTY> conhecimentos = new LinkedList<ConhecimentoSTY>();
         SmartCollections.specialFilter(conhecimentos, forms, new ConhecimentoFilter());
@@ -72,26 +91,26 @@ public final class FormServices {
         final List<NotafiscalSTY> notasfiscais = new LinkedList<NotafiscalSTY>();
         SmartCollections.specialFilter(notasfiscais, forms, new NotafiscalFilter());
 
-        LOGGER.info("Updating forms flags. forms="+forms.size()+", conhecimentos="+conhecimentos.size()+", notasfiscais="+notasfiscais.size());
+        LOGGER.info("Updating forms flags. forms=" + forms.size() + ", conhecimentos=" + conhecimentos.size() + ", notasfiscais=" + notasfiscais.size());
 
-        if( conhecimentos.size() == 0 ) {
+        if (conhecimentos.size() == 0) {
             LOGGER.info("No 'conhecimentos' to update.");
         }
         else {
             final UpdateConhecimentosFlagsQuery updateConhecimentoRecebidoFlagQuery = new UpdateConhecimentosFlagsQuery("Recebido", ktClientId, conhecimentos);
-            final UpdateQueryResult conhecimentosFlagResult = UpdateQueryExecuter.executeUpdateQuery(updateConhecimentoRecebidoFlagQuery);
-            if( conhecimentosFlagResult.isUpdateQuerySuccessful() == false ) {
+            final UpdateQueryResult conhecimentosFlagResult = UpdateQueryExecuter.executeUpdateQuery(dbConfig, updateConhecimentoRecebidoFlagQuery);
+            if (conhecimentosFlagResult.isUpdateQuerySuccessful() == false) {
                 LOGGER.error("Error updating the flag");
             }
         }
 
-        if( notasfiscais.size() == 0 ) {
+        if (notasfiscais.size() == 0) {
             LOGGER.info("No 'notasfiscais' to update.");
         }
         else {
             final UpdateNotafiscaisFlagsQuery updateNotasfiscaisRecebidasFlagQuery = new UpdateNotafiscaisFlagsQuery("Recebido", notasfiscais);
-            final UpdateQueryResult notasfiscaisFlagResult = UpdateQueryExecuter.executeUpdateQuery(updateNotasfiscaisRecebidasFlagQuery);
-            if( notasfiscaisFlagResult.isUpdateQuerySuccessful() == false ) {
+            final UpdateQueryResult notasfiscaisFlagResult = UpdateQueryExecuter.executeUpdateQuery(dbConfig, updateNotasfiscaisRecebidasFlagQuery);
+            if (notasfiscaisFlagResult.isUpdateQuerySuccessful() == false) {
                 LOGGER.error("Error updating the flag");
             }
         }
@@ -100,7 +119,7 @@ public final class FormServices {
 
     }
 
-    static public boolean flagFormsAsRead(final String ktClientId) {
+    public boolean flagFormsAsRead(final String ktClientId) {
         // TODO Auto-generated method stub
         return false;
     }

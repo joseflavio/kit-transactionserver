@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.InsertQueryResult;
@@ -18,12 +19,23 @@ public final class AuthenticationService {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
-    /**
-     * @return true If the service is successfully init.
-     */
-    static public boolean initAndRecoverIfNecessary() {
+    static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
+        DatabaseConfiguration dbConfig = DatabaseConfiguration.getInstance(configAccessor);
+        return new AuthenticationService(dbConfig);
+    }
 
-        final SelectQueryResult<List<String>> queryResult = TableAuthenticateOperations.selectLoggedInClients();
+    private final TableLogConexoesOperations logConexoesOperations;
+
+    private final TableAuthenticateOperations tableAuthenticateOperations;
+
+    private AuthenticationService(final DatabaseConfiguration dbConfig) {
+        this.logConexoesOperations = new TableLogConexoesOperations(dbConfig);
+        this.tableAuthenticateOperations = new TableAuthenticateOperations(dbConfig);
+    }
+
+    public boolean initAndRecoverIfNecessary() {
+
+        final SelectQueryResult<List<String>> queryResult = tableAuthenticateOperations.selectLoggedInClients();
         if(queryResult.isQuerySuccessful() == false ) {
             return false;
         }
@@ -31,7 +43,7 @@ public final class AuthenticationService {
         final List<String> ktClientIdsLoggedIn = queryResult.getResult();
         if( ktClientIdsLoggedIn.size() > 0 ) {
             LOGGER.warn("Problems since last server shutdown. ktClientIdsLoggedIn=" + ktClientIdsLoggedIn);
-            UpdateQueryResult updateResult = TableAuthenticateOperations.updateAllLoggedInClientsToLoggedOff();
+            UpdateQueryResult updateResult = tableAuthenticateOperations.updateAllLoggedInClientsToLoggedOff();
             if( updateResult.isUpdateQuerySuccessful() == false ) {
                 return false;
             }
@@ -43,14 +55,14 @@ public final class AuthenticationService {
 
     }
 
-    static public AuthenticationServiceResponse authenticate(final ConnectionInfo connectionId, final String userClientId, final String password,
+    public AuthenticationServiceResponse authenticate(final ConnectionInfo connectionId, final String userClientId, final String password,
             final InstallationIdSTY installationId) {
 
-        final AuthenticationServiceResponse authenticationResponse = AuthenticationService.checkAuthentication(userClientId, password);
+        final AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
 
         final int status = TableLogConexoesConstants.convertToStatus(authenticationResponse);
 
-        final InsertQueryResult registerConnectionResult = TableLogConexoesOperations.registerConnection(connectionId, installationId, userClientId, status);
+        final InsertQueryResult registerConnectionResult = logConexoesOperations.registerConnection(connectionId, installationId, userClientId, status);
 
         if (registerConnectionResult.isQuerySuccessfullyExecuted() == false) {
             LOGGER.error("Unexpected error when loggin the connection. ktConexaoId=" + connectionId + ", registerConnectionResult=" + registerConnectionResult);
@@ -60,9 +72,9 @@ public final class AuthenticationService {
 
     }
 
-    static private AuthenticationServiceResponse checkAuthentication(final String userClientId, final String password) {
+    private AuthenticationServiceResponse checkAuthentication(final String userClientId, final String password) {
 
-        final SelectQueryResult<AuthenticateQueryResult> resultContainer = TableAuthenticateOperations.selectClientIdExists(userClientId);
+        final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(userClientId);
         LOGGER.info("resultContainer="+resultContainer);
 
         if( resultContainer.isQuerySuccessful() == false ) { // Just checking if the query was successful
@@ -90,7 +102,7 @@ public final class AuthenticationService {
          * Success
          * ...but it still needs to update the last authentication
          */
-        final UpdateQueryResult updateLastAuthenticationResultContainer = TableAuthenticateOperations.updateClientLoggedIn(userClientId);
+        final UpdateQueryResult updateLastAuthenticationResultContainer = tableAuthenticateOperations.updateClientLoggedIn(userClientId);
         if( updateLastAuthenticationResultContainer.isUpdateQuerySuccessful() == false ) {
             return AuthenticationServiceResponse.ERROR;
         }
@@ -106,9 +118,9 @@ public final class AuthenticationService {
 
     }
 
-    static public boolean logOff(final String ktClientId, final boolean mustResetInNextConnection) {
+    public boolean logOff(final String ktClientId, final boolean mustResetInNextConnection) {
 
-        final UpdateQueryResult result = TableAuthenticateOperations.updateClientLoggedOff(ktClientId, mustResetInNextConnection);
+        final UpdateQueryResult result = tableAuthenticateOperations.updateClientLoggedOff(ktClientId, mustResetInNextConnection);
         if (result.isUpdateQuerySuccessful() == false) {
             return false;
         }

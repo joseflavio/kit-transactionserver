@@ -4,7 +4,7 @@
 	<property name="jar.name" value="kit-transactionserver-simplestatemachine"/>
 
 	<property file="version.properties"/>
-	
+
 	<property name="lib.dir" value="../kit-transactionserver-main/"/>
 
 	<path id="project.classpath">
@@ -12,26 +12,31 @@
 			<include name="slf4j-api-1.6.2.jar"/>
 		</fileset>
 	</path>
-	
+
 	<target name="compile">
 		<mkdir dir="tmp/compiled"/>
-		
+
 		<javac destdir="tmp/compiled" debug="off" deprecation="on">
 			<src path="src"/>
 			<classpath refid="project.classpath"/>
 		</javac>
 	</target>
 
+	<target name="jar-all-local" depends="compile">
+		<antcall target="jar">
+			<param name="build.dest.dir" value="build"/>
+		</antcall>
+	</target>
+
 	<target name="jar" depends="compile">
 		<mkdir dir="tmp/manifest"/>
 		<manifest file="tmp/manifest/MANIFEST.MF">
-			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>			
+			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
 			<attribute name="Class-Path" value="lib/slf4j-api-1.6.2.jar"/>
 		</manifest>
 
-		<mkdir dir="build"/>
-
-		<jar jarfile="build/${jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="tmp/compiled"/>
+		<mkdir dir="${build.dest.dir}"/>
+		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="tmp/compiled"/>
 
 	</target>
 
