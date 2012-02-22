@@ -1,7 +1,6 @@
 package com.kit.lightserver.loggers.connectionlogger;
 
 import java.net.InetAddress;
-import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +15,8 @@ public final class ConnectionsLogger {
         LOGGER.info("[CONNECTION ACCEPTED] connectionInfo="+connectionInfo+", clientInetAddress="+clientInetAddress);
     }
 
-    static public void logConnectionClosed(final ConnectionInfo connectionInfo, final Socket socket) {
-        LOGGER.info("[CONNECTION CLOSED] connectionInfo="+connectionInfo+", socket="+socket);
+    static public void logConnectionClosed(final ConnectionInfo connectionInfo) {
+        LOGGER.info("[CONNECTION CLOSED] connectionInfo="+connectionInfo);
     }
 
 }// class

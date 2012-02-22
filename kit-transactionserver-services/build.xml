@@ -12,8 +12,6 @@
 			<include name="slf4j-api-1.6.2.jar"/>
 			<include name="joda-time-2.0.jar"/>
 			<include name="sqljdbc-1.2.jar"/>
-		</fileset>
-		<fileset dir="../kit-transactionserver-simplestatemachine/build">
 			<include name="kit-transactionserver-simplestatemachine-1.0.0.jar"/>
 		</fileset>
 	</path>

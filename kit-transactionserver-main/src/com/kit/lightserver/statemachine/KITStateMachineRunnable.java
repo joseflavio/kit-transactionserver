@@ -1,6 +1,5 @@
 package com.kit.lightserver.statemachine;
 
-import java.net.Socket;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,9 +32,9 @@ public final class KITStateMachineRunnable implements Runnable {
 
     private final ClientAdapterOut clientAdapterOut;
 
-    public KITStateMachineRunnable(final Socket socket, final ConfigAccessor configAccessor, final ConnectionInfo connectionId) {
+    public KITStateMachineRunnable(final ClientAdapterOut clientAdapterOut, final ConfigAccessor configAccessor, final ConnectionInfo connectionId) {
 
-        this.clientAdapterOut = new ClientAdapterOut(socket);
+        this.clientAdapterOut = clientAdapterOut;
         this.stateMachineContext = new StateMachineMainContext(clientAdapterOut, configAccessor, connectionId);
         this.kitStateState = new StateMachine<KitEventSME>();
 

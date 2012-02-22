@@ -2,7 +2,6 @@ package com.kit.lightserver.adapters.adapterout;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 
 import kit.primitives.base.Primitive;
 import kit.primitives.factory.PrimitiveStreamFactory;
@@ -11,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.adapters.logger.AdaptersLogger;
+import com.kit.lightserver.network.SocketWrapper;
 
 final class ClientAdapterOutSender {
 
@@ -20,21 +20,18 @@ final class ClientAdapterOutSender {
 
     private boolean validToSend = false;
 
-    public ClientAdapterOutSender(final Socket socket) {
+    private final SocketWrapper socketWrapper;
 
-        try {
-            dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            validToSend = true;
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
+    public ClientAdapterOutSender(final SocketWrapper socketWrapper) {
+        this.socketWrapper = socketWrapper;
+        this.dataOutputStream = socketWrapper.getDataOutputStream();
+        this.validToSend = true;
 
     }// constructor
 
     final void sendToTheClientSocket(final Primitive clientPrimitive) {
         try {
             AdaptersLogger.logSending(clientPrimitive);
-
             PrimitiveStreamFactory.writePrimitive(dataOutputStream, clientPrimitive);
         } catch (final IOException e) {
             closeOutput();
@@ -44,12 +41,7 @@ final class ClientAdapterOutSender {
 
     void closeOutput() {
         validToSend = false;
-        try {
-            dataOutputStream.close();
-            LOGGER.info("Data output stream is closed.");
-        } catch (final IOException e) {
-            LOGGER.error("Error closing the dataOutputStream.", e);
-        }
+        socketWrapper.closeDataOutputStream();
     }
 
     boolean isValidToSend() {

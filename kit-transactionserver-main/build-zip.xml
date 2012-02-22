@@ -9,9 +9,9 @@
 
 	<target name="build-all-jars" depends="clean">
 
-		<property name="build.lib.dir" value="../kit-transactionserver-main/${tmp.dir}/lib"/>
+		<property name="build.lib.dir" value="../kit-transactionserver-main/lib"/>
 
-		<ant antfile="build.xml" target="jar">
+		<ant dir="../kit-transactionserver-simplestatemachine" antfile="build.xml" target="jar">
 			<property name="build.dest.dir" value="${build.lib.dir}"/>
 		</ant>
 
@@ -19,7 +19,7 @@
 			<property name="build.dest.dir" value="${build.lib.dir}"/>
 		</ant>
 
-		<ant dir="../kit-transactionserver-simplestatemachine" antfile="build.xml" target="jar">
+		<ant antfile="build.xml" target="jar">
 			<property name="build.dest.dir" value="${build.lib.dir}"/>
 		</ant>
 

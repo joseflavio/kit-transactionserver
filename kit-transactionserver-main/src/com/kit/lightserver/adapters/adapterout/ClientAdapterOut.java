@@ -1,12 +1,11 @@
 package com.kit.lightserver.adapters.adapterout;
 
-import java.net.Socket;
-
 import kit.primitives.base.Primitive;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kit.lightserver.network.SocketWrapper;
 import com.kit.lightserver.types.response.ClientResponseRSTY;
 import com.kit.lightserver.types.response.CloseDataOutputCommandRSTY;
 
@@ -16,9 +15,7 @@ public final class ClientAdapterOut {
 
     private final ClientAdapterOutSender sender;
 
-
-
-    public ClientAdapterOut(final Socket socket) {
+    public ClientAdapterOut(final SocketWrapper socket) {
 
         this.sender = new ClientAdapterOutSender(socket);
 

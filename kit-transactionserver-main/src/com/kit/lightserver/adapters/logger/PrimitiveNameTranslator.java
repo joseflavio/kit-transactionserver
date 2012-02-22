@@ -3,6 +3,7 @@ package com.kit.lightserver.adapters.logger;
 import kit.primitives.authentication.AuthenticationRequest;
 import kit.primitives.authentication.AuthenticationResponse;
 import kit.primitives.base.Primitive;
+import kit.primitives.channel.ChannelNotification;
 import kit.primitives.forms.FormOperation;
 
 final class PrimitiveNameTranslator {
@@ -54,6 +55,17 @@ final class PrimitiveNameTranslator {
                 typeStr = ERROR_TYPE;
             }
             nickname = "AuthenticationResponse[type=" + typeStr + "]";
+        }
+        else if (primitive instanceof ChannelNotification) {
+            final ChannelNotification castedPrimitive = (ChannelNotification) primitive;
+            final String typeStr;
+            if(castedPrimitive.type == ChannelNotification.END_CHANNEL) {
+                typeStr = "END_CHANNEL";
+            }
+            else {
+                typeStr = "(type=" + castedPrimitive.type + ")";
+            }
+            nickname = "FormOperation[type=" + typeStr + "]";
         }
         else if (primitive instanceof FormOperation) {
             final FormOperation castedPrimitive = (FormOperation) primitive;

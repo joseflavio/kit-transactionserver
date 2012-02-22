@@ -16,9 +16,13 @@ public final class KITLightServerBootstrap {
         ConfigAccessor configAccessor = ConfigurationReader.getConfiguration();
 
         KITLightServer kitLightServer = new KITLightServer(1000, configAccessor);
-        kitLightServer.startServer();
+        String threadName = "T0:main-XXXXXXXXXXXXXX";
+        Thread thread = new Thread(kitLightServer, threadName);
+        thread.start();
 
         Runtime.getRuntime().addShutdownHook(new ShutdownThread(kitLightServer));
+
+        LOGGER.info("Init finished.");
 
     }
 

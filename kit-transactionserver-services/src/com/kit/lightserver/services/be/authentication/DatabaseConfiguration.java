@@ -45,5 +45,10 @@ final public class DatabaseConfiguration {
         return dbPassword;
     }
 
+    @Override
+    public String toString() {
+        return "DatabaseConfiguration [dbHost=" + dbHost + ", dbPort=" + dbPort + ", dbName=" + dbName + ", dbUser=" + dbUser + ", dbPassword=" + dbPassword
+                + "]";
+    }
 
 }// class

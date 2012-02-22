@@ -1,9 +1,6 @@
 package com.kit.lightserver.adapters.adapterin;
 
 import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.net.Socket;
 
 import kit.primitives.base.Primitive;
 import kit.primitives.factory.PrimitiveStreamFactory;
@@ -12,9 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jfap.framework.configuration.ConfigAccessor;
+import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
 import com.kit.lightserver.adapters.logger.AdaptersLogger;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.loggers.connectionlogger.ConnectionsLogger;
+import com.kit.lightserver.network.SocketWrapper;
 import com.kit.lightserver.statemachine.KITStateMachineRunnable;
 import com.kit.lightserver.statemachine.events.AdapterInDataInputClosedSME;
 import com.kit.lightserver.statemachine.events.AdapterInErrorTimeOutSME;
@@ -26,9 +25,9 @@ public final class AdiClientListenerRunnable implements Runnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(AdiClientListenerRunnable.class);
 
-    static private final int ADAPTER_IN_TIMEOUT_IN_MILLIS = 180000; // 30s in tests
+    static private final int ADAPTER_IN_TIMEOUT_IN_MILLIS = 300000; // 30s in tests
 
-    private final Socket socket;
+    private final SocketWrapper socket;
 
     private final ConnectionInfo connectionInfo;
 
@@ -36,12 +35,17 @@ public final class AdiClientListenerRunnable implements Runnable {
 
     private final Thread kitStateMachineThread;
 
-    public AdiClientListenerRunnable(final Socket givenSocket, final ConfigAccessor configAccessor, final ConnectionInfo connectionInfo) {
+    public AdiClientListenerRunnable(final SocketWrapper givenSocket, final ConfigAccessor configAccessor, final ConnectionInfo connectionInfo) {
+
         this.socket = givenSocket;
         this.connectionInfo = connectionInfo;
-        this.kitStateMachineRunnable = new KITStateMachineRunnable(givenSocket, configAccessor, connectionInfo);
+
+        ClientAdapterOut clientAdapterOut = new ClientAdapterOut(socket);
+        this.kitStateMachineRunnable = new KITStateMachineRunnable(clientAdapterOut, configAccessor, connectionInfo);
+
         final String threadName = "T2:" + connectionInfo.getConnectionUniqueId();
         this.kitStateMachineThread = new Thread(kitStateMachineRunnable, threadName);
+
     }// constructor
 
     @Override
@@ -56,22 +60,20 @@ public final class AdiClientListenerRunnable implements Runnable {
             LOGGER.error("Unexpected error.", t);
         }
 
+//        try {
+//            Thread.sleep(2000);
+//        }
+//        catch (InterruptedException e1) {
+//            LOGGER.error("Unexpected error.", e1);
+//        }
 
-        try {
-            Thread.sleep(2000);
+        if( socket.isClosed() == true ) {
+            ConnectionsLogger.logConnectionClosed(connectionInfo);
         }
-        catch (InterruptedException e1) {
-            LOGGER.error("Unexpected error.", e1);
-        }
-
-        try {
-            socket.close();
-        }
-        catch (IOException e) {
-            LOGGER.error("Unexpected error.", e);
+        else {
+            LOGGER.error("Unexpected! Socket not closed!");
         }
 
-        ConnectionsLogger.logConnectionClosed(connectionInfo, socket);
 
         LOGGER.info("Thread Finished");
     }
@@ -87,20 +89,21 @@ public final class AdiClientListenerRunnable implements Runnable {
             }
         });
 
+        LOGGER.info("Waiting for the KitStateMachine start.");
         final boolean eventOccurred = sleeper.waitFor(2000);
 
         if (eventOccurred == false) {
             return;
         }
+        LOGGER.info("KitStateMachine started.");
 
-        DataInputStream dataInputStream = null;
         try {
 
-            dataInputStream = new DataInputStream(socket.getInputStream());
-            boolean dataInputAlive = true;
+            DataInputStream dataInputStream = socket.getDataInputStream();
+            boolean dataInputTimeOut = false;
 
             long lastEventTime = System.currentTimeMillis();
-            while ((socket.isClosed() == false) && dataInputAlive && kitStateMachineThread.isAlive()) {
+            while ( socket.dataOutputCanBeClosed()==false && dataInputTimeOut == false ) {
 
                 if (dataInputStream.available() > 0) {
 
@@ -123,17 +126,16 @@ public final class AdiClientListenerRunnable implements Runnable {
 
                 }
                 else {
-                    SimpleSleeper.sleep(50);
+                    SimpleSleeper.sleep(100);
                 }// if-else
 
                 /*
                  * Checking for timeout
                  */
                 final long waitingTime = System.currentTimeMillis() - lastEventTime;
-
                 if (waitingTime >= ADAPTER_IN_TIMEOUT_IN_MILLIS) {
+                    dataInputTimeOut = true;
                     LOGGER.error("Time out. waitingTime=" + waitingTime);
-                    dataInputAlive = false;
                     final AdapterInErrorTimeOutSME errorSTY = new AdapterInErrorTimeOutSME(waitingTime);
                     kitStateMachineRunnable.enqueueReceived(errorSTY);
                 }// if
@@ -141,28 +143,18 @@ public final class AdiClientListenerRunnable implements Runnable {
             }// while
 
         }
-        catch (final EOFException e) {
-            LOGGER.info("Unexpected EOF.", e);
+        catch (final Exception e) {
+            LOGGER.info("Unexpected Error.", e);
             final AdapterInInterrupedSME errorSTY = new AdapterInInterrupedSME(e);
             kitStateMachineRunnable.enqueueReceived(errorSTY);
         }
-        catch (final IOException e) {
-            LOGGER.info("Interrupted", e);
-            final AdapterInInterrupedSME errorSTY = new AdapterInInterrupedSME(e);
-            kitStateMachineRunnable.enqueueReceived(errorSTY);
-        }// try-catch
+
+        LOGGER.info("Not receiving data anymore.");
 
         final AdapterInDataInputClosedSME eventSME = new AdapterInDataInputClosedSME();
         kitStateMachineRunnable.enqueueReceived(eventSME);
 
-        if( dataInputStream != null ) {
-            try {
-                dataInputStream.close();
-            }
-            catch (IOException e) {
-                LOGGER.error("Unexpected error.", e);
-            }
-        }
+        socket.closeDataInputStream();
 
     }
 
