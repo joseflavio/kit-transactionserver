@@ -41,7 +41,7 @@ ALTER TABLE dbo.LogConexoes DROP COLUMN tempRowId;
 -- ----------------------------------------------------------------------------------------------------------
 
 EXEC sp_rename 'Authenticate.KTLastAuthentication', 'KTLastAuthenticationDbDateTime', 'COLUMN'
-ALTER TABLE dbo.Authenticate ADD KTUsuarioConectado bit NOT NULL DEFAULT 0;
+-- ALTER TABLE dbo.Authenticate ADD KTUsuarioConectado bit NOT NULL DEFAULT 0; REMOVE
 ALTER TABLE dbo.Authenticate ADD KTDeveResetar bit NOT NULL DEFAULT 0;
 ALTER TABLE dbo.Authenticate ADD KTLastDisconnectionDbDateTime datetime NULL DEFAULT NULL;
 CREATE NONCLUSTERED INDEX Index_KTClientId ON dbo.Authenticate(KTClientId);

@@ -15,8 +15,7 @@ final class SelectClientIdAndPasswordResultAdapter implements SelectQueryResultA
             String ktClientId = rs.getString("KTClientId");
             String ktPassword = rs.getString("KTPassword");
             boolean ktDeveResetar = rs.getBoolean("KTDeveResetar");
-            boolean ktUsuarioConectado = rs.getBoolean("KTUsuarioConectado");
-            result = new AuthenticateQueryResult(ktClientId, ktPassword, ktDeveResetar, ktUsuarioConectado);
+            result = new AuthenticateQueryResult(ktClientId, ktPassword, ktDeveResetar);
         } else {
             // User do not exist
             result = new AuthenticateQueryResult();

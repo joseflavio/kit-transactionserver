@@ -11,7 +11,6 @@ public final class FormContentConhecimentoReadSME implements KitEventSME {
 
     private final Date firstReadDate;
 
-
     public FormContentConhecimentoReadSME(final ConhecimentoIdSTY conhecimentoId, final Date firstReadDate) {
         this.conhecimentoId = conhecimentoId;
         this.firstReadDate = firstReadDate;

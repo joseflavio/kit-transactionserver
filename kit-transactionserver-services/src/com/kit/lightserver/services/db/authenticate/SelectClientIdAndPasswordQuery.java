@@ -21,7 +21,7 @@ final class SelectClientIdAndPasswordQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        final String selectQueryStr = "SELECT KTClientId, KTPassword, KTDeveResetar, KTUsuarioConectado FROM "
+        final String selectQueryStr = "SELECT KTClientId, KTPassword, KTDeveResetar FROM "
                 + TableAuthenticateConstants.TABLE_AUTHENTICATE + " WHERE KTClientId=?";
 
         return selectQueryStr;

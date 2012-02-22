@@ -16,7 +16,7 @@ public final class ConnectionsLogger {
     }
 
     static public void logConnectionClosed(final ConnectionInfo connectionInfo) {
-        LOGGER.info("[CONNECTION CLOSED] connectionInfo="+connectionInfo);
+        LOGGER.info("[CONNECTION CLOSED  ] connectionInfo="+connectionInfo);
     }
 
 }// class

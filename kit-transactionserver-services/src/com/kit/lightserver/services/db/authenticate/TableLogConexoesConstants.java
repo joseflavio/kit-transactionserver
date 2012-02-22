@@ -29,9 +29,6 @@ public final class TableLogConexoesConstants {
         case FAILED_INVALID_PASSWORD:
             status = 210;
             break;
-        case FAILED_USER_ALREADY_LOGGEDIN:
-            status = 220;
-            break;
         case ERROR:
             status = 300;
             break;

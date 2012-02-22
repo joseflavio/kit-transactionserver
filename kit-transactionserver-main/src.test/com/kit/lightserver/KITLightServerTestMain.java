@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.configuration.ConfigurationReader;
-import com.kit.lightserver.KITLightServerBootstrap.ShutdownThread;
 
 final class KITLightServerTestMain {
 
@@ -21,10 +20,6 @@ final class KITLightServerTestMain {
         KITLightServer kitLightServer = new KITLightServer(40000, configAccessor);
         kitLightServer.waitConnection2(serverSocket);
 
-        Runtime.getRuntime().addShutdownHook(new ShutdownThread(kitLightServer));
-
     }
-
-
 
 }// class

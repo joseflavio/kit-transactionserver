@@ -26,7 +26,7 @@ final class UpdateAuthenticateUserLogOffQuery implements UpdateQueryInterface {
     public String getPreparedUpdateQueryString() {
         final String queryStr =
                 "UPDATE " + TableAuthenticateConstants.TABLE_AUTHENTICATE +
-                " SET KTLastDisconnectionDbDateTime=GETDATE(), KTUsuarioConectado=0, KTDeveResetar=? WHERE KTClientId=?";
+                " SET KTLastDisconnectionDbDateTime=GETDATE(), KTDeveResetar=? WHERE KTClientId=?";
         return queryStr;
     }
 

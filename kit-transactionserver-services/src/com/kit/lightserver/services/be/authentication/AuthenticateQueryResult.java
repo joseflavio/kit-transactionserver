@@ -6,25 +6,22 @@ public final class AuthenticateQueryResult {
     private final String ktClientId;
     private final String ktPassword;
     private final Boolean ktDeveResetar;
-    private final Boolean ktUsuarioConectado;
 
     public AuthenticateQueryResult() {
-        this.userExists = false;
+        this.userExists = Boolean.FALSE;
         this.ktClientId = null;
         this.ktPassword = null;
         this.ktDeveResetar = null;
-        this.ktUsuarioConectado = null;
     }// constructor
 
-    public AuthenticateQueryResult(final String ktClientId, final String ktPassword, final boolean ktDeveResetar, final boolean ktUsuarioConectado) {
-        this.userExists = true;
+    public AuthenticateQueryResult(final String ktClientId, final String ktPassword, final boolean ktDeveResetar) {
+        this.userExists = Boolean.TRUE;
         this.ktClientId = ktClientId;
         this.ktPassword = ktPassword;
-        this.ktDeveResetar = ktDeveResetar;
-        this.ktUsuarioConectado = ktUsuarioConectado;
+        this.ktDeveResetar = Boolean.valueOf(ktDeveResetar);
     }// constructor
 
-    public boolean isUserExists() {
+    public Boolean isUserExists() {
         return userExists;
     }
 
@@ -36,18 +33,14 @@ public final class AuthenticateQueryResult {
         return ktPassword;
     }
 
-    public boolean isKtDeveResetar() {
+    public Boolean isKtDeveResetar() {
         return ktDeveResetar;
-    }
-
-    public boolean isKtUsuarioConectado() {
-        return ktUsuarioConectado;
     }
 
     @Override
     public String toString() {
         return "AuthenticateQueryResult [userExists=" + userExists + ", ktClientId=" + ktClientId + ", ktPassword=" + ktPassword + ", ktDeveResetar="
-                + ktDeveResetar + ", ktUsuarioConectado=" + ktUsuarioConectado + "]";
+                + ktDeveResetar + "]";
     }
 
 }// class

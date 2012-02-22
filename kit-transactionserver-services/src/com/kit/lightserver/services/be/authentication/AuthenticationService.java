@@ -1,7 +1,5 @@
 package com.kit.lightserver.services.be.authentication;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,28 +29,6 @@ public final class AuthenticationService {
     private AuthenticationService(final DatabaseConfiguration dbConfig) {
         this.logConexoesOperations = new TableLogConexoesOperations(dbConfig);
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dbConfig);
-    }
-
-    public boolean initAndRecoverIfNecessary() {
-
-        final SelectQueryResult<List<String>> queryResult = tableAuthenticateOperations.selectLoggedInClients();
-        if(queryResult.isQuerySuccessful() == false ) {
-            return false;
-        }
-
-        final List<String> ktClientIdsLoggedIn = queryResult.getResult();
-        if( ktClientIdsLoggedIn.size() > 0 ) {
-            LOGGER.warn("Problems since last server shutdown. ktClientIdsLoggedIn=" + ktClientIdsLoggedIn);
-            UpdateQueryResult updateResult = tableAuthenticateOperations.updateAllLoggedInClientsToLoggedOff();
-            if( updateResult.isUpdateQuerySuccessful() == false ) {
-                return false;
-            }
-            final int count = updateResult.getRowsUpdated();
-            LOGGER.warn("Some clients will be reseted in their next login. count="+count);
-        }
-
-        return true;
-
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfo connectionId, final String userClientId, final String password,
@@ -94,9 +70,9 @@ public final class AuthenticationService {
             return AuthenticationServiceResponse.FAILED_INVALID_PASSWORD;
         }
 
-        if( result.isKtUsuarioConectado() == true ) {
-            return AuthenticationServiceResponse.FAILED_USER_ALREADY_LOGGEDIN;
-        }
+//        if( result.isKtUsuarioConectado() == true ) {
+//            return AuthenticationServiceResponse.FAILED_USER_ALREADY_LOGGEDIN;
+//        }
 
         /*
          * Success

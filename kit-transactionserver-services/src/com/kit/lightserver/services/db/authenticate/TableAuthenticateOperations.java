@@ -1,7 +1,5 @@
 package com.kit.lightserver.services.db.authenticate;
 
-import java.util.List;
-
 import com.kit.lightserver.services.be.authentication.AuthenticateQueryResult;
 import com.kit.lightserver.services.be.authentication.DatabaseConfiguration;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
@@ -15,20 +13,6 @@ public final class TableAuthenticateOperations {
 
     public TableAuthenticateOperations(final DatabaseConfiguration dbConfig) {
         this.dbConfig = dbConfig;
-    }
-
-    public SelectQueryResult<List<String>> selectLoggedInClients() {
-        final SelectLoggedInClientIdsResultAdapter queryResultAdapter = new SelectLoggedInClientIdsResultAdapter();
-        final SelectLoggedInClientIdsQuery selectQuery = new SelectLoggedInClientIdsQuery();
-        final SelectQueryExecuter<List<String>> selectQueryExecuter = new SelectQueryExecuter<List<String>>(queryResultAdapter);
-        final SelectQueryResult<List<String>> result = selectQueryExecuter.executeSelectQuery(dbConfig, selectQuery);
-        return result;
-    }
-
-    public UpdateQueryResult updateAllLoggedInClientsToLoggedOff() {
-        final UpdateLoggedInUsersToLogOffQuery updateQuery = new UpdateLoggedInUsersToLogOffQuery();
-        final UpdateQueryResult result = UpdateQueryExecuter.executeUpdateQuery(dbConfig, updateQuery);
-        return result;
     }
 
     public SelectQueryResult<AuthenticateQueryResult> selectClientIdExists(final String userKtClientId) {

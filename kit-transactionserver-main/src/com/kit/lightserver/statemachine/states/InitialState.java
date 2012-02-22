@@ -18,7 +18,6 @@ import com.kit.lightserver.statemachine.events.AuthenticationRequestSME;
 import com.kit.lightserver.statemachine.types.ClientInfoCTX;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.AuthenticationResponseFailedDatabaseErrorRSTY;
-import com.kit.lightserver.types.response.AuthenticationResponseFailedUserAlreadyLoggedRSTY;
 import com.kit.lightserver.types.response.AuthenticationResponseFailedWrongPassowordRSTY;
 import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 
@@ -117,17 +116,6 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
                 || authenticationResponse.equals(AuthenticationServiceResponse.FAILED_INVALID_PASSWORD)) {
 
             final AuthenticationResponseFailedWrongPassowordRSTY failed = new AuthenticationResponseFailedWrongPassowordRSTY();
-            context.getClientAdapterOut().sendBack(failed);
-
-            final ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
-            context.getClientAdapterOut().sendBack(endConversation);
-
-            newState = WaitForEventEndConversationState.getInstance(context);
-
-        }
-        else if (authenticationResponse.equals(AuthenticationServiceResponse.FAILED_USER_ALREADY_LOGGEDIN)) {
-
-            final AuthenticationResponseFailedUserAlreadyLoggedRSTY failed = new AuthenticationResponseFailedUserAlreadyLoggedRSTY();
             context.getClientAdapterOut().sendBack(failed);
 
             final ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();

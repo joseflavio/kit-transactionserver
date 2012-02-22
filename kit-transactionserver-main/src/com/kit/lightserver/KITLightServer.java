@@ -23,7 +23,6 @@ import com.kit.lightserver.domain.types.ConnectionInfoFactory;
 import com.kit.lightserver.loggers.connectionlogger.ConnectionsLogger;
 import com.kit.lightserver.network.JavaNetSocketWrapper;
 import com.kit.lightserver.network.SocketWrapper;
-import com.kit.lightserver.services.be.authentication.AuthenticationService;
 
 public final class KITLightServer implements Runnable {
 
@@ -46,20 +45,6 @@ public final class KITLightServer implements Runnable {
          * TO log any unexpected exception
          */
         Thread.setDefaultUncaughtExceptionHandler(new LogUncaughtExceptionHandler());
-
-        /*
-         * Init services
-         */
-        AuthenticationService authenticationService = AuthenticationService.getInstance(configAccessor);
-
-        boolean authenticationServiceInitSuccess = authenticationService.initAndRecoverIfNecessary();
-        if( authenticationServiceInitSuccess == false ) {
-            final String errorMessage = "An essencial service could not init. authenticationServiceInitSuccess="+authenticationServiceInitSuccess;
-            LOGGER.error(errorMessage);
-            throw new RuntimeException(errorMessage);
-        }
-
-
 
     }// constructor
 

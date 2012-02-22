@@ -16,7 +16,7 @@
 	<target name="compile">
 		<mkdir dir="tmp/compiled"/>
 
-		<javac destdir="tmp/compiled" debug="off" deprecation="on">
+		<javac destdir="tmp/compiled" debug="true" optimize="true" deprecation="on" encoding="UTF-8">
 			<src path="src"/>
 			<classpath refid="project.classpath"/>
 		</javac>
@@ -29,6 +29,7 @@
 	</target>
 
 	<target name="jar" depends="compile">
+		
 		<mkdir dir="tmp/manifest"/>
 		<manifest file="tmp/manifest/MANIFEST.MF">
 			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>

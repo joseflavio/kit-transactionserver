@@ -38,11 +38,10 @@ public final class AuthenticationRequestSME implements KitEventSME {
 		return installationIdSTY;
 	}
 
-	@Override
-	public String toString() {
-		return "AuthenticationRequestSTY [clientId=" + clientId + ", password=" + password
-				+ ", authenticationRequestType=" + authenticationRequestType + ", installationIdSTY="
-				+ installationIdSTY + "]";
-	}
+    @Override
+    public String toString() {
+        return "AuthenticationRequestSME [clientId=" + clientId + ", password=" + password + ", authenticationRequestType=" + authenticationRequestType
+                + ", installationIdSTY=" + installationIdSTY + "]";
+    }
 
 }// class
