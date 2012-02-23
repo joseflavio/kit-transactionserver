@@ -31,6 +31,8 @@ public final class KITLightServerBootstrap {
 
     }
 
+    static private final String DEFAULT_TRAY_ICON = "/images/kit-icone-azul.png";
+
     private final ConfigAccessor configAccessor;
     private final TrayIcon trayIcon;
     private final KITLightServer kitLightServer;
@@ -46,7 +48,7 @@ public final class KITLightServerBootstrap {
             throw new RuntimeException("SystemTray is not supported");
         }
 
-        URL imageIconJarUrl = KITLightServerBootstrap.class.getResource("/images/kit.png");
+        URL imageIconJarUrl = KITLightServerBootstrap.class.getResource(DEFAULT_TRAY_ICON);
         ImageIcon imageIcon = new ImageIcon(imageIconJarUrl);
 
         final PopupMenu popup = new PopupMenu();

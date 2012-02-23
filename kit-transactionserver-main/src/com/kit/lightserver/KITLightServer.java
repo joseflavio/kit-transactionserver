@@ -1,16 +1,11 @@
 package com.kit.lightserver;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.BindException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.nio.channels.AsynchronousServerSocketChannel;
-import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.Channels;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,18 +53,18 @@ public final class KITLightServer implements Runnable {
 
     }
 
-    static public void listenForConnections2() {
-        try {
-            final AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(SERVER_PORT));
-            AsynchronousSocketChannel socket = serverSocket.accept().get();
-            InputStream is = Channels.newInputStream(socket);
-            is.close();
-        }
-        catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+//    static public void listenForConnections2() {
+//        try {
+//            final AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(SERVER_PORT));
+//            AsynchronousSocketChannel socket = serverSocket.accept().get();
+//            InputStream is = Channels.newInputStream(socket);
+//            is.close();
+//        }
+//        catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//    }
 
     public void listenForConnections() {
 
