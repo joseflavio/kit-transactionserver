@@ -30,7 +30,7 @@ public final class KITLightServer implements Runnable {
 
     private final ConfigAccessor configAccessor;
 
-    static private final int SERVER_PORT = 3003;
+    static private final int SERVER_PORT = 3301;
 
     private boolean isAlive = true;
 
