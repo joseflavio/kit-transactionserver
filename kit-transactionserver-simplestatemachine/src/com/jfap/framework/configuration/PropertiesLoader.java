@@ -20,15 +20,13 @@ public final class PropertiesLoader {
             in = PropertiesLoader.class.getResourceAsStream(filename);
             if( in != null ) {
                 properties.load(in);
-
             }
             else {
-                LOGGER.error("Resource not found. filename="+filename);
+                throw new RuntimeException("Resource not found. filename="+filename);
             }
-
         }
         catch (IOException e) {
-            LOGGER.error("Could no load properties. filename="+filename, e);
+            throw new RuntimeException("Could no load properties. filename="+filename, e);
         }
         finally {
             if(in != null) {
@@ -46,15 +44,15 @@ public final class PropertiesLoader {
         FileInputStream in = null;
         try {
             File file = new File(filename);
-            LOGGER.info("Loading file=" + file.getAbsoluteFile());
+            LOGGER.info("Loading properties. file=" + file.getAbsoluteFile());
             in = new FileInputStream(filename);
             properties.load(in);
         }
         catch (FileNotFoundException e) {
-            LOGGER.error("Could no load properties. filename="+filename, e);
+            throw new RuntimeException("Resource not found. filename="+filename, e);
         }
         catch (IOException e) {
-            LOGGER.error("Could no load properties. filename="+filename, e);
+            throw new RuntimeException("Could no load properties. filename="+filename, e);
         }
         finally {
             if(in != null) {

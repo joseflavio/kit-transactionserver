@@ -17,7 +17,7 @@ final class KITLightServerTestMain {
 
         ConfigAccessor configAccessor = ConfigurationReader.getConfiguration();
 
-        KITLightServer kitLightServer = new KITLightServer(40000, configAccessor);
+        KITLightServer kitLightServer = new KITLightServer(SERVER_PORT, 40000, configAccessor);
         kitLightServer.waitConnection2(serverSocket);
 
     }

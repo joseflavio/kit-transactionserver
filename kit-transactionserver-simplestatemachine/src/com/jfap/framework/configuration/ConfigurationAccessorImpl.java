@@ -29,7 +29,19 @@ public final class ConfigurationAccessorImpl implements ConfigAccessor {
         }
     }
 
-    public <T> T getMandatoryProperty(final String propertyName, final TypeAdapter<T> adapter) {
+    @Override
+    public String getOptionalProperty(final String propertyName, final String defaultValue) {
+        final String propertyValue = properties.getProperty(propertyName);
+        if (propertyValue == null) {
+            return defaultValue;
+        }
+        else {
+            return propertyValue;
+        }
+    }
+
+    @Override
+    public <T> T getMandatoryProperty(final String propertyName, final TypeAdapter<T, String> adapter) {
         final String propertyValue = properties.getProperty(propertyName);
         if (propertyValue == null) {
             throw new RuntimeException("Missing mandatory property. propertyName=" + propertyName);
@@ -42,5 +54,7 @@ public final class ConfigurationAccessorImpl implements ConfigAccessor {
             return adapterResult.getValue();
         }
     }
+
+
 
 }// class

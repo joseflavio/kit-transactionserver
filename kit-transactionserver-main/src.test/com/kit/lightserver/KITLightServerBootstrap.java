@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.configuration.ConfigurationReader;
+import com.kit.lightserver.config.ServerConfig;
 
 
 public final class KITLightServerBootstrap {
@@ -31,24 +32,31 @@ public final class KITLightServerBootstrap {
 
     }
 
-    static private final String DEFAULT_TRAY_ICON = "/images/kit-icone-azul.png";
-
     private final ConfigAccessor configAccessor;
+    private final ServerConfig serverConfig;
     private final TrayIcon trayIcon;
     private final KITLightServer kitLightServer;
 
     private KITLightServerBootstrap() {
 
         this.configAccessor = ConfigurationReader.getConfiguration();
-        this.kitLightServer = new KITLightServer(1000, configAccessor);
+        this.serverConfig = ServerConfig.getInstance(configAccessor);
+        this.kitLightServer = new KITLightServer(serverConfig.getServerPort(), 1000, configAccessor);
 
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
+
+        /*
+         *
+         */
         if (!SystemTray.isSupported()) {
             throw new RuntimeException("SystemTray is not supported");
         }
 
-        URL imageIconJarUrl = KITLightServerBootstrap.class.getResource(DEFAULT_TRAY_ICON);
+        URL imageIconJarUrl = KITLightServerBootstrap.class.getResource(serverConfig.getServerIcon());
+        if( imageIconJarUrl == null ) {
+            throw new RuntimeException("File not found. serverConfig.getServerIcon()="+serverConfig.getServerIcon());
+        }
         ImageIcon imageIcon = new ImageIcon(imageIconJarUrl);
 
         final PopupMenu popup = new PopupMenu();

@@ -23,16 +23,15 @@ public final class KITLightServer implements Runnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(KITLightServer.class);
 
+    private final int serverPort;
+    private final int socketTimeout;
     private final ConfigAccessor configAccessor;
-
-    static private final int SERVER_PORT = 3301;
 
     private boolean isAlive = true;
 
-    private final int socketTimeout;
+    public KITLightServer(final int serverPort, final int socketTimeout, final ConfigAccessor configAccessor) {
 
-    public KITLightServer(final int socketTimeout, final ConfigAccessor configAccessor) {
-
+        this.serverPort = serverPort;
         this.socketTimeout = socketTimeout;
         this.configAccessor = configAccessor;
 
@@ -73,12 +72,12 @@ public final class KITLightServer implements Runnable {
          */
         final ServerSocket serverSocket;
         try {
-            serverSocket = new ServerSocket(SERVER_PORT);
+            serverSocket = new ServerSocket(serverPort);
             serverSocket.setSoTimeout(socketTimeout);
-            LOGGER.info("Server socket created. serverPort="+SERVER_PORT+", socketTimeout="+socketTimeout);
+            LOGGER.info("Server socket created. serverPort="+serverPort+", socketTimeout="+socketTimeout);
         }
         catch (final IOException e) {
-            LOGGER.error("Unexpected error! Could not start the server. serverPort=" + SERVER_PORT, e);
+            LOGGER.error("Unexpected error! Could not start the server. serverPort=" + serverPort, e);
             throw new RuntimeException(e);
         }
 
@@ -96,14 +95,15 @@ public final class KITLightServer implements Runnable {
             serverSocket.close();
         }
         catch (final IOException e) {
-            LOGGER.error("Unexpected error. serverPort=" + SERVER_PORT, e);
+            LOGGER.error("Unexpected error.", e);
             throw new RuntimeException(e);
         }
 
-        LOGGER.info("Not waiting for new connections. serverPort=" + SERVER_PORT);
+        LOGGER.info("Not waiting for new connections.");
     }
 
     public void waitConnection2(final ServerSocket serverSocket) {
+
         try {
 
             Socket clientSocket = serverSocket.accept(); // Blocks waiting to a Client connect
@@ -130,9 +130,9 @@ public final class KITLightServer implements Runnable {
             LOGGER.error("Could not start the server, port probably already in use.", e);
         }
         catch (final IOException e) {
-            LOGGER.error("Unexpected error. serverPort=" + SERVER_PORT, e);
-            throw new RuntimeException(e);
+            LOGGER.error("Unexpected error." , e);
         }
+
     }
 
     public void stopServer() {

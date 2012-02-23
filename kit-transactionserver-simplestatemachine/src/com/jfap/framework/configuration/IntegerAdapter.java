@@ -1,6 +1,6 @@
 package com.jfap.framework.configuration;
 
-public final class IntegerAdapter implements TypeAdapter<Integer> {
+public final class IntegerAdapter implements TypeAdapter<Integer, String> {
 
     @Override
     public TypeAdapterResult<Integer> adapt(final String propertyValue) {

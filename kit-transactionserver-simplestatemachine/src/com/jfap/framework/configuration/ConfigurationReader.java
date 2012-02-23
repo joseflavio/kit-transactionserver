@@ -4,12 +4,16 @@ import java.util.Properties;
 
 public final class ConfigurationReader {
 
-    static private final String databasePropertiesFilename = "/config/database.properties";
+    static public final String databasePropertiesFilenameInternal = "/config/internal.properties"; // root
+
+    static private final String SERVER_PROPERTIES="config/server.properties";
+    static private final String DATABASE_PROPERTIES = "config/database.properties"; // relative
 
     private final Properties properties = new Properties();
 
     private ConfigurationReader() {
-        PropertiesLoader.loadInternalClasspathProperties(properties, databasePropertiesFilename);
+        PropertiesLoader.loadExternalProperties(properties, SERVER_PROPERTIES);
+        PropertiesLoader.loadExternalProperties(properties, DATABASE_PROPERTIES);
     }
 
     static private ConfigurationReader INSTANCE = new ConfigurationReader();

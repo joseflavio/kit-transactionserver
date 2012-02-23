@@ -8,7 +8,7 @@ import com.jfap.framework.configuration.IntegerAdapter;
 
 final public class DatabaseConfiguration {
 
-    static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
     static public DatabaseConfiguration getInstance(final ConfigAccessor accessor) {
         final DatabaseConfiguration dbConfig = new DatabaseConfiguration(accessor);
