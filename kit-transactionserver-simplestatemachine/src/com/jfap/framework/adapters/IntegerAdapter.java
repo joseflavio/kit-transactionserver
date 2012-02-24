@@ -1,4 +1,5 @@
-package com.jfap.framework.configuration;
+package com.jfap.framework.adapters;
+
 
 public final class IntegerAdapter implements TypeAdapter<Integer, String> {
 

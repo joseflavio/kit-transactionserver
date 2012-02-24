@@ -3,8 +3,8 @@ package com.kit.lightserver.services.be.authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jfap.framework.adapters.IntegerAdapter;
 import com.jfap.framework.configuration.ConfigAccessor;
-import com.jfap.framework.configuration.IntegerAdapter;
 
 final public class DatabaseConfiguration {
 

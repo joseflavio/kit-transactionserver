@@ -1,6 +1,6 @@
-package com.jfap.framework.configuration;
+package com.jfap.framework.adapters;
 
-final class TypeAdapterResult<T> {
+public final class TypeAdapterResult<T> {
 
     private final boolean success;
     private final T value;

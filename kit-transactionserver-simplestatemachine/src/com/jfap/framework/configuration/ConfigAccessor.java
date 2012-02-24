@@ -1,11 +1,15 @@
 package com.jfap.framework.configuration;
 
+import com.jfap.framework.adapters.TypeAdapter;
+
 public interface ConfigAccessor {
 
     String getMandatoryProperty(String propertyName);
 
-    <T> T getMandatoryProperty(final String propertyName, final TypeAdapter<T, String> adapter);
+    <T> T getMandatoryProperty(String propertyName, TypeAdapter<T, String> adapter);
 
     String getOptionalProperty(String propertyName, String defaultValue);
+
+    <T> T getOptionalProperty(String propertyName, TypeAdapter<T, String> adapter, T defaultValue);
 
 }// interface

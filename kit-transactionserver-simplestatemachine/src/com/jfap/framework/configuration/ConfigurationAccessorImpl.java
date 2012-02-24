@@ -2,6 +2,9 @@ package com.jfap.framework.configuration;
 
 import java.util.Properties;
 
+import com.jfap.framework.adapters.TypeAdapter;
+import com.jfap.framework.adapters.TypeAdapterResult;
+
 public final class ConfigurationAccessorImpl implements ConfigAccessor {
 
     private final Properties properties;
@@ -53,6 +56,16 @@ public final class ConfigurationAccessorImpl implements ConfigAccessor {
             }
             return adapterResult.getValue();
         }
+    }
+
+    @Override
+    public <T> T getOptionalProperty(final String propertyName, final TypeAdapter<T, String> adapter, final T defaultValue) {
+        final String propertyValue = properties.getProperty(propertyName);
+        TypeAdapterResult<T> adapterResult = adapter.adapt(propertyValue);
+        if( adapterResult.isSuccess() == false ) {
+            return defaultValue;
+        }
+        return adapterResult.getValue();
     }
 
 

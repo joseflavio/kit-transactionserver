@@ -7,7 +7,6 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -18,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.configuration.ConfigurationReader;
 import com.kit.lightserver.config.ServerConfig;
+import com.kit.lightserver.gui.resources.ImageIconLoader;
 
 
 public final class KITLightServerBootstrap {
@@ -53,11 +53,7 @@ public final class KITLightServerBootstrap {
             throw new RuntimeException("SystemTray is not supported");
         }
 
-        URL imageIconJarUrl = KITLightServerBootstrap.class.getResource(serverConfig.getServerIcon());
-        if( imageIconJarUrl == null ) {
-            throw new RuntimeException("File not found. serverConfig.getServerIcon()="+serverConfig.getServerIcon());
-        }
-        ImageIcon imageIcon = new ImageIcon(imageIconJarUrl);
+        ImageIcon imageIcon = ImageIconLoader.load(serverConfig.getServerIcon()) ;
 
         final PopupMenu popup = new PopupMenu();
         MenuItem aboutItem = new MenuItem("Sobre");
