@@ -1,6 +1,6 @@
 janel.jvm.path=${env.JAVA_HOME}\jre\bin\server\jvm.dll
 -Djava.class.path=lib\kit-transactionserver-main-1.0.0.jar
-janel.main.class=com.kit.lightserver.KITLightServerBootstrap
+janel.main.class=com.kit.lightserver.Main
 janel.debug.file=logs\janel-debug.log
 -Xms40m
 -Xmx256m

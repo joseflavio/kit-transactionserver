@@ -1,17 +1,18 @@
 package com.kit.lightserver;
 
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jfap.framework.configuration.ConfigAccessor;
-import com.jfap.framework.exception.LogUncaughtExceptionHandler;
 import com.kit.lightserver.adapters.adapterin.AdiClientListenerRunnable;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.ConnectionInfoFactory;
@@ -29,7 +30,8 @@ public final class KITLightServer implements Runnable {
 
     private boolean isAlive = true;
 
-    public KITLightServer(final int serverPort, final int socketTimeout, final ConfigAccessor configAccessor) {
+    public KITLightServer(final int serverPort, final int socketTimeout, final ConfigAccessor configAccessor,
+            final UncaughtExceptionHandler uncaughtExceptionHandler) {
 
         this.serverPort = serverPort;
         this.socketTimeout = socketTimeout;
@@ -38,7 +40,7 @@ public final class KITLightServer implements Runnable {
         /*
          * TO log any unexpected exception
          */
-        Thread.setDefaultUncaughtExceptionHandler(new LogUncaughtExceptionHandler());
+        Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
 
     }// constructor
 
@@ -52,45 +54,51 @@ public final class KITLightServer implements Runnable {
 
     }
 
-//    static public void listenForConnections2() {
-//        try {
-//            final AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(SERVER_PORT));
-//            AsynchronousSocketChannel socket = serverSocket.accept().get();
-//            InputStream is = Channels.newInputStream(socket);
-//            is.close();
-//        }
-//        catch (Exception e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
+    // static public void listenForConnections2() {
+    // try {
+    // final AsynchronousServerSocketChannel serverSocket = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(SERVER_PORT));
+    // AsynchronousSocketChannel socket = serverSocket.accept().get();
+    // InputStream is = Channels.newInputStream(socket);
+    // is.close();
+    // }
+    // catch (Exception e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+    // }
 
     public void listenForConnections() {
 
-        /*
-         * Init the ServerSocket
-         */
+        // Try to create the socket
         final ServerSocket serverSocket;
         try {
             serverSocket = new ServerSocket(serverPort);
-            serverSocket.setSoTimeout(socketTimeout);
-            LOGGER.info("Server socket created. serverPort="+serverPort+", socketTimeout="+socketTimeout);
         }
-        catch (final IOException e) {
+        catch (final BindException e) {
             LOGGER.error("Unexpected error! Could not start the server. serverPort=" + serverPort, e);
+            throw new ServerPortNotAvailableException(serverPort, e);
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        /*
-         * Accepting income connections
-         */
+        // Setting the timeout, so it is not blocking
+        try {
+            serverSocket.setSoTimeout(socketTimeout);
+        }
+        catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Success creating the server socket
+        LOGGER.info("Server socket created. serverPort=" + serverPort + ", socketTimeout=" + socketTimeout);
+
+        // Accepting income connections
         while (isAlive) {
             waitConnection2(serverSocket);
         }
 
-        /*
-         * Close the ServerSocket
-         */
+        // Closing the server socket
         try {
             serverSocket.close();
         }
@@ -100,6 +108,7 @@ public final class KITLightServer implements Runnable {
         }
 
         LOGGER.info("Not waiting for new connections.");
+
     }
 
     public void waitConnection2(final ServerSocket serverSocket) {
@@ -109,7 +118,7 @@ public final class KITLightServer implements Runnable {
             Socket clientSocket = serverSocket.accept(); // Blocks waiting to a Client connect
             InetAddress clientInetAddress = clientSocket.getInetAddress();
 
-            final ConnectionInfo connectionInfo = ConnectionInfoFactory.getInstance(clientInetAddress); //It creates a unique ID for the connection
+            final ConnectionInfo connectionInfo = ConnectionInfoFactory.getInstance(clientInetAddress); // It creates a unique ID for the connection
             LOGGER.info("Connection accepted. connectionInfo=" + connectionInfo);
             ConnectionsLogger.logConnection(connectionInfo, clientInetAddress);
 
@@ -128,9 +137,11 @@ public final class KITLightServer implements Runnable {
         }
         catch (final BindException e) {
             LOGGER.error("Could not start the server, port probably already in use.", e);
+            isAlive = false;
         }
         catch (final IOException e) {
-            LOGGER.error("Unexpected error." , e);
+            LOGGER.error("Unexpected error.", e);
+            isAlive = false;
         }
 
     }

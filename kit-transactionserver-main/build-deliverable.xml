@@ -2,36 +2,35 @@
 <project name="kit-transactionserver-zip" default="copy-all" basedir=".">
 
 	<property file="build-deliverable.properties"/>
+	<property name="tmp.deliverable.dir" value="tmp/kit-server-${server.config.name}"/>
 
-	<property name="tmp.dir" value="tmp/zip-${server.config.name}"/>
-
-	<target name="clean">
+	<target name="clean-all">
 		<delete dir="${tmp.dir}"/>
 	</target>
 
-	<target name="build-depencies-jars" depends="clean">
+	<target name="build-depencies-jars" depends="clean-all">
 		<property name="build.lib.dir" value="../kit-transactionserver-main/lib"/>
-		<ant dir="../kit-transactionserver-simplestatemachine" antfile="build.xml" target="jar">
+		<ant dir="../kit-transactionserver-simplestatemachine" antfile="build.xml" target="build-external">
 			<property name="build.dest.dir" value="${build.lib.dir}"/>
 		</ant>
-		<ant dir="../kit-transactionserver-services" antfile="build.xml" target="jar">
+		<ant dir="../kit-transactionserver-services" antfile="build.xml" target="build-external">
 			<property name="build.dest.dir" value="${build.lib.dir}"/>
 		</ant>
-		<ant antfile="build.xml" target="jar">
+		<ant antfile="build.xml" target="build-external">
 			<property name="build.dest.dir" value="${build.lib.dir}"/>
 		</ant>
 	</target>
 
 	<target name="copy-server-specifics">
 		<echo level="info">Copying files for server: ${server.config.name}</echo>
-		<copy todir="${tmp.dir}/">
+		<copy todir="${tmp.deliverable.dir}/">
 			<fileset dir="servers/${server.config.name}" includes="**/*" />
 		</copy>
 	</target>
 
 	<target name="copy-all" depends="build-depencies-jars, copy-server-specifics">
-		<mkdir dir="${tmp.dir}/logs"/>
-		<copy todir="${tmp.dir}/lib/">
+		<mkdir dir="${tmp.deliverable.dir}/logs"/>
+		<copy todir="${tmp.deliverable.dir}/lib/">
 			<fileset dir="lib" includes="**/*.jar" />
 		</copy>
 	</target>

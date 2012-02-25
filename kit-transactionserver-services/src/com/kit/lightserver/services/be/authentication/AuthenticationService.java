@@ -18,7 +18,7 @@ public final class AuthenticationService {
     static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
-        DatabaseConfiguration dbConfig = DatabaseConfiguration.getInstance(configAccessor);
+        DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
         return new AuthenticationService(dbConfig);
     }
 
@@ -26,7 +26,7 @@ public final class AuthenticationService {
 
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
-    private AuthenticationService(final DatabaseConfiguration dbConfig) {
+    private AuthenticationService(final DatabaseConfig dbConfig) {
         this.logConexoesOperations = new TableLogConexoesOperations(dbConfig);
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dbConfig);
     }

@@ -37,7 +37,7 @@ public final class DatabaseConnectionUtil {
 
     }// constructor
 
-    public synchronized Connection getConnection(final DatabaseConfiguration dbConfig) {
+    public synchronized Connection getConnection(final DatabaseConfig dbConfig) {
 
         try {
             final Connection connection = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getDbPassword());

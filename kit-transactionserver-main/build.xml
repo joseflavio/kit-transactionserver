@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="kit-transactionserver-main" default="compile" basedir=".">
+<project name="kit-transactionserver-main" default="jars" basedir=".">
 
 	<property name="jar.name" value="kit-transactionserver-main"/>
-
 	<property name="resources.jar.name" value="kit-transactionserver-resources"/>
+	<property name="lib.main.dir" value="../kit-transactionserver-main/"/>
 
 	<property file="version.properties"/>
 
-	<property name="lib.main.dir" value="../kit-transactionserver-main/"/>
+	<property name="tmp.dir" value="tmp/${jar.name}-${project.version}-jar"/>
+	<property name="tmp.classes.dir" value="${tmp.dir}/classes"/>
 
 	<path id="project.classpath">
 		<fileset dir="${lib.main.dir}/lib">
@@ -18,42 +19,54 @@
 		</fileset>
 	</path>
 
-	<target name="compile">
-		<mkdir dir="tmp/compiled"/>
+	<target name="copy-sources">
+		<mkdir dir="${tmp.classes.dir}" />
+		<copy todir="${tmp.classes.dir}">
+			<fileset dir="src" includes="**/*" />
+			<fileset dir="src.test" includes="**/*" />
+		</copy>
+	</target>
 
-		<javac destdir="tmp/compiled" debug="true" optimize="true" deprecation="on" encoding="UTF-8" >
-			<src path="src"/>
-			<src path="src.resources"/>
-			<src path="src.test"/>
+	<target name="compile" depends="copy-sources">
+		<javac destdir="${tmp.classes.dir}" debug="true" optimize="true" deprecation="on" encoding="UTF-8" >
+			<src path="${tmp.classes.dir}"/>
 			<classpath refid="project.classpath"/>
-			
 		</javac>
 	</target>
 
-	<target name="jar-all-local" depends="compile">
-		<antcall target="jar">
+	<target name="jars" depends="compile">
+		<antcall target="build-external">
 			<param name="build.dest.dir" value="build"/>
 		</antcall>
 	</target>
 
 	<target name="jar-resources">
-		<mkdir dir="tmp/manifest"/>
-		<manifest file="tmp/manifest/MANIFEST.MF">
+		<tstamp><format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/></tstamp>
+		<mkdir dir="${tmp.dir}/manifest-resources"/>
+		<manifest file="${tmp.dir}/manifest-resources/MANIFEST.MF">
 			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
+            <attribute name="Specification-Version" value="${project.version}"/>
+            <attribute name="Implementation-Version" value="build-${build.id}"/>
 		</manifest>
 		<mkdir dir="${build.dest.dir}"/>
-		<jar jarfile="${build.dest.dir}/${resources.jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="src.resources"/>
+		<jar jarfile="${build.dest.dir}/${resources.jar.name}-${project.version}.jar" manifest="${tmp.dir}/manifest-resources/MANIFEST.MF" basedir="src.resources"/>
 	</target>
 
-	<target name="jar" depends="compile,jar-resources">
-		<mkdir dir="tmp/manifest"/>
-		<manifest file="tmp/manifest/MANIFEST.MF">
-			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
-			<attribute name="Main-Class" value="com.kit.lightserver.KITLightServerBootstrap"/>
-			<attribute name="Class-Path" value="slf4j-api-1.6.2.jar logback-core-1.0.0.jar logback-classic-1.0.0.jar sqljdbc-1.2.jar primitives_v1-2_mira_rev51a.jar kit-transactionserver-resources-1.0.0.jar kit-transactionserver-services-1.0.0.jar kit-transactionserver-simplestatemachine-1.0.0.jar"/>
-		</manifest>
+	<target name="manifest">
+		<tstamp><format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/></tstamp>
+        <mkdir dir="${tmp.dir}/manifest"/>
+        <manifest file="${tmp.dir}/manifest/MANIFEST.MF">
+            <attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
+            <attribute name="Main-Class" value="com.kit.lightserver.KITLightServerBootstrap"/>
+            <attribute name="Specification-Version" value="${project.version}"/>
+            <attribute name="Implementation-Version" value="build-${build.id}"/>
+            <attribute name="Class-Path" value="slf4j-api-1.6.2.jar logback-core-1.0.0.jar logback-classic-1.0.0.jar sqljdbc-1.2.jar primitives_v1-2_mira_rev51a.jar kit-transactionserver-resources-1.0.0.jar kit-transactionserver-services-1.0.0.jar kit-transactionserver-simplestatemachine-1.0.0.jar"/>
+        </manifest>
+	</target>
+	
+	<target name="build-external" depends="manifest,compile,jar-resources">		
 		<mkdir dir="${build.dest.dir}"/>
-		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="tmp/manifest/MANIFEST.MF" basedir="tmp/compiled"/>
+		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.dir}/manifest/MANIFEST.MF" basedir="${tmp.classes.dir}"/>
 	</target>
 
 </project>

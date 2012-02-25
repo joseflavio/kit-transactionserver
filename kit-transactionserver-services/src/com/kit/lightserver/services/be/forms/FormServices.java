@@ -14,7 +14,7 @@ import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.be.authentication.DatabaseConfiguration;
+import com.kit.lightserver.services.be.authentication.DatabaseConfig;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
 import com.kit.lightserver.services.db.SelectQueryResult;
 import com.kit.lightserver.services.db.UpdateQueryExecuter;
@@ -29,17 +29,17 @@ public final class FormServices {
     static private final Logger LOGGER = LoggerFactory.getLogger(FormServices.class);
 
     static public FormServices getInstance(final ConfigAccessor configAccessor) {
-        DatabaseConfiguration dbConfig = DatabaseConfiguration.getInstance(configAccessor);
+        DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
         return new FormServices(dbConfig);
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final DatabaseConfiguration dbConfig;
+    private final DatabaseConfig dbConfig;
 
     private final FormNotasfiscaisOperations formNotasfiscaisOperations;
 
-    private FormServices(final DatabaseConfiguration dbConfig) {
+    private FormServices(final DatabaseConfig dbConfig) {
         this.dbConfig = dbConfig;
         this.formNotasfiscaisOperations = new FormNotasfiscaisOperations(dbConfig);
     }

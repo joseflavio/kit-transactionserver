@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.configuration.ConfigurationReader;
+import com.jfap.framework.exception.LogUncaughtExceptionHandler;
 
 final class KITLightServerTestMain {
 
@@ -17,7 +18,7 @@ final class KITLightServerTestMain {
 
         ConfigAccessor configAccessor = ConfigurationReader.getConfiguration();
 
-        KITLightServer kitLightServer = new KITLightServer(SERVER_PORT, 40000, configAccessor);
+        KITLightServer kitLightServer = new KITLightServer(SERVER_PORT, 40000, configAccessor, new LogUncaughtExceptionHandler());
         kitLightServer.waitConnection2(serverSocket);
 
     }

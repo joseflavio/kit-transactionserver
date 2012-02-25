@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 import com.jfap.framework.adapters.IntegerAdapter;
 import com.jfap.framework.configuration.ConfigAccessor;
 
-final public class DatabaseConfiguration {
+final public class DatabaseConfig {
 
-    static private final Logger LOGGER = LoggerFactory.getLogger(DatabaseConfiguration.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(DatabaseConfig.class);
 
-    static public DatabaseConfiguration getInstance(final ConfigAccessor accessor) {
-        final DatabaseConfiguration dbConfig = new DatabaseConfiguration(accessor);
+    static public DatabaseConfig getInstance(final ConfigAccessor accessor) {
+        final DatabaseConfig dbConfig = new DatabaseConfig(accessor);
         LOGGER.info("Configuration loaded. dbConfig="+dbConfig);
         return dbConfig;
     }
@@ -24,7 +24,7 @@ final public class DatabaseConfiguration {
     private final String dbUser;
     private final String dbPassword;
 
-    private DatabaseConfiguration(final ConfigAccessor accessor) {
+    private DatabaseConfig(final ConfigAccessor accessor) {
         this.dbHost = accessor.getMandatoryProperty("database.host");
         this.dbPort = accessor.getMandatoryProperty("database.port", new IntegerAdapter()).intValue();
         this.dbName = accessor.getMandatoryProperty("database.name");
@@ -32,8 +32,13 @@ final public class DatabaseConfiguration {
         this.dbPassword = accessor.getMandatoryProperty("database.password");
     }
 
-    String getDbUrl() {
+    public String getDbUrl() {
         final String dbJdbcConnectionUrl = "jdbc:sqlserver://" + dbHost + ":" + dbPort + ";databaseName=" + dbName;
+        return dbJdbcConnectionUrl;
+    }
+
+    public String getDbName() {
+        final String dbJdbcConnectionUrl = dbHost + ":" + dbPort + "/" + dbName;
         return dbJdbcConnectionUrl;
     }
 

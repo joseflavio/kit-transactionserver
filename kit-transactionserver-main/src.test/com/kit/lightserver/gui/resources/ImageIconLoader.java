@@ -6,7 +6,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 import com.jfap.framework.types.FilepathVO;
-import com.kit.lightserver.KITLightServerBootstrap;
+import com.kit.lightserver.KITLightServerGui;
 
 public final class ImageIconLoader {
 
@@ -14,7 +14,7 @@ public final class ImageIconLoader {
 
     static public ImageIcon load(final FilepathVO file) {
         if( file.getType() == FilepathVO.FilepathType.CLASS_PATH ) {
-            URL imageIconJarUrl = KITLightServerBootstrap.class.getResource(file.getFilepath());
+            URL imageIconJarUrl = KITLightServerGui.class.getResource(file.getFilepath());
             if( imageIconJarUrl == null ) {
                 throw new RuntimeException("File not found. file="+file);
             }

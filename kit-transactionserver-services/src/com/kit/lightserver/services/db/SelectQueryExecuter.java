@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jfap.chronometer.Chronometer;
-import com.kit.lightserver.services.be.authentication.DatabaseConfiguration;
+import com.kit.lightserver.services.be.authentication.DatabaseConfig;
 import com.kit.lightserver.services.be.authentication.DatabaseConnectionUtil;
 import com.kit.lightserver.services.db.logger.DatabaseLogger;
 
@@ -24,7 +24,7 @@ public final class SelectQueryExecuter<T> {
         this.resultAdapter = resultAdapter;
     }// constructor
 
-    public SelectQueryResult<T> executeSelectQuery(final DatabaseConfiguration dbConfig, final SelectQueryInterface selectQuery) {
+    public SelectQueryResult<T> executeSelectQuery(final DatabaseConfig dbConfig, final SelectQueryInterface selectQuery) {
 
         final Connection connection = DatabaseConnectionUtil.getInstance2().getConnection(dbConfig);
         if (connection == null) {

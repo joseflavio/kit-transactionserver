@@ -1,7 +1,7 @@
 package com.kit.lightserver.services.db.authenticate;
 
 import com.kit.lightserver.services.be.authentication.AuthenticateQueryResult;
-import com.kit.lightserver.services.be.authentication.DatabaseConfiguration;
+import com.kit.lightserver.services.be.authentication.DatabaseConfig;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
 import com.kit.lightserver.services.db.SelectQueryResult;
 import com.kit.lightserver.services.db.UpdateQueryExecuter;
@@ -9,9 +9,9 @@ import com.kit.lightserver.services.db.UpdateQueryResult;
 
 public final class TableAuthenticateOperations {
 
-    private final DatabaseConfiguration dbConfig;
+    private final DatabaseConfig dbConfig;
 
-    public TableAuthenticateOperations(final DatabaseConfiguration dbConfig) {
+    public TableAuthenticateOperations(final DatabaseConfig dbConfig) {
         this.dbConfig = dbConfig;
     }
 

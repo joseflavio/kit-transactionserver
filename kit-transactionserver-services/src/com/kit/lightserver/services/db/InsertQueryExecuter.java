@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jfap.chronometer.Chronometer;
-import com.kit.lightserver.services.be.authentication.DatabaseConfiguration;
+import com.kit.lightserver.services.be.authentication.DatabaseConfig;
 import com.kit.lightserver.services.be.authentication.DatabaseConnectionUtil;
 import com.kit.lightserver.services.db.logger.DatabaseLogger;
 
@@ -17,7 +17,7 @@ public final class InsertQueryExecuter {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(InsertQueryExecuter.class);
 
-    static public InsertQueryResult executeInsertQuery(final DatabaseConfiguration dbConfig, final InsertQueryInterface insertQuery) {
+    static public InsertQueryResult executeInsertQuery(final DatabaseConfig dbConfig, final InsertQueryInterface insertQuery) {
 
         final Connection connection = DatabaseConnectionUtil.getInstance2().getConnection(dbConfig);
         if (connection == null) {
