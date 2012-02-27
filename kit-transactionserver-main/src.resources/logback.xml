@@ -2,7 +2,7 @@
 
   <appender name="FILE-MAIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/logs-%d{yyyy-MM}/logs-%d{yyyy-MM-dd}/kit-transactionserver-main.log</fileNamePattern>
+      <fileNamePattern>logs/logs-%d{yyyy-MM-dd}/kit-transactionserver-main.log</fileNamePattern>
     </rollingPolicy>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <Pattern>[%date{HH:mm:ss.SSS}] [%thread] [%level] [%file:%line] %msg%n</Pattern>
@@ -11,7 +11,7 @@
 
   <appender name="FILE-DATABASE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/logs-%d{yyyy-MM}/logs-%d{yyyy-MM-dd}/database.log</fileNamePattern>
+      <fileNamePattern>logs/logs-%d{yyyy-MM-dd}/database.log</fileNamePattern>
     </rollingPolicy>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <Pattern>[%date{HH:mm:ss.SSS}] [%thread] [%level] [%class{0}] %msg%n</Pattern>
@@ -20,7 +20,7 @@
 
   <appender name="FILE-ADAPTERS" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/logs-%d{yyyy-MM}/logs-%d{yyyy-MM-dd}/adapters.log</fileNamePattern>
+      <fileNamePattern>logs/logs-%d{yyyy-MM-dd}/adapters.log</fileNamePattern>
     </rollingPolicy>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <Pattern>[%date{HH:mm:ss.SSS}] [%thread] [%level] [%class{0}] %msg%n</Pattern>
@@ -29,7 +29,7 @@
   
   <appender name="FILE-CONNECTIONS" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/logs-%d{yyyy-MM}/logs-%d{yyyy-MM-dd}/connections.log</fileNamePattern>
+      <fileNamePattern>logs/logs-%d{yyyy-MM-dd}/connections.log</fileNamePattern>
     </rollingPolicy>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <Pattern>[%date{HH:mm:ss.SSS}] [%thread] [%level] [%class{0}] %msg%n</Pattern>
@@ -46,7 +46,7 @@
       <pattern>[%date] [%level] [%thread] [%logger{64}:%method] [%file:%line] %msg%n%caller{16}%throwable{full}%n%n</pattern>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-        <fileNamePattern>logs/logs-%d{yyyy-MM}/errors.%d{yyyy-MM}.log</fileNamePattern>
+        <fileNamePattern>logs/errors/errors-%d{yyyy-ww}.log</fileNamePattern>
     </rollingPolicy>
   </appender>     
 
