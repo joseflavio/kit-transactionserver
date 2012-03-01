@@ -9,6 +9,7 @@ import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
+import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.domain.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
@@ -115,23 +116,19 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         if (authenticationResponse.equals(AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST)
                 || authenticationResponse.equals(AuthenticationServiceResponse.FAILED_INVALID_PASSWORD)) {
 
-            final AuthenticationResponseFailedWrongPassowordRSTY failed = new AuthenticationResponseFailedWrongPassowordRSTY();
-            context.getClientAdapterOut().sendBack(failed);
-
-            final ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
-            context.getClientAdapterOut().sendBack(endConversation);
-
+            AuthenticationResponseFailedWrongPassowordRSTY failed = new AuthenticationResponseFailedWrongPassowordRSTY();
+            ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
+            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(failed, endConversation);
+            context.getClientAdapterOut().sendBack(primitivesEnvelope);
             newState = WaitForEventEndConversationState.getInstance(context);
 
         }
         else if (authenticationResponse.equals(AuthenticationServiceResponse.ERROR)) {
 
-            final AuthenticationResponseFailedDatabaseErrorRSTY failed = new AuthenticationResponseFailedDatabaseErrorRSTY();
-            context.getClientAdapterOut().sendBack(failed);
-
-            final ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
-            context.getClientAdapterOut().sendBack(endConversation);
-
+            AuthenticationResponseFailedDatabaseErrorRSTY failed = new AuthenticationResponseFailedDatabaseErrorRSTY();
+            ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
+            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(failed, endConversation);
+            context.getClientAdapterOut().sendBack(primitivesEnvelope);
             newState = WaitForEventEndConversationState.getInstance(context);
 
         }

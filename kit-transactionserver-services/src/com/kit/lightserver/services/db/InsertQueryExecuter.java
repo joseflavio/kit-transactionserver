@@ -8,10 +8,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jfap.chronometer.Chronometer;
-import com.kit.lightserver.services.be.authentication.DatabaseConfig;
-import com.kit.lightserver.services.be.authentication.DatabaseConnectionUtil;
-import com.kit.lightserver.services.db.logger.DatabaseLogger;
+import com.fap.chronometer.Chronometer;
+import com.fap.framework.db.DatabaseConfig;
+import com.fap.framework.db.DatabaseConnectionUtil;
+import com.fap.framework.db.InsertQueryInterface;
+import com.fap.framework.db.InsertQueryPrinter;
+import com.fap.framework.db.InsertQueryResult;
+import com.fap.framework.db.QueryParameter;
+import com.fap.loggers.db.DatabaseLogger;
 
 public final class InsertQueryExecuter {
 
@@ -58,14 +62,13 @@ public final class InsertQueryExecuter {
                 return new InsertQueryResult(rowsInserted);
             }
             else {
-                LOGGER.error("Expected to insert a single row in the database. rowsUpdated=" + rowsInserted);
+                LOGGER.error("Expected to insert a single row in the database. rowsUpdated={}", rowsInserted);
                 return new InsertQueryResult();
             }
 
         }
         catch (final SQLException e) {
-            final String queryToString = QueryPrinter.toString(insertQuery);
-            LOGGER.error("Error executing the query. queryToString="+queryToString, e);
+            LOGGER.error("Error executing the query. insertQuery={}", new InsertQueryPrinter(insertQuery), e);
             return new InsertQueryResult();
         }// try-catch
 

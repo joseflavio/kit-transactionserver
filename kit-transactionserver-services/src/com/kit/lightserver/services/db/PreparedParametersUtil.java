@@ -10,6 +10,8 @@ import java.util.TimeZone;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import com.fap.framework.db.QueryParameter;
+
 final class PreparedParametersUtil {
 
     static void fillParameters(final PreparedStatement st, final List<QueryParameter> queryParameterList) throws SQLException {

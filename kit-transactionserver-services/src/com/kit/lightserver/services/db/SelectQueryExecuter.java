@@ -9,10 +9,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jfap.chronometer.Chronometer;
-import com.kit.lightserver.services.be.authentication.DatabaseConfig;
-import com.kit.lightserver.services.be.authentication.DatabaseConnectionUtil;
-import com.kit.lightserver.services.db.logger.DatabaseLogger;
+import com.fap.chronometer.Chronometer;
+import com.fap.framework.db.DatabaseConfig;
+import com.fap.framework.db.DatabaseConnectionUtil;
+import com.fap.framework.db.QueryParameter;
+import com.fap.framework.db.SelectQueryInterface;
+import com.fap.framework.db.SelectQueryResult;
+import com.fap.loggers.db.DatabaseLogger;
 
 public final class SelectQueryExecuter<T> {
 

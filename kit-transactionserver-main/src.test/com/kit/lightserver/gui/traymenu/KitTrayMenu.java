@@ -16,10 +16,10 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.framework.db.DatabaseConfig;
 import com.kit.lightserver.KITLightServerGui.KitTrayIconListeners;
 import com.kit.lightserver.config.ServerConfig;
 import com.kit.lightserver.gui.resources.ImageIconLoader;
-import com.kit.lightserver.services.be.authentication.DatabaseConfig;
 
 public class KitTrayMenu {
 

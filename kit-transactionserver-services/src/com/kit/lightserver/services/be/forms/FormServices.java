@@ -6,7 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jfap.chronometer.Chronometer;
+import com.fap.chronometer.Chronometer;
+import com.fap.framework.db.DatabaseConfig;
+import com.fap.framework.db.SelectQueryResult;
+import com.fap.framework.db.UpdateQueryResult;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.util.collections.SmartCollections;
 import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
@@ -14,11 +17,8 @@ import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.be.authentication.DatabaseConfig;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
-import com.kit.lightserver.services.db.SelectQueryResult;
 import com.kit.lightserver.services.db.UpdateQueryExecuter;
-import com.kit.lightserver.services.db.UpdateQueryResult;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQueryResultAdapter;
 import com.kit.lightserver.services.db.forms.conhecimentos.UpdateConhecimentosFlagsQuery;
@@ -44,10 +44,10 @@ public final class FormServices {
         this.formNotasfiscaisOperations = new FormNotasfiscaisOperations(dbConfig);
     }
 
-    public SimpleServiceResponse<FormsParaEnviarCTX> retrieveCurrentForms(final String ktUserClientId, final boolean retrieveSomenteNaoRecebidos) {
+    public SimpleServiceResponse<FormsParaEnviarCTX> retrieveCurrentForms(final String ktUserClientId, final boolean retrieveNaoRecebidos) {
 
         SelectConhecimentosQueryResultAdapter conhecimentosAdapter = new SelectConhecimentosQueryResultAdapter();
-        SelectConhecimentosQuery conhecimentosQuery = new SelectConhecimentosQuery(ktUserClientId, retrieveSomenteNaoRecebidos);
+        SelectConhecimentosQuery conhecimentosQuery = new SelectConhecimentosQuery(ktUserClientId, retrieveNaoRecebidos);
 
         SelectQueryExecuter<List<ConhecimentoSTY>> conhecimentosQueryExecuter = new SelectQueryExecuter<List<ConhecimentoSTY>>(conhecimentosAdapter);
         SelectQueryResult<List<ConhecimentoSTY>> conhecimentosQueryResult = conhecimentosQueryExecuter.executeSelectQuery(dbConfig, conhecimentosQuery);
@@ -62,10 +62,9 @@ public final class FormServices {
         // TODO: Usar um método melhor de salvar estatisticas dos serviços
         final Chronometer chronometer = new Chronometer("NotasfiscaisServices.retrieveNotasfiscais");
         chronometer.start();
-        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = formNotasfiscaisOperations.retrieveNotasfiscais(conhecimentosList,
-                retrieveSomenteNaoRecebidos);
+        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = formNotasfiscaisOperations.retrieveNotasfiscais(conhecimentosList, retrieveNaoRecebidos);
         chronometer.stop();
-        FormServices.LOGGER.info(chronometer.getLogString());
+        FormServices.LOGGER.info("Time to execute the service. chronometer={}", chronometer);
 
         if (notasfiscaisResult.isValid() == false) {
             final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();

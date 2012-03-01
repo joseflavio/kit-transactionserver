@@ -3,12 +3,12 @@ package com.kit.lightserver.services.be.forms;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fap.framework.db.DatabaseConfig;
+import com.fap.framework.db.SelectQueryResult;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.be.authentication.DatabaseConfig;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
-import com.kit.lightserver.services.db.SelectQueryResult;
 import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQuery;
 import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQueryResultAdapter;
 

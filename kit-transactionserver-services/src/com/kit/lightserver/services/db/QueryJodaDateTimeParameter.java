@@ -2,6 +2,8 @@ package com.kit.lightserver.services.db;
 
 import org.joda.time.DateTime;
 
+import com.fap.framework.db.QueryParameter;
+
 public final class QueryJodaDateTimeParameter extends QueryParameter {
 
     private final DateTime value;

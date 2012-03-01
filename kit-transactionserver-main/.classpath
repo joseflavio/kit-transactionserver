@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src.test"/>
 	<classpathentry kind="src" path="src.resources"/>
-	<classpathentry kind="lib" path="lib/primitives_v1-2_mira_rev51a.jar"/>
+	<classpathentry kind="src" path="src.primitives"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/logback-classic-1.0.0.jar"/>

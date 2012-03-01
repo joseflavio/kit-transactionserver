@@ -3,12 +3,14 @@ package com.kit.lightserver.services.be.authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.framework.db.DataSource;
+import com.fap.framework.db.DatabaseConfig;
+import com.fap.framework.db.InsertQueryResult;
+import com.fap.framework.db.SelectQueryResult;
+import com.fap.framework.db.UpdateQueryResult;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
-import com.kit.lightserver.services.db.InsertQueryResult;
-import com.kit.lightserver.services.db.SelectQueryResult;
-import com.kit.lightserver.services.db.UpdateQueryResult;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
 import com.kit.lightserver.services.db.authenticate.TableLogConexoesConstants;
 import com.kit.lightserver.services.db.authenticate.TableLogConexoesOperations;
@@ -27,8 +29,10 @@ public final class AuthenticationService {
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
     private AuthenticationService(final DatabaseConfig dbConfig) {
+        DataSource dataSource = new DataSource(dbConfig);
         this.logConexoesOperations = new TableLogConexoesOperations(dbConfig);
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dbConfig);
+
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfo connectionId, final String userClientId, final String password,

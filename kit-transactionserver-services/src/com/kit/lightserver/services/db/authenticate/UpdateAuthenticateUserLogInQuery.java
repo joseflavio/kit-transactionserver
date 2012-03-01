@@ -3,9 +3,9 @@ package com.kit.lightserver.services.db.authenticate;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.kit.lightserver.services.db.QueryParameter;
+import com.fap.framework.db.QueryParameter;
+import com.fap.framework.db.UpdateQueryInterface;
 import com.kit.lightserver.services.db.QueryStringParameter;
-import com.kit.lightserver.services.db.UpdateQueryInterface;
 
 final class UpdateAuthenticateUserLogInQuery implements UpdateQueryInterface {
 

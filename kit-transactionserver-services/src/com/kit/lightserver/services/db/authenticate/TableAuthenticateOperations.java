@@ -1,11 +1,11 @@
 package com.kit.lightserver.services.db.authenticate;
 
+import com.fap.framework.db.DatabaseConfig;
+import com.fap.framework.db.SelectQueryResult;
+import com.fap.framework.db.UpdateQueryResult;
 import com.kit.lightserver.services.be.authentication.AuthenticateQueryResult;
-import com.kit.lightserver.services.be.authentication.DatabaseConfig;
 import com.kit.lightserver.services.db.SelectQueryExecuter;
-import com.kit.lightserver.services.db.SelectQueryResult;
 import com.kit.lightserver.services.db.UpdateQueryExecuter;
-import com.kit.lightserver.services.db.UpdateQueryResult;
 
 public final class TableAuthenticateOperations {
 

@@ -7,6 +7,7 @@ import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
+import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.ChannelNotificationServerErrorRSTY;
@@ -30,10 +31,11 @@ public final class UnrecoverableErrorState implements StateSME<KitEventSME> {
 
     @Override
     public ProcessingResult<KitEventSME> transitionOccurred() {
-        final ChannelNotificationServerErrorRSTY error = new ChannelNotificationServerErrorRSTY();
-        context.getClientAdapterOut().sendBack(error);
-        final StateSME<KitEventSME> newState = FinishAndWaitForDataInputCloseState.getInstance(context, conversationFinishedStatus);
-        final ResultStateTransition<KitEventSME> transition = new ResultStateTransition<KitEventSME>(newState);
+        ChannelNotificationServerErrorRSTY error = new ChannelNotificationServerErrorRSTY();
+        AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(error);
+        context.getClientAdapterOut().sendBack(primitivesEnvelope);
+        StateSME<KitEventSME> newState = FinishAndWaitForDataInputCloseState.getInstance(context, conversationFinishedStatus);
+        ResultStateTransition<KitEventSME> transition = new ResultStateTransition<KitEventSME>(newState);
         return transition;
     }
 

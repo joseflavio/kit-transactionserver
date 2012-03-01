@@ -1,7 +1,7 @@
 package com.kit.lightserver.adapters.adapterout;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import kit.primitives.base.Primitive;
 import kit.primitives.factory.PrimitiveStreamFactory;
@@ -16,7 +16,7 @@ final class ClientAdapterOutSender {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(ClientAdapterOutSender.class);
 
-    private final DataOutputStream dataOutputStream;
+    private final ServerDataWriter dataOutputStream;
 
     private boolean validToSend = false;
 
@@ -24,22 +24,23 @@ final class ClientAdapterOutSender {
 
     public ClientAdapterOutSender(final SocketWrapper socketWrapper) {
         this.socketWrapper = socketWrapper;
-        this.dataOutputStream = socketWrapper.getDataOutputStream();
+        this.dataOutputStream = new ServerDataWriter(socketWrapper.getDataOutputStream());
         this.validToSend = true;
 
     }// constructor
 
-    final void sendToTheClientSocket(final Primitive clientPrimitive) {
+    final void sendToTheClientSocket(final List<Primitive> primitiveList) {
         try {
-            AdaptersLogger.logSending(clientPrimitive);
-            PrimitiveStreamFactory.writePrimitive(dataOutputStream, clientPrimitive);
+            AdaptersLogger.logSending(primitiveList);
+            PrimitiveStreamFactory.writePrimitive(dataOutputStream, primitiveList);
         } catch (final IOException e) {
             closeOutput();
-            LOGGER.error("Could not send. clientPrimitive=" + clientPrimitive, e);
+            LOGGER.error("Could not send. primitiveList=" + primitiveList, e);
         }
     }
 
     void closeOutput() {
+        LOGGER.info("dataOutputStream.getTotalBytesSent="+dataOutputStream.getTotalBytesSent());
         validToSend = false;
         socketWrapper.closeDataOutputStream();
     }

@@ -1,5 +1,7 @@
 package com.kit.lightserver.services.db;
 
+import com.fap.framework.db.QueryParameter;
+
 public final class QueryIntegerParameter extends QueryParameter {
 
     private final Integer intValue;

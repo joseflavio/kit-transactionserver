@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.StateSME;
+import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
@@ -34,7 +35,8 @@ final class ClientAuthenticationSuccessfulState extends BaseState implements Sta
          */
         // final boolean clientNewLogin = PrimitiveTranslator.isAuthenticationRequest_NEWLOGIN(requestPrimitive);
         final AuthenticationResponseSuccessRSTY success = new AuthenticationResponseSuccessRSTY();
-        context.getClientAdapterOut().sendBack(success);
+        final AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(success);
+        context.getClientAdapterOut().sendBack(primitivesEnvelope);
 
         /*
          * GETTING ALL THE FORMS HERE, SHOULD IT BE HERE???

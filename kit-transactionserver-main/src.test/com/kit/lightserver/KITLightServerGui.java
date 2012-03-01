@@ -7,11 +7,11 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.framework.db.DatabaseConfig;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.configuration.ConfigurationReader;
 import com.kit.lightserver.config.ServerConfig;
 import com.kit.lightserver.gui.traymenu.KitTrayMenu;
-import com.kit.lightserver.services.be.authentication.DatabaseConfig;
 
 
 public final class KITLightServerGui {

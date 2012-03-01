@@ -7,6 +7,7 @@ import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
+import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.services.be.forms.FormServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
@@ -26,8 +27,9 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
 
     @Override
     public ProcessingResult<KitEventSME> transitionOccurred() {
-        final FormOperationUpdatedFormsRequestRSTY formOperationUpdatedRowsGetRSTY = new FormOperationUpdatedFormsRequestRSTY();
-        context.getClientAdapterOut().sendBack(formOperationUpdatedRowsGetRSTY);
+        FormOperationUpdatedFormsRequestRSTY formOperationUpdatedRowsGetRSTY = new FormOperationUpdatedFormsRequestRSTY();
+        AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(formOperationUpdatedRowsGetRSTY);
+        context.getClientAdapterOut().sendBack(primitivesEnvelope);
         return new ResultWaitEvent<KitEventSME>();
     }
 
@@ -55,16 +57,12 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
 
         }
         else if (event instanceof FormOperationUpdateFormsCompleteEventSME) {
-
-            final FormOperationUpdatedFormsClearFlagsRSTY formOperationClearFlags = new FormOperationUpdatedFormsClearFlagsRSTY();
-            context.getClientAdapterOut().sendBack(formOperationClearFlags);
-
-            final ChannelNotificationEndConversationRSTY channelNotificationEndConversationRSTY = new ChannelNotificationEndConversationRSTY();
-            context.getClientAdapterOut().sendBack(channelNotificationEndConversationRSTY);
-
+            FormOperationUpdatedFormsClearFlagsRSTY formOperationClearFlags = new FormOperationUpdatedFormsClearFlagsRSTY();
+            ChannelNotificationEndConversationRSTY channelNotificationEndConversationRSTY = new ChannelNotificationEndConversationRSTY();
+            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(formOperationClearFlags, channelNotificationEndConversationRSTY);
+            context.getClientAdapterOut().sendBack(primitivesEnvelope);
             StateSME<KitEventSME> newState = WaitForEventEndConversationState.getInstance(context);
             result = new ResultStateTransition<KitEventSME>(newState);
-
         }
         else {
             LOGGER.error("Invalid event. event=" + event);

@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.statemachine.StateMachine;
 import com.jfap.framework.statemachine.StateSME;
+import com.kit.lightserver.adapters.adapterout.AdoResponseEnvelope;
 import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.statemachine.states.InitialState;
 import com.kit.lightserver.statemachine.states.KitEventSME;
-import com.kit.lightserver.types.response.ClientResponseRSTY;
 
 public final class KITStateMachineRunnable implements Runnable {
 
@@ -22,7 +22,7 @@ public final class KITStateMachineRunnable implements Runnable {
 
     private final List<KitEventSME> requestsReceivedQueue = Collections.synchronizedList(new LinkedList<KitEventSME>());
 
-    private final List<ClientResponseRSTY> responseToSendQueue = Collections.synchronizedList(new LinkedList<ClientResponseRSTY>());
+    private final List<AdoResponseEnvelope> responseToSendQueue = Collections.synchronizedList(new LinkedList<AdoResponseEnvelope>());
 
     private final StateMachine<KitEventSME> kitStateState;
 
@@ -53,7 +53,7 @@ public final class KITStateMachineRunnable implements Runnable {
         return true;
     }
 
-    public synchronized boolean enqueueToSend(final ClientResponseRSTY clientResponseRSTY) {
+    public synchronized boolean enqueueToSend(final AdoResponseEnvelope clientResponseRSTY) {
         if(  canEnqueue == false ) {
             LOGGER.warn("Could not enqueue " + clientResponseRSTY);
             return false;
@@ -82,7 +82,7 @@ public final class KITStateMachineRunnable implements Runnable {
 
                 while( responseToSendQueue.size() > 0 ) {
 
-                    final ClientResponseRSTY clientResponse = responseToSendQueue.remove(0);
+                    final AdoResponseEnvelope clientResponse = responseToSendQueue.remove(0);
                     if( clientAdapterOut.isValidToSend() ) {
                         clientAdapterOut.sendBack(clientResponse);
                     }

@@ -1,5 +1,8 @@
 package com.kit.lightserver.adapters.adapterout;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import kit.primitives.base.Primitive;
 
 import org.slf4j.Logger;
@@ -7,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.network.SocketWrapper;
 import com.kit.lightserver.types.response.ClientResponseRSTY;
-import com.kit.lightserver.types.response.CloseDataOutputCommandRSTY;
 
 public final class ClientAdapterOut {
 
@@ -21,33 +23,46 @@ public final class ClientAdapterOut {
 
     }// constructor
 
-    public void sendBack(final ClientResponseRSTY clientResponse) {
+    public void sendBack(final AdoResponseEnvelope adoResponseEnvelope) {
 
-
-        if( clientResponse instanceof CloseDataOutputCommandRSTY ) {
-            LOGGER.info("Closing data output stream to mobile. clientResponse=" + clientResponse);
+        if( adoResponseEnvelope instanceof CloseDataOutputCommandRSTY ) {
+            LOGGER.info("Closing data output stream to mobile. adoResponseEnvelope=" + adoResponseEnvelope);
             sender.closeOutput();
         }
-        else {
+        else if( adoResponseEnvelope instanceof AdoPrimitiveListEnvelope ) {
 
-            final AdoConverterResult<Primitive> converterResult = AdoPrimiveConverter.convert(clientResponse);
-            //LOGGER.debug("Processing " + clientResponse + " to " + converterResult);
+            AdoPrimitiveListEnvelope primitiveListEnvelope = (AdoPrimitiveListEnvelope)adoResponseEnvelope;
 
-            if( !converterResult.isSuccess() ) {
+            List<ClientResponseRSTY> responseList = primitiveListEnvelope.getAdoClientResponseList();
 
-                /*
-                 * If we can't convert, the conversation has to finish to avoid make the client inconsistent
-                 */
-                sender.closeOutput();
+            List<Primitive> primitiveList = new LinkedList<Primitive>();
+            boolean successConvertingAll = true;
+            for(int i=0; i<responseList.size(); ++i) {
 
-            }// if
+                ClientResponseRSTY currentResponse = responseList.get(i);
+                AdoConverterResult<Primitive> converterResult = AdoPrimiveConverter.convert(currentResponse);
+
+                primitiveList.add(converterResult.getPrimitiveToSend()); // TODO: Improve this, the error should not be inside the AdoPrimiveConverter
+
+                if( converterResult.isSuccess() == false ) {
+                    successConvertingAll = false;
+                    break;
+                }
+
+            }
 
             /*
-             * Even with error converting, we need to send the error to the client
+             * ? Even with error converting, we need to send the error to the client ?
              */
-            final Primitive clientPrimitive = converterResult.getPrimitiveToSend();
-            sender.sendToTheClientSocket(clientPrimitive);
+            sender.sendToTheClientSocket(primitiveList);
 
+            if( successConvertingAll == false ) { // If we can't convert, the conversation has to finish to avoid make the client inconsistent
+                LOGGER.error("The ADO output will be closed because an error occurred.");
+                sender.closeOutput();
+            }
+
+        } else {
+            LOGGER.error("Unknow kind of AdoEnvelope. adoResponseEnvelope="+adoResponseEnvelope);
         }
 
     }

@@ -7,10 +7,10 @@ import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
+import com.kit.lightserver.adapters.adapterout.CloseDataOutputCommandRSTY;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.AdapterInDataInputClosedSME;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
-import com.kit.lightserver.types.response.CloseDataOutputCommandRSTY;
 
 public final class FinishAndWaitForDataInputCloseState implements StateSME<KitEventSME> {
 
