@@ -18,6 +18,8 @@ public final class KITLightServerGui {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(KITLightServerGui.class);
 
+
+
     private final ConfigAccessor configAccessor;
     private final ServerConfig serverConfig;
     private final DatabaseConfig dbConfig;
@@ -26,7 +28,7 @@ public final class KITLightServerGui {
 
     KITLightServerGui() {
 
-        configAccessor = ConfigurationReader.getConfiguration();
+        configAccessor = ConfigurationReader.getConfiguration(KitPropertiesFiles.SERVER_PROPERTIES, KitPropertiesFiles.DATABASE_PROPERTIES);
         serverConfig = ServerConfig.getInstance(configAccessor);
         dbConfig = DatabaseConfig.getInstance(configAccessor);
 

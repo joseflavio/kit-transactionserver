@@ -16,7 +16,7 @@ final class KITLightServerTestMain {
         ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
         serverSocket.setSoTimeout(40000);
 
-        ConfigAccessor configAccessor = ConfigurationReader.getConfiguration();
+        ConfigAccessor configAccessor = ConfigurationReader.getConfiguration(KitPropertiesFiles.SERVER_PROPERTIES, KitPropertiesFiles.DATABASE_PROPERTIES);
 
         KITLightServer kitLightServer = new KITLightServer(SERVER_PORT, 40000, configAccessor, new LogUncaughtExceptionHandler());
         kitLightServer.waitConnection2(serverSocket);
