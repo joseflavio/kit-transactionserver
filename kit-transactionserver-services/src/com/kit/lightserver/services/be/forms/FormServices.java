@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import com.fap.chronometer.Chronometer;
 import com.fap.framework.db.DatabaseConfig;
+import com.fap.framework.db.SelectQueryExecuter;
 import com.fap.framework.db.SelectQueryResult;
+import com.fap.framework.db.UpdateQueryExecuter;
 import com.fap.framework.db.UpdateQueryResult;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.util.collections.SmartCollections;
@@ -17,8 +19,6 @@ import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.db.SelectQueryExecuter;
-import com.kit.lightserver.services.db.UpdateQueryExecuter;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQueryResultAdapter;
 import com.kit.lightserver.services.db.forms.conhecimentos.UpdateConhecimentosFlagsQuery;

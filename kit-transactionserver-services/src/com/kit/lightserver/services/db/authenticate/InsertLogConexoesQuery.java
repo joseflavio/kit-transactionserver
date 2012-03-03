@@ -7,11 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fap.framework.db.InsertQueryInterface;
+import com.fap.framework.db.QueryIntegerParameter;
 import com.fap.framework.db.QueryParameter;
+import com.fap.framework.db.QueryStringParameter;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
-import com.kit.lightserver.services.db.QueryIntegerParameter;
-import com.kit.lightserver.services.db.QueryStringParameter;
 
 final class InsertLogConexoesQuery implements InsertQueryInterface {
 

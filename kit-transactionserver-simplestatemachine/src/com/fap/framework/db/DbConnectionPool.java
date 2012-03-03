@@ -1,17 +1,25 @@
 package com.fap.framework.db;
 
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class DbConnectionPool {
 
-    public DbConnectionPool(final DatabaseConfig dbConfig) {
-        // TODO Auto-generated constructor stub
-    }
+    private final List<DbPooledConnection> connections = new ArrayList<DbPooledConnection>();
+    private final DatabaseConfig dbConfig;
 
-    private final ConnectionLock c1 = new ConnectionLock("c1");
-    private final ConnectionLock c2 = new ConnectionLock("c2");
+    public DbConnectionPool(final DatabaseConfig dbConfig, final int poolSize) {
+
+        this.dbConfig = dbConfig;
+
+        for(int i=0; i < poolSize; ++i) {
+            final DbPooledConnection c = new DbPooledConnection("c"+i);
+            connections.add(c);
+        }
+
+    }
 
     private final Lock lock = new ReentrantLock(true);
 
@@ -21,22 +29,17 @@ public class DbConnectionPool {
 
         try {
 
-            ConnectionLock selected = null;
-            while (true) {
-                System.out.print(".");
-                if (c1.isAvailable() == true) {
-                    selected = c1;
-                    break;
+            DbPooledConnection selected = null;
+            do {
+                for(DbPooledConnection currentConnection : connections) {
+                    if (currentConnection.internalTryToGet() == true) {
+                        selected = currentConnection;
+                        break;
+                    }
                 }
+            } while (selected == null);
 
-                if (c2.isAvailable() == true) {
-                    selected = c2;
-                    break;
-                }
-
-            }
-
-            return selected.getConnection();
+            return selected;
 
         }
         finally {
@@ -45,31 +48,10 @@ public class DbConnectionPool {
 
     }
 
-    static final class ConnectionLock {
 
-        private final DbPooledConnection connection;
-        private final Lock lock = new ReentrantLock();
-
-        public ConnectionLock(final String name) {
-            this.connection = new DbPooledConnection(name);
-        }
-
-        public boolean isAvailable() {
-            try {
-                boolean locked = lock.tryLock(100, TimeUnit.MILLISECONDS);
-                System.out.println("locked="+locked);
-                return locked;
-            }
-            catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return false;
-        }
-
-        public DbPooledConnection getConnection() {
-            return connection;
-        }
-    }// class
+    public <T> SelectQueryResult<T> executeSelectQuery(final SelectQueryInterface selectQuery, final SelectQueryResultAdapter<T> resultAdapter) {
+        SelectQueryExecuter<T> executer = new SelectQueryExecuter<T>(resultAdapter);
+        return executer.executeSelectQuery(dbConfig, selectQuery);
+    }
 
 }// class

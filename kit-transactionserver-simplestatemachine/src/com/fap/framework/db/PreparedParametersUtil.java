@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db;
+package com.fap.framework.db;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -9,8 +9,6 @@ import java.util.TimeZone;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-
-import com.fap.framework.db.QueryParameter;
 
 final class PreparedParametersUtil {
 

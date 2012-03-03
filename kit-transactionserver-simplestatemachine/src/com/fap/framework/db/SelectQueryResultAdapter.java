@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db;
+package com.fap.framework.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

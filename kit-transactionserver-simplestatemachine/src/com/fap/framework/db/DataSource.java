@@ -4,8 +4,8 @@ public class DataSource {
 
     private final DbConnectionPool connectionPool;
 
-    public DataSource(final DatabaseConfig dbConfig) {
-        this.connectionPool = new DbConnectionPool(dbConfig);
+    public DataSource(final DatabaseConfig dbConfig, final int connectionPoolSize) {
+        this.connectionPool = new DbConnectionPool(dbConfig, connectionPoolSize);
     }
 
     public DbConnectionPool getConnectionPool() {

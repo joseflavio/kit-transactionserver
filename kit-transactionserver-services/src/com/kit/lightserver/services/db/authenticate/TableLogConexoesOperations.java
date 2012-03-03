@@ -1,10 +1,10 @@
 package com.kit.lightserver.services.db.authenticate;
 
 import com.fap.framework.db.DatabaseConfig;
+import com.fap.framework.db.InsertQueryExecuter;
 import com.fap.framework.db.InsertQueryResult;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
-import com.kit.lightserver.services.db.InsertQueryExecuter;
 
 public final class TableLogConexoesOperations {
 

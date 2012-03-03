@@ -1,6 +1,5 @@
-package com.kit.lightserver.services.db;
+package com.fap.framework.db;
 
-import com.fap.framework.db.QueryParameter;
 
 
 public final class QueryBooleanParameter extends QueryParameter {

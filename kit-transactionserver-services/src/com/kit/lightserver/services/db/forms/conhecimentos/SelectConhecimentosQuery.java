@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.fap.framework.db.QueryParameter;
+import com.fap.framework.db.QueryStringParameter;
 import com.fap.framework.db.SelectQueryInterface;
-import com.kit.lightserver.services.db.QueryStringParameter;
 
 final public class SelectConhecimentosQuery implements SelectQueryInterface {
 

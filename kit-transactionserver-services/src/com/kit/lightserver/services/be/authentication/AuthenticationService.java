@@ -29,7 +29,7 @@ public final class AuthenticationService {
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
     private AuthenticationService(final DatabaseConfig dbConfig) {
-        DataSource dataSource = new DataSource(dbConfig);
+        DataSource dataSource = new DataSource(dbConfig, 8);
         this.logConexoesOperations = new TableLogConexoesOperations(dbConfig);
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dbConfig);
 

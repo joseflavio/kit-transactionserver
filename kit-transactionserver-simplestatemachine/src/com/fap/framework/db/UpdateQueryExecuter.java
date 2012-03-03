@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db;
+package com.fap.framework.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,11 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fap.chronometer.Chronometer;
-import com.fap.framework.db.DatabaseConfig;
-import com.fap.framework.db.DatabaseConnectionUtil;
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.UpdateQueryInterface;
-import com.fap.framework.db.UpdateQueryResult;
 import com.fap.loggers.db.DatabaseLogger;
 
 public final class UpdateQueryExecuter {

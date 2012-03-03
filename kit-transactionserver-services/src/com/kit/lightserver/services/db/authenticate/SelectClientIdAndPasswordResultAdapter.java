@@ -3,8 +3,8 @@ package com.kit.lightserver.services.db.authenticate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.fap.framework.db.SelectQueryResultAdapter;
 import com.kit.lightserver.services.be.authentication.AuthenticateQueryResult;
-import com.kit.lightserver.services.db.SelectQueryResultAdapter;
 
 final class SelectClientIdAndPasswordResultAdapter implements SelectQueryResultAdapter<AuthenticateQueryResult> {
 

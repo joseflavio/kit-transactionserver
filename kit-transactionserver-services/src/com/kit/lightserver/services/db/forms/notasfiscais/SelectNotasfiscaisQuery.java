@@ -3,9 +3,9 @@ package com.kit.lightserver.services.db.forms.notasfiscais;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fap.framework.db.QueryIntegerParameter;
 import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.SelectQueryInterface;
-import com.kit.lightserver.services.db.QueryIntegerParameter;
 import com.kit.lightserver.services.db.common.QueryUtil;
 
 final public class SelectNotasfiscaisQuery implements SelectQueryInterface {

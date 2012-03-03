@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db;
+package com.fap.framework.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fap.chronometer.Chronometer;
-import com.fap.framework.db.DatabaseConfig;
-import com.fap.framework.db.DatabaseConnectionUtil;
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.SelectQueryInterface;
-import com.fap.framework.db.SelectQueryResult;
 import com.fap.loggers.db.DatabaseLogger;
 
 public final class SelectQueryExecuter<T> {
@@ -35,17 +30,8 @@ public final class SelectQueryExecuter<T> {
             return failResult;
         }
 
-        /*
-         * Log the query
-         */
-        DatabaseLogger.logSelectQuery(selectQuery);
 
-        final Chronometer chronometer = new Chronometer("executeSelectQuery(..)");
-        chronometer.start();
         final SelectQueryResult<T> result = executeSelectQuery(connection, selectQuery);
-        chronometer.stop();
-
-        DatabaseLogger.logSelectResult(chronometer, result);
 
         DatabaseConnectionUtil.getInstance2().closeConnection(connection);
 
@@ -55,6 +41,15 @@ public final class SelectQueryExecuter<T> {
 
     private SelectQueryResult<T> executeSelectQuery(final Connection connection, final SelectQueryInterface selectQuery) {
 
+        /*
+         * Log the query
+         */
+        DatabaseLogger.logSelectQuery(selectQuery);
+
+        final Chronometer chronometer = new Chronometer("executeSelectQuery(..)");
+        chronometer.start();
+
+        SelectQueryResult<T> result;
         try {
 
             final String selectQueryStr = selectQuery.getPreparedSelectQueryString();
@@ -64,12 +59,17 @@ public final class SelectQueryExecuter<T> {
             final ResultSet rs = st.executeQuery();
             final T selectQueryResult = resultAdapter.adaptResultSet(rs);
 
-            return new SelectQueryResult<T>(selectQueryResult);
+            result = new SelectQueryResult<T>(selectQueryResult);
 
         } catch (final SQLException e) {
             LOGGER.error("Error executing the query.", e);
-            return new SelectQueryResult<T>();
+            result = new SelectQueryResult<T>();
         }
+
+        chronometer.stop();
+        DatabaseLogger.logSelectResult(chronometer, result);
+
+        return result;
 
     }
 
