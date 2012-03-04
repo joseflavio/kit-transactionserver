@@ -36,7 +36,7 @@ public final class AuthenticationService {
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfo connectionId, final String userClientId, final String password,
-            final InstallationIdSTY installationId) {
+            final InstallationIdSTY installationId, final long lastConnectionToken) {
 
         final AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
 
@@ -55,7 +55,6 @@ public final class AuthenticationService {
     private AuthenticationServiceResponse checkAuthentication(final String userClientId, final String password) {
 
         final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(userClientId);
-        LOGGER.info("resultContainer="+resultContainer);
 
         if( resultContainer.isQuerySuccessful() == false ) { // Just checking if the query was successful
             return AuthenticationServiceResponse.ERROR;
@@ -65,7 +64,7 @@ public final class AuthenticationService {
          * Failed Cases
          */
         final AuthenticateQueryResult result = resultContainer.getResult();
-        final Boolean userExists = result.isUserExists();
+        final boolean userExists = result.isUserExists().booleanValue();
         if(  userExists == false ) {
             return AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST;
         }
@@ -87,7 +86,7 @@ public final class AuthenticationService {
             return AuthenticationServiceResponse.ERROR;
         }
 
-        final boolean deveResetar = result.isKtDeveResetar();
+        final boolean deveResetar = result.isKtDeveResetar().booleanValue();
         if( deveResetar == true ) {
             return AuthenticationServiceResponse.SUCCESS_MUST_RESET;
 

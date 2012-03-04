@@ -18,7 +18,7 @@ public final class TableAuthenticateOperations {
     public SelectQueryResult<AuthenticateQueryResult> selectClientIdExists(final String userKtClientId) {
         final SelectClientIdAndPasswordResultAdapter queryResultAdapter = new SelectClientIdAndPasswordResultAdapter();
         final SelectQueryExecuter<AuthenticateQueryResult> selectQueryExecuter = new SelectQueryExecuter<AuthenticateQueryResult>(queryResultAdapter);
-        final SelectClientIdAndPasswordQuery selectQuery = new SelectClientIdAndPasswordQuery(userKtClientId);
+        final SelectAuthenticateByClientIdQuery selectQuery = new SelectAuthenticateByClientIdQuery(userKtClientId);
         final SelectQueryResult<AuthenticateQueryResult> result = selectQueryExecuter.executeSelectQuery(dbConfig, selectQuery);
         return result;
     }

@@ -7,11 +7,11 @@ import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.QueryStringParameter;
 import com.fap.framework.db.SelectQueryInterface;
 
-final class SelectClientIdAndPasswordQuery implements SelectQueryInterface {
+final class SelectAuthenticateByClientIdQuery implements SelectQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    SelectClientIdAndPasswordQuery(final String ktClientId) {
+    SelectAuthenticateByClientIdQuery(final String ktClientId) {
 
         final QueryStringParameter ktClientIdParam = new QueryStringParameter(ktClientId);
         queryParameters.add(ktClientIdParam);

@@ -5,6 +5,7 @@ import kit.primitives.channel.ChannelProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.framework.uniqueids.LastConnectionTokenGenerator;
 import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
@@ -55,16 +56,17 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         /*
          * Real processing
          */
-        final AuthenticationRequestSME authenticationRequestSME = (AuthenticationRequestSME) event;
+        AuthenticationRequestSME authenticationRequestSME = (AuthenticationRequestSME) event;
 
-        final String userClientId = authenticationRequestSME.getUserClientId();
-        final String password = authenticationRequestSME.getPassword();
-        final InstallationIdSTY installationId = authenticationRequestSME.getInstallationIdSTY();
+        String userClientId = authenticationRequestSME.getUserClientId();
+        String password = authenticationRequestSME.getPassword();
+        InstallationIdSTY installationId = authenticationRequestSME.getInstallationIdSTY();
 
+        AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
 
-        final AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
+        long lastConnectionToken = LastConnectionTokenGenerator.generateRandomConnectionId();
         final AuthenticationServiceResponse authenticationResponse = authenticationService.authenticate(context.getConnectionInfo(), userClientId, password,
-                installationId);
+                installationId, lastConnectionToken);
 
         LOGGER.info("Authentication complete. authenticationResponse=" + authenticationResponse);
 
