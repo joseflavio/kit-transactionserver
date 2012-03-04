@@ -1,15 +1,11 @@
 package com.fap.framework.db;
 
-public class DataSource {
+public final class DataSource {
 
-    private final DbConnectionPool connectionPool;
+    private final DatabaseConfig dbConfig;
 
-    public DataSource(final DatabaseConfig dbConfig, final int connectionPoolSize) {
-        this.connectionPool = new DbConnectionPool(dbConfig, connectionPoolSize);
-    }
-
-    public DbConnectionPool getConnectionPool() {
-        return connectionPool;
+    public DataSource(final DatabaseConfig dbConfig) {
+        this.dbConfig = dbConfig;
     }
 
 }

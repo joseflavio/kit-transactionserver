@@ -21,6 +21,7 @@ public final class AuthenticationService {
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
         DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
+        DataSource dataSource = new DataSource(dbConfig);
         return new AuthenticationService(dbConfig);
     }
 
@@ -29,10 +30,8 @@ public final class AuthenticationService {
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
     private AuthenticationService(final DatabaseConfig dbConfig) {
-        DataSource dataSource = new DataSource(dbConfig, 8);
         this.logConexoesOperations = new TableLogConexoesOperations(dbConfig);
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dbConfig);
-
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfo connectionId, final String userClientId, final String password,
