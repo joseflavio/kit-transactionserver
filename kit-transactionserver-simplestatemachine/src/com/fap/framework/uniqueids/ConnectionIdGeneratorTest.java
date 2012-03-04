@@ -1,4 +1,4 @@
-package com.jfap.framework.connectionid;
+package com.fap.framework.uniqueids;
 
 final class ConnectionIdGeneratorTest {
 

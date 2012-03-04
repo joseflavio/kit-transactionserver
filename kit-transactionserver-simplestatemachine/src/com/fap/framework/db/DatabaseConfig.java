@@ -3,7 +3,7 @@ package com.fap.framework.db;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jfap.framework.adapters.IntegerAdapter;
+import com.fap.framework.adapters.IntegerAdapter;
 import com.jfap.framework.configuration.ConfigAccessor;
 
 final public class DatabaseConfig {

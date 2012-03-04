@@ -1,7 +1,6 @@
-package com.jfap.framework.adapters;
+package com.fap.framework.adapters;
 
-import com.jfap.framework.types.FilepathVO;
-import com.jfap.framework.types.FilepathVO.FilepathType;
+import com.fap.framework.adapters.FilepathVO.FilepathType;
 
 public final class FilepathAdapter implements TypeAdapter<FilepathVO, String> {
 

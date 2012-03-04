@@ -1,6 +1,6 @@
 package com.jfap.framework.configuration;
 
-import com.jfap.framework.adapters.TypeAdapter;
+import com.fap.framework.adapters.TypeAdapter;
 
 public interface ConfigAccessor {
 

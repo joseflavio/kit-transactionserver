@@ -3,11 +3,11 @@ package com.kit.lightserver.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jfap.framework.adapters.FilepathAdapter;
-import com.jfap.framework.adapters.IntegerAdapter;
+import com.fap.framework.adapters.FilepathAdapter;
+import com.fap.framework.adapters.FilepathVO;
+import com.fap.framework.adapters.IntegerAdapter;
+import com.fap.framework.adapters.FilepathVO.FilepathType;
 import com.jfap.framework.configuration.ConfigAccessor;
-import com.jfap.framework.types.FilepathVO;
-import com.jfap.framework.types.FilepathVO.FilepathType;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 
 

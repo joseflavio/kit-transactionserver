@@ -2,7 +2,7 @@ package com.kit.lightserver.domain.types;
 
 import java.net.InetAddress;
 
-import com.jfap.framework.connectionid.ConnectionIdGenerator;
+import com.fap.framework.uniqueids.ConnectionIdGenerator;
 
 public final class ConnectionInfoFactory {
 

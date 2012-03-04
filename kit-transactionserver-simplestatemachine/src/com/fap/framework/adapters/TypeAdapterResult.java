@@ -1,4 +1,4 @@
-package com.jfap.framework.adapters;
+package com.fap.framework.adapters;
 
 public final class TypeAdapterResult<T> {
 

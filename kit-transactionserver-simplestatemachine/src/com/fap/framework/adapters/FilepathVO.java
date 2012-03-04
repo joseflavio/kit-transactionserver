@@ -1,4 +1,4 @@
-package com.jfap.framework.types;
+package com.fap.framework.adapters;
 
 
 public final class FilepathVO {

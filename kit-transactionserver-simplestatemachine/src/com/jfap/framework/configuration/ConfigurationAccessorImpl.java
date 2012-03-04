@@ -2,8 +2,8 @@ package com.jfap.framework.configuration;
 
 import java.util.Properties;
 
-import com.jfap.framework.adapters.TypeAdapter;
-import com.jfap.framework.adapters.TypeAdapterResult;
+import com.fap.framework.adapters.TypeAdapter;
+import com.fap.framework.adapters.TypeAdapterResult;
 
 public final class ConfigurationAccessorImpl implements ConfigAccessor {
 
