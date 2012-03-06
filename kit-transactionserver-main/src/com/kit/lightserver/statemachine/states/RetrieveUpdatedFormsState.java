@@ -21,6 +21,8 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
 
     static private final Logger LOGGER = LoggerFactory.getLogger(RetrieveUpdatedFormsState.class);
 
+    private final FormServices formServices = FormServices.getInstance(context.getConfigAccessor());
+
     protected RetrieveUpdatedFormsState(final StateMachineMainContext context) {
         super(context);
     }
@@ -40,9 +42,7 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
 
         if (event instanceof FormContentConhecimentoReadSME) {
 
-            LOGGER.error("Unimplemented event. event=" + event);
-
-            FormServices formServices = FormServices.getInstance(context.getConfigAccessor());
+            LOGGER.info("Testing event. event=" + event);
 
             final String ktClientId = context.getClientInfo().getKtClientId();
             final boolean serviceSuccess = formServices.flagFormsAsRead(ktClientId);

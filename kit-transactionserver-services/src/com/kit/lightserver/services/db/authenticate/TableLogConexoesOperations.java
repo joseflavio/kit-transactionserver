@@ -1,15 +1,15 @@
 package com.kit.lightserver.services.db.authenticate;
 
-import com.fap.framework.db.DataSource;
+import com.fap.framework.db.KitDataSource;
 import com.fap.framework.db.InsertQueryResult;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 
 public final class TableLogConexoesOperations {
 
-    private final DataSource dataSource;
+    private final KitDataSource dataSource;
 
-    public TableLogConexoesOperations(final DataSource dataSource) {
+    public TableLogConexoesOperations(final KitDataSource dataSource) {
         this.dataSource = dataSource;
     }
 

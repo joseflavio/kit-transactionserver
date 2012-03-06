@@ -1,15 +1,15 @@
 package com.kit.lightserver.services.db.authenticate;
 
-import com.fap.framework.db.DataSource;
+import com.fap.framework.db.KitDataSource;
 import com.fap.framework.db.SelectQueryResult;
 import com.fap.framework.db.UpdateQueryResult;
 import com.kit.lightserver.services.be.authentication.AuthenticateQueryResult;
 
 public final class TableAuthenticateOperations {
 
-    private final DataSource dataSource;
+    private final KitDataSource dataSource;
 
-    public TableAuthenticateOperations(final DataSource dataSource) {
+    public TableAuthenticateOperations(final KitDataSource dataSource) {
         this.dataSource = dataSource;
     }
 

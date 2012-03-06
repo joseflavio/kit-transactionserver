@@ -31,17 +31,9 @@ public final class DbPooledConnection {
         lock.unlock();
     }
 
-    public void doSomething() {
-        System.out.println("Doing Something");
-
-    }
-
     @Override
     public String toString() {
         return "DbPooledConnection [name=" + name + "]";
     }
-
-
-
 
 }// class

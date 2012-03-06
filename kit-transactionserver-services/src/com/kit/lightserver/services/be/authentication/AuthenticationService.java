@@ -3,9 +3,10 @@ package com.kit.lightserver.services.be.authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.framework.db.DataSource;
 import com.fap.framework.db.DatabaseConfig;
 import com.fap.framework.db.InsertQueryResult;
+import com.fap.framework.db.KitDataSource;
+import com.fap.framework.db.KitDataSourceSimple;
 import com.fap.framework.db.SelectQueryResult;
 import com.fap.framework.db.UpdateQueryResult;
 import com.jfap.framework.configuration.ConfigAccessor;
@@ -21,7 +22,7 @@ public final class AuthenticationService {
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
         DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
-        DataSource dataSource = new DataSource(dbConfig);
+        KitDataSource dataSource = new KitDataSourceSimple(dbConfig);
         return new AuthenticationService(dataSource);
     }
 
@@ -29,7 +30,7 @@ public final class AuthenticationService {
 
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
-    private AuthenticationService(final DataSource dataSource) {
+    private AuthenticationService(final KitDataSource dataSource) {
         this.logConexoesOperations = new TableLogConexoesOperations(dataSource);
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dataSource);
     }
