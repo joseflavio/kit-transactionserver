@@ -1,15 +1,9 @@
 package com.kit.lightserver.domain.types;
 
-public final class ConhecimentoIdSTY {
-
-    private final int ktRowId;
+public final class ConhecimentoIdSTY extends AbstractFormIdSTY {
 
     public ConhecimentoIdSTY(final int ktRowId) {
-        this.ktRowId = ktRowId;
-    }
-
-    public int getKtRowId() {
-        return ktRowId;
+        super(ktRowId);
     }
 
     @Override

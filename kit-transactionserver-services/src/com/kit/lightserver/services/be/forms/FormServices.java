@@ -1,5 +1,6 @@
 package com.kit.lightserver.services.be.forms;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.util.collections.SmartCollections;
 import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
+import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
@@ -118,7 +120,7 @@ public final class FormServices {
 
     }
 
-    public boolean flagFormsAsRead(final String ktClientId) {
+    public boolean flagFormsAsRead(final String ktClientId, final ConhecimentoIdSTY conhecimentoIdSTY, final Date date) {
         // TODO Auto-generated method stub
         return false;
     }

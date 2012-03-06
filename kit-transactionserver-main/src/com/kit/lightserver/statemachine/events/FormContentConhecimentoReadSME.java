@@ -16,6 +16,18 @@ public final class FormContentConhecimentoReadSME implements KitEventSME {
         this.firstReadDate = firstReadDate;
     }
 
+    public ConhecimentoIdSTY getConhecimentoId() {
+        return conhecimentoId;
+    }
+
+
+
+    public Date getFirstReadDate() {
+        return firstReadDate;
+    }
+
+
+
     @Override
     public String toString() {
         return "FormContentConhecimentoReadSME [conhecimentoId=" + conhecimentoId + ", firstReadDate=" + firstReadDate + "]";
