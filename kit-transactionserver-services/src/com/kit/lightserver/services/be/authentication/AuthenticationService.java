@@ -22,26 +22,24 @@ public final class AuthenticationService {
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
         DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
         DataSource dataSource = new DataSource(dbConfig);
-        return new AuthenticationService(dbConfig);
+        return new AuthenticationService(dataSource);
     }
 
     private final TableLogConexoesOperations logConexoesOperations;
 
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
-    private AuthenticationService(final DatabaseConfig dbConfig) {
-        this.logConexoesOperations = new TableLogConexoesOperations(dbConfig);
-        this.tableAuthenticateOperations = new TableAuthenticateOperations(dbConfig);
+    private AuthenticationService(final DataSource dataSource) {
+        this.logConexoesOperations = new TableLogConexoesOperations(dataSource);
+        this.tableAuthenticateOperations = new TableAuthenticateOperations(dataSource);
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfo connectionId, final String userClientId, final String password,
             final InstallationIdSTY installationId, final long lastConnectionToken) {
 
-        final AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
-
-        final int status = TableLogConexoesConstants.convertToStatus(authenticationResponse);
-
-        final InsertQueryResult registerConnectionResult = logConexoesOperations.registerConnection(connectionId, installationId, userClientId, status);
+        AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
+        int status = TableLogConexoesConstants.convertToStatus(authenticationResponse);
+        InsertQueryResult registerConnectionResult = logConexoesOperations.registerConnection(connectionId, installationId, userClientId, status);
 
         if (registerConnectionResult.isQuerySuccessfullyExecuted() == false) {
             LOGGER.error("Unexpected error when loggin the connection. ktConexaoId=" + connectionId + ", registerConnectionResult=" + registerConnectionResult);

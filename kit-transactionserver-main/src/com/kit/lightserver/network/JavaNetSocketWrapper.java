@@ -99,6 +99,4 @@ public final class JavaNetSocketWrapper implements SocketWrapper {
         return clientSocketClosed;
     }
 
-
-
 }// class

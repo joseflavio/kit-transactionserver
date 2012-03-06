@@ -50,20 +50,32 @@ public final class SelectQueryExecuter<T> {
         chronometer.start();
 
         SelectQueryResult<T> result;
+        ResultSet rs = null;
         try {
 
-            final String selectQueryStr = selectQuery.getPreparedSelectQueryString();
-            final PreparedStatement st = connection.prepareStatement(selectQueryStr);
-            final List<QueryParameter> selectQueryParameterList = selectQuery.getSelectQueryParameters();
+            String selectQueryStr = selectQuery.getPreparedSelectQueryString();
+            PreparedStatement st = connection.prepareStatement(selectQueryStr);
+            List<QueryParameter> selectQueryParameterList = selectQuery.getSelectQueryParameters();
             PreparedParametersUtil.fillParameters(st, selectQueryParameterList);
-            final ResultSet rs = st.executeQuery();
-            final T selectQueryResult = resultAdapter.adaptResultSet(rs);
+            rs = st.executeQuery();
 
+            final T selectQueryResult = resultAdapter.adaptResultSet(rs);
             result = new SelectQueryResult<T>(selectQueryResult);
+            rs.close();
 
         } catch (final SQLException e) {
             LOGGER.error("Error executing the query.", e);
             result = new SelectQueryResult<T>();
+        } finally {
+
+            if( rs != null ) {
+                try {
+                    rs.close();
+                }
+                catch (SQLException e) {
+                    LOGGER.error("Error closing the ResultSet.", e);
+                }
+            }
         }
 
         chronometer.stop();
