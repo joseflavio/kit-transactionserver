@@ -1,6 +1,6 @@
 package com.kit.lightserver.services.be.forms;
 
-import com.jfap.util.collections.SmartCollectionTransformFilter;
+import com.fap.collections.SmartCollectionTransformFilter;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 

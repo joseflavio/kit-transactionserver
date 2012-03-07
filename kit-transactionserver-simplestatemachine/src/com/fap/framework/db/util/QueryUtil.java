@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.common;
+package com.fap.framework.db.util;
 
 
 public final class QueryUtil {

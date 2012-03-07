@@ -6,7 +6,7 @@ import java.util.List;
 import com.fap.framework.db.QueryIntegerParameter;
 import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.SelectQueryInterface;
-import com.kit.lightserver.services.db.common.QueryUtil;
+import com.fap.framework.db.util.QueryUtil;
 
 final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 

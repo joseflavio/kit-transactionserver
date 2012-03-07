@@ -15,7 +15,7 @@ public final class InsertQueryExecuter {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(InsertQueryExecuter.class);
 
-    static public InsertQueryResult executeInsertQuery(final DatabaseConfig dbConfig, final InsertQueryInterface insertQuery) {
+    static public InsertQueryResult executeInsertQuery2(final DatabaseConfig dbConfig, final InsertQueryInterface insertQuery) {
 
         final Connection connection = DatabaseConnectionUtil.getInstance2().getConnection(dbConfig);
         if (connection == null) {

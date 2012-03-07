@@ -14,7 +14,7 @@ public final class QueryStringParameter extends QueryParameter {
     }
 
     @Override
-    public Object getValue() {
+    public Object getValueToPrint() {
         return stringValue;
     }
 

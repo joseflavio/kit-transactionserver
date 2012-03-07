@@ -1,24 +1,19 @@
 package com.kit.lightserver.services.be.authentication;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fap.framework.db.DatabaseConfig;
-import com.fap.framework.db.InsertQueryResult;
 import com.fap.framework.db.KitDataSource;
 import com.fap.framework.db.KitDataSourceSimple;
 import com.fap.framework.db.SelectQueryResult;
 import com.fap.framework.db.UpdateQueryResult;
+import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
 import com.kit.lightserver.services.db.authenticate.TableLogConexoesConstants;
-import com.kit.lightserver.services.db.authenticate.TableLogConexoesOperations;
+import com.kit.lightserver.services.db.logconnection.LogConectionTask;
 
 public final class AuthenticationService {
-
-    static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
         DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
@@ -26,12 +21,12 @@ public final class AuthenticationService {
         return new AuthenticationService(dataSource);
     }
 
-    private final TableLogConexoesOperations logConexoesOperations;
+    private final KitDataSource dataSource;
 
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
     private AuthenticationService(final KitDataSource dataSource) {
-        this.logConexoesOperations = new TableLogConexoesOperations(dataSource);
+        this.dataSource = dataSource;
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dataSource);
     }
 
@@ -40,11 +35,11 @@ public final class AuthenticationService {
 
         AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
         int status = TableLogConexoesConstants.convertToStatus(authenticationResponse);
-        InsertQueryResult registerConnectionResult = logConexoesOperations.registerConnection(connectionId, installationId, userClientId, status);
 
-        if (registerConnectionResult.isQuerySuccessfullyExecuted() == false) {
-            LOGGER.error("Unexpected error when loggin the connection. ktConexaoId=" + connectionId + ", registerConnectionResult=" + registerConnectionResult);
-        }
+        LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionId, installationId, userClientId, status);
+        RichThreadFactory t3Factory = new RichThreadFactory("T3", connectionId);
+        Thread logConectionThread = t3Factory.newThread(logConectionTask);
+        logConectionThread.start();
 
         return authenticationResponse;
 
@@ -76,8 +71,7 @@ public final class AuthenticationService {
 //        }
 
         /*
-         * Success
-         * ...but it still needs to update the last authentication
+         * Success ...but it still needs to update the last authentication.
          */
         final UpdateQueryResult updateLastAuthenticationResultContainer = tableAuthenticateOperations.updateClientLoggedIn(userClientId);
         if( updateLastAuthenticationResultContainer.isUpdateQuerySuccessful() == false ) {

@@ -51,7 +51,7 @@ public class DbConnectionPool {
 
     public <T> SelectQueryResult<T> executeSelectQuery(final SelectQueryInterface selectQuery, final SelectQueryResultAdapter<T> resultAdapter) {
         SelectQueryExecuter<T> executer = new SelectQueryExecuter<T>(resultAdapter);
-        return executer.executeSelectQuery(dbConfig, selectQuery);
+        return executer.executeSelectQuery2(dbConfig, selectQuery);
     }
 
 }// class

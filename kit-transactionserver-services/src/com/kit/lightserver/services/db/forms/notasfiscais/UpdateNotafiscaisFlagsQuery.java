@@ -6,8 +6,8 @@ import java.util.List;
 import com.fap.framework.db.QueryIntegerParameter;
 import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.UpdateQueryInterface;
+import com.fap.framework.db.util.QueryUtil;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.db.common.QueryUtil;
 
 public final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
 

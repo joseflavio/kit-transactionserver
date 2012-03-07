@@ -15,7 +15,7 @@ public final class UpdateQueryExecuter {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(UpdateQueryExecuter.class);
 
-    static public UpdateQueryResult executeUpdateQuery(final DatabaseConfig dbConfig, final UpdateQueryInterface updateQuery) {
+    static public UpdateQueryResult executeUpdateQuery2(final DatabaseConfig dbConfig, final UpdateQueryInterface updateQuery) {
 
         final Connection connection = DatabaseConnectionUtil.getInstance2().getConnection(dbConfig);
         if (connection == null) {

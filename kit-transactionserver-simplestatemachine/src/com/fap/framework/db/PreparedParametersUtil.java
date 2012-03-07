@@ -24,8 +24,13 @@ final class PreparedParametersUtil {
             }
             else if (queryParameter instanceof QueryIntegerParameter) {
                 final QueryIntegerParameter parameter = (QueryIntegerParameter) queryParameter;
-                final int parameterValue = parameter.getParameterValue();
-                st.setInt(parameterIndex, parameterValue);
+                final Integer parameterValue = parameter.getParameterValue();
+                if( parameterValue != null ) {
+                    st.setInt(parameterIndex, parameterValue.intValue());
+                }
+                else {
+                    st.setNull(parameterIndex, java.sql.Types.INTEGER);
+                }
             }
             else if (queryParameter instanceof QueryStringParameter) {
                 final QueryStringParameter parameter = (QueryStringParameter) queryParameter;

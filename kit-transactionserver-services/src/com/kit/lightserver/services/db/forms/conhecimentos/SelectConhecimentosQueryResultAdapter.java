@@ -7,9 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.fap.framework.db.SelectQueryResultAdapter;
+import com.fap.framework.db.util.MsSqlBitConverter;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
-import com.kit.lightserver.services.db.common.MsSqlBitConverter;
 
 public final class SelectConhecimentosQueryResultAdapter implements SelectQueryResultAdapter<List<ConhecimentoSTY>> {
 

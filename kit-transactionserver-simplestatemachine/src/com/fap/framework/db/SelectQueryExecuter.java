@@ -22,14 +22,13 @@ public final class SelectQueryExecuter<T> {
         this.resultAdapter = resultAdapter;
     }// constructor
 
-    public SelectQueryResult<T> executeSelectQuery(final DatabaseConfig dbConfig, final SelectQueryInterface selectQuery) {
+    public SelectQueryResult<T> executeSelectQuery2(final DatabaseConfig dbConfig, final SelectQueryInterface selectQuery) {
 
         final Connection connection = DatabaseConnectionUtil.getInstance2().getConnection(dbConfig);
         if (connection == null) {
             final SelectQueryResult<T> failResult = new SelectQueryResult<T>();
             return failResult;
         }
-
 
         final SelectQueryResult<T> result = executeSelectQuery(connection, selectQuery);
 

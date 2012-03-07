@@ -41,8 +41,6 @@ public final class DatabaseConnectionUtil {
 
     public synchronized Connection getConnection(final DatabaseConfig dbConfig) {
 
-
-
         try {
             final Connection connection = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getDbPassword());
             connection.setAutoCommit(true);

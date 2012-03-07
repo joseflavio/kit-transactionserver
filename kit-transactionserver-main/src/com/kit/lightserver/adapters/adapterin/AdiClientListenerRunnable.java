@@ -6,6 +6,7 @@ import kit.primitives.factory.PrimitiveStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
 import com.kit.lightserver.adapters.logger.AdaptersLogger;
@@ -38,11 +39,10 @@ public final class AdiClientListenerRunnable implements Runnable {
         this.socket = givenSocket;
         this.connectionInfo = connectionInfo;
 
-        ClientAdapterOut clientAdapterOut = new ClientAdapterOut(socket);
-        this.kitStateMachineRunnable = new KITStateMachineRunnable(clientAdapterOut, configAccessor, connectionInfo);
+        this.kitStateMachineRunnable = new KITStateMachineRunnable(new ClientAdapterOut(socket), configAccessor, connectionInfo);
 
-        final String threadName = "T2:" + connectionInfo.getConnectionUniqueId();
-        this.kitStateMachineThread = new Thread(kitStateMachineRunnable, threadName);
+        RichThreadFactory t2Factory = new RichThreadFactory("T2", connectionInfo);
+        this.kitStateMachineThread = t2Factory.newThread(this.kitStateMachineRunnable);
 
     }// constructor
 

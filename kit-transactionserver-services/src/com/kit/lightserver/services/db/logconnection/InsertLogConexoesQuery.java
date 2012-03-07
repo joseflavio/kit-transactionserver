@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.authenticate;
+package com.kit.lightserver.services.db.logconnection;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +12,7 @@ import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.QueryStringParameter;
 import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
+import com.kit.lightserver.services.db.authenticate.TableLogConexoesConstants;
 
 final class InsertLogConexoesQuery implements InsertQueryInterface {
 

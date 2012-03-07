@@ -2,6 +2,6 @@ package com.fap.framework.db;
 
 public abstract class QueryParameter {
 
-    public abstract Object getValue();
+    public abstract Object getValueToPrint();
 
 }// class

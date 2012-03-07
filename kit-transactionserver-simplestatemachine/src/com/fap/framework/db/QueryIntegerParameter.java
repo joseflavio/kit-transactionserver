@@ -5,16 +5,16 @@ public final class QueryIntegerParameter extends QueryParameter {
 
     private final Integer intValue;
 
-    public QueryIntegerParameter(final int intValue) {
+    public QueryIntegerParameter(final Integer intValue) {
         this.intValue = intValue;
     }
 
-    public int getParameterValue() {
+    public Integer getParameterValue() {
         return intValue;
     }
 
     @Override
-    public Object getValue() {
+    public Object getValueToPrint() {
         return intValue;
     }
 

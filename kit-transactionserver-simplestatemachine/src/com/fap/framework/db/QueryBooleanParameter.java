@@ -15,7 +15,7 @@ public final class QueryBooleanParameter extends QueryParameter {
     }
 
     @Override
-    public Object getValue() {
+    public Object getValueToPrint() {
         return value;
     }
 

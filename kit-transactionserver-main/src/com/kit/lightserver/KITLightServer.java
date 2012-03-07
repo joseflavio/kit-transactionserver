@@ -12,6 +12,7 @@ import java.net.SocketTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.adapters.adapterin.AdiClientListenerRunnable;
 import com.kit.lightserver.domain.types.ConnectionInfo;
@@ -126,9 +127,9 @@ public final class KITLightServer implements Runnable {
              * Forking a thread to deal with the external connection
              */
             SocketWrapper socketWrapper = new JavaNetSocketWrapper(clientSocket);
-            AdiClientListenerRunnable clientListenerThread = new AdiClientListenerRunnable(socketWrapper, configAccessor, connectionInfo);
-            String threadName = "T1:" + connectionInfo.getConnectionUniqueId();
-            Thread thread = new Thread(clientListenerThread, threadName);
+            RichThreadFactory richThreadFactory = new RichThreadFactory("T1", connectionInfo);
+            AdiClientListenerRunnable clientListenerRunnable = new AdiClientListenerRunnable(socketWrapper, configAccessor, connectionInfo);
+            Thread thread = richThreadFactory.newThread(clientListenerRunnable);
             thread.start();
 
         }

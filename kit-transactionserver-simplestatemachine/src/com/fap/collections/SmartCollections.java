@@ -1,4 +1,4 @@
-package com.jfap.util.collections;
+package com.fap.collections;
 
 import java.util.Collection;
 

@@ -4,11 +4,11 @@ public final class InsertQueryResult {
 
     private final boolean querySuccessfullyExecuted;
 
-    private final Integer rowsInserted;
+    private final int rowsInserted;
 
     public InsertQueryResult() {
         this.querySuccessfullyExecuted = false;
-        this.rowsInserted = null;
+        this.rowsInserted = 0;
     }
 
     public InsertQueryResult(final int rowsUpdated) {
@@ -16,7 +16,7 @@ public final class InsertQueryResult {
         this.rowsInserted = rowsUpdated;
     }
 
-    public Integer getRowsInserted() {
+    public int getRowsInserted() {
         return rowsInserted;
     }
 
