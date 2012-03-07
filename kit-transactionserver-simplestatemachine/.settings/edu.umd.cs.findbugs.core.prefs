@@ -1,5 +1,5 @@
 #FindBugs User Preferences
-#Thu Jan 26 22:34:38 CET 2012
+#Wed Mar 07 23:32:47 CET 2012
 cloud_id=edu.umd.cs.findbugs.cloud.doNothingCloud
 detectorAppendingToAnObjectOutputStream=AppendingToAnObjectOutputStream|true
 detectorAtomicityProblem=AtomicityProblem|true
@@ -33,7 +33,7 @@ detectorExplicitSerialization=ExplicitSerialization|true
 detectorFinalizerNullsFields=FinalizerNullsFields|true
 detectorFindBadCast2=FindBadCast2|true
 detectorFindBadForLoop=FindBadForLoop|true
-detectorFindCircularDependencies=FindCircularDependencies|false
+detectorFindCircularDependencies=FindCircularDependencies|true
 detectorFindDeadLocalStores=FindDeadLocalStores|true
 detectorFindDoubleCheck=FindDoubleCheck|true
 detectorFindEmptySynchronizedBlock=FindEmptySynchronizedBlock|true

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="src.util"/>
 	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/joda-time-2.0.jar"/>
 	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/sqljdbc-1.2.jar"/>
 	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/slf4j-api-1.6.2.jar"/>

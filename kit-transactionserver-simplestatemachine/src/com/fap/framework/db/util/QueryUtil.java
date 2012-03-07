@@ -5,20 +5,22 @@ public final class QueryUtil {
 
     static public String buildLongOrClause(final String columnName, final int parametersCount) {
 
-        String orClause = null;
+        StringBuffer buf = new StringBuffer();
+
+        String columnAssign = " OR " + columnName +"=?";
 
         for(int i = 0; i < parametersCount; ++i) {
-            if (orClause == null) {
-                orClause = "( " + columnName + "=?";
+            if (i == 0) {
+                buf.append("( " + columnName + "=?");
             }
             else {
-                orClause = orClause + " OR " + columnName +"=?";
+                buf.append(columnAssign);
             }
         }// for
 
-        orClause = orClause + " )";
+        buf.append(" )");
 
-        return orClause;
+        return buf.toString();
 
     }
 
