@@ -1,5 +1,7 @@
 package com.fap.framework.db;
 
+
+import java.util.Date;
 import java.util.List;
 
 
@@ -15,7 +17,9 @@ final class InternalQueryPrinter {
 
         String replacedQueryString = queryString;
         for (final QueryParameter queryParam : queryParameters) {
-            replacedQueryString = replacedQueryString.replaceFirst("\\?", queryParam.getValueToPrint().toString());
+            final Object paramValue = queryParam.getValueToPrint();
+            final String printedParam = InternalQueryPrinter.convertParameterToPrint(paramValue);
+            replacedQueryString = replacedQueryString.replaceFirst("\\?", printedParam);
         }
 
         return replacedQueryString;
@@ -43,22 +47,28 @@ final class InternalQueryPrinter {
 
         String replacedQueryString = queryString;
         for (final QueryParameter queryParam : queryParameters) {
-
             final Object paramValue = queryParam.getValueToPrint();
-
-            final String printedParam;
-            if( paramValue instanceof String ) {
-                printedParam = "'" + (String)paramValue + "'";
-            }
-            else {
-                printedParam = paramValue.toString();
-            }
-
+            final String printedParam = InternalQueryPrinter.convertParameterToPrint(paramValue);
             replacedQueryString = replacedQueryString.replaceFirst("\\?", printedParam);
         }
 
         return replacedQueryString;
 
+    }
+
+    static private String convertParameterToPrint(final Object paramValue) {
+        final String printedParam;
+        if( paramValue instanceof String ) {
+            printedParam = "'" + (String)paramValue + "'";
+        }
+        else
+        if( paramValue instanceof Date ) {
+            printedParam = "'" + paramValue.toString() + "'";
+        }
+        else {
+            printedParam = paramValue.toString();
+        }
+        return printedParam;
     }
 
 }// class

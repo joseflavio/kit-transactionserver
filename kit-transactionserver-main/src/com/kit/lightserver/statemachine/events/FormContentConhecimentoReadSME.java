@@ -20,13 +20,9 @@ public final class FormContentConhecimentoReadSME implements KitEventSME {
         return conhecimentoId;
     }
 
-
-
     public Date getFirstReadDate() {
         return firstReadDate;
     }
-
-
 
     @Override
     public String toString() {

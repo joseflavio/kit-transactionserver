@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -32,10 +33,22 @@ final class PreparedParametersUtil {
                     st.setNull(parameterIndex, java.sql.Types.INTEGER);
                 }
             }
+            else if (queryParameter instanceof QueryIntParameter) {
+                final QueryIntParameter parameter = (QueryIntParameter) queryParameter;
+                final int parameterValue = parameter.getParameterValue();
+                st.setInt(parameterIndex, parameterValue);
+            }
             else if (queryParameter instanceof QueryStringParameter) {
                 final QueryStringParameter parameter = (QueryStringParameter) queryParameter;
                 final String parameterValue = parameter.getParameterValue();
                 st.setString(parameterIndex, parameterValue);
+            }
+            else if (queryParameter instanceof QueryDateParameter) {
+                final QueryDateParameter parameter = (QueryDateParameter) queryParameter;
+                final Date parameterValue = parameter.getParameterValue();
+                final  java.sql.Timestamp parameterSqlDate = new  java.sql.Timestamp(parameterValue.getTime());
+                final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                st.setTimestamp(parameterIndex, parameterSqlDate, calendar);
             }
             else if (queryParameter instanceof QueryJodaDateTimeParameter) {
                 final QueryJodaDateTimeParameter parameter = (QueryJodaDateTimeParameter) queryParameter;

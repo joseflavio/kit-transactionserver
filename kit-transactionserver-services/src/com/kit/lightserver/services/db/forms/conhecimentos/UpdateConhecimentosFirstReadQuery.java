@@ -34,8 +34,8 @@ public final class UpdateConhecimentosFirstReadQuery implements UpdateQueryInter
 
         final String queryStr =
                 "UPDATE " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS +
-                " SET KTFirstReadDate=? KTFlagLido=1, KTFlagLidoUpdateDBTime=GETDATE(), KTFormVersion=KTFormVersion+1" +
-                " WHERE KTClientId=? AND KTRowId=?";
+                " SET KTCelularDataPrimeiraLeitura=?, KTFlagLido=1, KTFlagLidoUpdateDBTime=GETDATE(), KTFormVersion=KTFormVersion+1" +
+                " WHERE KTClientId=? AND KTRowId=? AND KTFlagLido=0";
 
         return queryStr;
 
