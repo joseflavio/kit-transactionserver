@@ -38,13 +38,15 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
     @Override
     public ProcessingResult<KitEventSME> processEvent(final KitEventSME event) {
 
+        LOGGER.info("event=" + event);
+
         final ProcessingResult<KitEventSME> result;
 
         if (event instanceof FormContentConhecimentoReadSME) {
 
             // FormContentConhecimentoReadSME [conhecimentoId=ConhecimentoIdSTY [ktRowId=1094966], firstReadDate=Tue Mar 06 22:29:56 CET 2012]
             FormContentConhecimentoReadSME formReadEvent = (FormContentConhecimentoReadSME)event;
-            LOGGER.info("Testing event. event=" + event);
+
 
             final String ktClientId = context.getClientInfo().getKtClientId();
             final boolean serviceSuccess = formServices.flagFormsAsRead(ktClientId, formReadEvent.getConhecimentoId(), formReadEvent.getFirstReadDate());

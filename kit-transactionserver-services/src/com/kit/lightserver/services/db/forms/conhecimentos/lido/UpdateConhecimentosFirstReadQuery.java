@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.conhecimentos;
+package com.kit.lightserver.services.db.forms.conhecimentos.lido;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -10,6 +10,7 @@ import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.QueryStringParameter;
 import com.fap.framework.db.UpdateQueryInterface;
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
+import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 
 public final class UpdateConhecimentosFirstReadQuery implements UpdateQueryInterface {
 
@@ -31,11 +32,10 @@ public final class UpdateConhecimentosFirstReadQuery implements UpdateQueryInter
 
     @Override
     public String getPreparedUpdateQueryString() {
-
         final String queryStr =
                 "UPDATE " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS +
                 " SET KTCelularDataPrimeiraLeitura=?, KTFlagLido=1, KTFlagLidoUpdateDBTime=GETDATE(), KTFormVersion=KTFormVersion+1" +
-                " WHERE KTClientId=? AND KTRowId=? AND KTFlagLido=0";
+                " WHERE KTClientId=? AND KTRowId=? AND KTFlagLido=0 AND KTCelularDataPrimeiraLeitura=NULL";
 
         return queryStr;
 

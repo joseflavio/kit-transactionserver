@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.network.SocketWrapper;
+import com.kit.lightserver.statemachine.KITStateMachineRunnable.EventQueue;
+import com.kit.lightserver.statemachine.events.AdapterOutUnexpectedErrorSME;
 import com.kit.lightserver.types.response.ClientResponseRSTY;
 
 public final class ClientAdapterOut {
@@ -17,9 +19,12 @@ public final class ClientAdapterOut {
 
     private final ClientAdapterOutSender sender;
 
-    public ClientAdapterOut(final SocketWrapper socket) {
+    private final EventQueue eventQueue;
+
+    public ClientAdapterOut(final SocketWrapper socket, final EventQueue eventQueue) {
 
         this.sender = new ClientAdapterOutSender(socket);
+        this.eventQueue = eventQueue;
 
     }// constructor
 
@@ -51,20 +56,24 @@ public final class ClientAdapterOut {
 
             }
 
-            /*
-             * ? Even with error converting, we need to send the error to the client ?
-             */
-            sender.sendToTheClientSocket(primitiveList);
+            boolean sucessSending = sender.sendToTheClientSocket(primitiveList); // TODO: Even with error converting, we need to send the error to the client? maybe
 
-            if( successConvertingAll == false ) { // If we can't convert, the conversation has to finish to avoid make the client inconsistent
+            if( successConvertingAll == false || sucessSending == false ) {
                 LOGGER.error("The ADO output will be closed because an error occurred.");
-                sender.closeOutput();
+                unexpectedErrorOccurred();
+
             }
 
         } else {
             LOGGER.error("Unknow kind of AdoEnvelope. adoResponseEnvelope="+adoResponseEnvelope);
+            unexpectedErrorOccurred();
         }
 
+    }
+
+    private void unexpectedErrorOccurred() {
+        sender.closeOutput();
+        eventQueue.enqueueReceived( new AdapterOutUnexpectedErrorSME() );
     }
 
     public boolean isValidToSend() {

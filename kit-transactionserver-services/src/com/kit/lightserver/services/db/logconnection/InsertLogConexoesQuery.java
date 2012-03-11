@@ -10,7 +10,7 @@ import com.fap.framework.db.InsertQueryInterface;
 import com.fap.framework.db.QueryIntegerParameter;
 import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.QueryStringParameter;
-import com.kit.lightserver.domain.types.ConnectionInfo;
+import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.authenticate.TableLogConexoesConstants;
 
@@ -21,7 +21,7 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
     public InsertLogConexoesQuery(final InstallationIdSTY installationIdSTY, final String ktClientId, final int status,
-            final ConnectionInfo connectionInfo) {
+            final ConnectionInfoVO connectionInfo) {
 
         final String idAStr = Long.toHexString(installationIdSTY.getInstallationId1());
         final String idBStr = Long.toHexString(installationIdSTY.getInstallationId2());

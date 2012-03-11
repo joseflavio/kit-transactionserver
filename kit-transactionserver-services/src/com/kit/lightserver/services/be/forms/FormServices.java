@@ -24,8 +24,11 @@ import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQueryResultAdapter;
-import com.kit.lightserver.services.db.forms.conhecimentos.UpdateConhecimentosFirstReadQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.UpdateConhecimentosFlagsQuery;
+import com.kit.lightserver.services.db.forms.conhecimentos.lido.SelectConhecimentoEspecifico;
+import com.kit.lightserver.services.db.forms.conhecimentos.lido.SelectConhecimentoEspecificoAdapter;
+import com.kit.lightserver.services.db.forms.conhecimentos.lido.UpdateConhecimentosFirstReadQuery;
+import com.kit.lightserver.services.db.forms.conhecimentos.lido.UpdateConhecimentosLastReadQuery;
 import com.kit.lightserver.services.db.forms.notasfiscais.UpdateNotafiscaisFlagsQuery;
 
 public final class FormServices {
@@ -122,13 +125,39 @@ public final class FormServices {
     }
 
     public boolean flagFormsAsRead(final String ktClientId, final ConhecimentoIdSTY conhecimentoIdSTY, final Date dataDaLeitura) {
-        UpdateConhecimentosFirstReadQuery query = new UpdateConhecimentosFirstReadQuery(ktClientId, conhecimentoIdSTY, dataDaLeitura);
-        final UpdateQueryResult notasfiscaisFlagResult = dataSource.executeUpdateQuery(query);
-        if (notasfiscaisFlagResult.isUpdateQuerySuccessful() == false) {
-            LOGGER.error("Error updating. query={}", new UpdateQueryPrinter(query));
-            return false;
+
+        LOGGER.info("flagFormsAsRead(..) - enter");
+
+        SelectConhecimentoEspecifico selectQuery = new SelectConhecimentoEspecifico(ktClientId, conhecimentoIdSTY);
+        SelectQueryResult<Boolean> selectResult = dataSource.executeSelectQuery(selectQuery, new SelectConhecimentoEspecificoAdapter());
+
+        LOGGER.info("selectResult={}"+selectResult);
+
+        if( selectResult.getResult() == Boolean.FALSE ) {
+
+            UpdateConhecimentosFirstReadQuery updateQuery = new UpdateConhecimentosFirstReadQuery(ktClientId, conhecimentoIdSTY, dataDaLeitura);
+            UpdateQueryResult queryResult = dataSource.executeUpdateQuery(updateQuery);
+            if (queryResult.isUpdateQuerySuccessful() == false) {
+                LOGGER.error("Error updating. query={}", new UpdateQueryPrinter(updateQuery));
+                return false;
+            }
+            else {
+                if( queryResult.getRowsUpdated() == 0 ) {
+                    LOGGER.warn("Unexpected result updating. getRowsUpdated={}", Integer.valueOf(queryResult.getRowsUpdated()) );
+                }
+            }
         }
+        else {
+            UpdateConhecimentosLastReadQuery updateQuery = new UpdateConhecimentosLastReadQuery(ktClientId, conhecimentoIdSTY, dataDaLeitura);
+            UpdateQueryResult queryResult = dataSource.executeUpdateQuery(updateQuery);
+            if (queryResult.isUpdateQuerySuccessful() == false) {
+                LOGGER.error("Error updating. query={}", new UpdateQueryPrinter(updateQuery));
+                return false;
+            }
+        }
+
         return true;
+
     }
 
 }// class

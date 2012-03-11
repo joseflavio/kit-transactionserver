@@ -12,7 +12,8 @@ import com.jfap.framework.statemachine.StateMachine;
 import com.jfap.framework.statemachine.StateSME;
 import com.kit.lightserver.adapters.adapterout.AdoResponseEnvelope;
 import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
-import com.kit.lightserver.domain.types.ConnectionInfo;
+import com.kit.lightserver.domain.types.ConnectionInfoVO;
+import com.kit.lightserver.network.SocketWrapper;
 import com.kit.lightserver.statemachine.states.InitialState;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
@@ -20,44 +21,29 @@ public final class KITStateMachineRunnable implements Runnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(KITStateMachineRunnable.class);
 
-    private final List<KitEventSME> requestsReceivedQueue = Collections.synchronizedList(new LinkedList<KitEventSME>());
-
     private final List<AdoResponseEnvelope> responseToSendQueue = Collections.synchronizedList(new LinkedList<AdoResponseEnvelope>());
 
     private final StateMachine<KitEventSME> kitStateState;
 
     private final StateMachineMainContext stateMachineContext;
 
-    private boolean canEnqueue = false; // In the runnable I can not access thread.isAlive()
+    private final EventQueue eventQueue = new EventQueue();
 
     private final ClientAdapterOut clientAdapterOut;
 
-    public KITStateMachineRunnable(final ClientAdapterOut clientAdapterOut, final ConfigAccessor configAccessor, final ConnectionInfo connectionId) {
+    public KITStateMachineRunnable(final SocketWrapper socket, final ConfigAccessor configAccessor, final ConnectionInfoVO connectionInfo) {
 
-        this.clientAdapterOut = clientAdapterOut;
-        this.stateMachineContext = new StateMachineMainContext(clientAdapterOut, configAccessor, connectionId);
+        this.clientAdapterOut = new ClientAdapterOut(socket, eventQueue);
+        this.stateMachineContext = new StateMachineMainContext(clientAdapterOut, configAccessor, connectionInfo);
         this.kitStateState = new StateMachine<KitEventSME>();
 
     }// constructor
 
-    private synchronized void setCanEnqueue(final boolean canEnqueue) { //TODO: Remove all synchronized and use locks
-        this.canEnqueue = canEnqueue;
-    }
-
-    public synchronized boolean enqueueReceived(final KitEventSME event) {
-        if(  canEnqueue == false ) {
-            LOGGER.warn("Could not enqueue " + event);
-            return false;
-        }
-        requestsReceivedQueue.add(event);
-        return true;
+    public EventQueue getEventQueue() {
+        return eventQueue;
     }
 
     public synchronized boolean enqueueToSend(final AdoResponseEnvelope clientResponseRSTY) {
-        if(  canEnqueue == false ) {
-            LOGGER.warn("Could not enqueue " + clientResponseRSTY);
-            return false;
-        }
         responseToSendQueue.add(clientResponseRSTY);
         return true;
     }
@@ -69,12 +55,12 @@ public final class KITStateMachineRunnable implements Runnable {
         final StateSME<KitEventSME> initialState = new InitialState(stateMachineContext);
         kitStateState.start(initialState);
 
-        setCanEnqueue(true);
+        eventQueue.setCanEnqueue(true);
 
         LOGGER.info("Thread Started");
 
         boolean isMachineProcessingExternalEvents = true;
-        while(isMachineProcessingExternalEvents || responseToSendQueue.size() > 0 || requestsReceivedQueue.size() > 0) {
+        while(isMachineProcessingExternalEvents || responseToSendQueue.size() > 0 || eventQueue.hasEvents() == true ) {
 
             boolean shouldThreadSleep = true;
 
@@ -87,7 +73,7 @@ public final class KITStateMachineRunnable implements Runnable {
                         clientAdapterOut.sendBack(clientResponse);
                     }
                     else {
-                        LOGGER.error("Adapter out can not send. Primitive pending will be discarted. clientResponse="+clientResponse);
+                        LOGGER.error("The clientAdapterOut can not send. clientResponse="+clientResponse);
                     }
 
                 }// while
@@ -96,8 +82,8 @@ public final class KITStateMachineRunnable implements Runnable {
 
             }// if
 
-            if(requestsReceivedQueue.size() > 0) {
-                final KitEventSME primitive = requestsReceivedQueue.remove(0);
+            if( eventQueue.hasEvents() == true ) {
+                final KitEventSME primitive = eventQueue.dequeueFirst();
                 isMachineProcessingExternalEvents = kitStateState.processExternalEvent(primitive);
                 shouldThreadSleep = false;
             }// if
@@ -112,15 +98,46 @@ public final class KITStateMachineRunnable implements Runnable {
 
         }// while
 
-        setCanEnqueue(false);
+        eventQueue.setCanEnqueue(false);
 
-        if(requestsReceivedQueue.size() > 0 ) {
-            LOGGER.error("The state machine thread has finished with unprocessed primitives. requestsReceivedQueue=" + requestsReceivedQueue);
+        if( eventQueue.hasEvents() == true ) {
+            LOGGER.error("The state machine thread has finished with unprocessed primitives. eventQueue=" + eventQueue);
         }
 
         LOGGER.info("Thread Finished");
 
     }
 
+    static public final class EventQueue {
+
+        private boolean canEnqueue = false;
+
+        private final List<KitEventSME> requestsReceivedQueue = Collections.synchronizedList(new LinkedList<KitEventSME>());
+
+        protected synchronized void setCanEnqueue(final boolean canEnqueue) { //TODO: Remove all synchronized and use locks
+            this.canEnqueue = canEnqueue;
+        }
+
+        protected synchronized KitEventSME dequeueFirst() {
+            return  requestsReceivedQueue.remove(0);
+        }
+
+        protected synchronized boolean hasEvents() {
+            if( requestsReceivedQueue.size() > 0 ) {
+                return true;
+            }
+            return false;
+        }
+
+        public synchronized boolean enqueueReceived(final KitEventSME event) {
+            if(  canEnqueue == false ) {
+                LOGGER.warn("Could not enqueue " + event);
+                return false;
+            }
+            requestsReceivedQueue.add(event);
+            return true;
+        }
+
+    }
 
 }// class

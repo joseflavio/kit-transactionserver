@@ -29,13 +29,14 @@ final class ClientAdapterOutSender {
 
     }// constructor
 
-    final void sendToTheClientSocket(final List<Primitive> primitiveList) {
+    final boolean sendToTheClientSocket(final List<Primitive> primitiveList) {
         try {
             AdaptersLogger.logSending(primitiveList);
             PrimitiveStreamFactory.writePrimitive(dataOutputStream, primitiveList);
+            return true;
         } catch (final IOException e) {
-            closeOutput();
             LOGGER.error("Could not send. primitiveList=" + primitiveList, e);
+            return false;
         }
     }
 

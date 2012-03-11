@@ -6,10 +6,10 @@ import com.fap.framework.uniqueids.ConnectionIdGenerator;
 
 public final class ConnectionInfoFactory {
 
-    static public ConnectionInfo getInstance(final InetAddress clientAddress) {
+    static public ConnectionInfoVO getInstance(final InetAddress clientAddress) {
         final String connectionUniqueId = ConnectionIdGenerator.generateRandomConnectionId();
         final String clientHostAddress = clientAddress.getHostAddress();
-        return new ConnectionInfo(connectionUniqueId, clientHostAddress);
+        return new ConnectionInfoVO(connectionUniqueId, clientHostAddress);
     }
 
 }// class

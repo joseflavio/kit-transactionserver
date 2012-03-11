@@ -6,14 +6,12 @@ import kit.primitives.factory.PrimitiveStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
-import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
 import com.kit.lightserver.adapters.logger.AdaptersLogger;
-import com.kit.lightserver.domain.types.ConnectionInfo;
+import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.loggers.connectionlogger.ConnectionsLogger;
 import com.kit.lightserver.network.SocketWrapper;
-import com.kit.lightserver.statemachine.KITStateMachineRunnable;
+import com.kit.lightserver.statemachine.KITStateMachineRunnable.EventQueue;
 import com.kit.lightserver.statemachine.events.AdapterInDataInputClosedSME;
 import com.kit.lightserver.statemachine.events.AdapterInErrorTimeOutSME;
 import com.kit.lightserver.statemachine.events.AdapterInInterrupedSME;
@@ -28,21 +26,20 @@ public final class AdiClientListenerRunnable implements Runnable {
 
     private final SocketWrapper socket;
 
-    private final ConnectionInfo connectionInfo;
+    private final ConnectionInfoVO connectionInfo;
 
-    private final KITStateMachineRunnable kitStateMachineRunnable;
+    private final EventQueue eventQueue;
 
-    private final Thread kitStateMachineThread;
+    //private final KITStateMachineRunnable kitStateMachineRunnable;
 
-    public AdiClientListenerRunnable(final SocketWrapper givenSocket, final ConfigAccessor configAccessor, final ConnectionInfo connectionInfo) {
+    //private final Thread kitStateMachineThread;
+
+    public AdiClientListenerRunnable(final SocketWrapper givenSocket, final ConfigAccessor config, final ConnectionInfoVO connectionInfo, final EventQueue eventQueue) {
 
         this.socket = givenSocket;
         this.connectionInfo = connectionInfo;
+        this.eventQueue = eventQueue;
 
-        this.kitStateMachineRunnable = new KITStateMachineRunnable(new ClientAdapterOut(socket), configAccessor, connectionInfo);
-
-        RichThreadFactory t2Factory = new RichThreadFactory("T2", connectionInfo);
-        this.kitStateMachineThread = t2Factory.newThread(this.kitStateMachineRunnable);
 
     }// constructor
 
@@ -58,13 +55,6 @@ public final class AdiClientListenerRunnable implements Runnable {
             LOGGER.error("Unexpected error.", t);
         }
 
-//        try {
-//            Thread.sleep(2000);
-//        }
-//        catch (InterruptedException e1) {
-//            LOGGER.error("Unexpected error.", e1);
-//        }
-
         if( socket.isClosed() == true ) {
             ConnectionsLogger.logConnectionClosed(connectionInfo);
         }
@@ -72,28 +62,13 @@ public final class AdiClientListenerRunnable implements Runnable {
             LOGGER.error("Unexpected! Socket not closed!");
         }
 
-
         LOGGER.info("Thread Finished");
+
     }
 
     private void runInternal() {
 
-        kitStateMachineThread.start();
-
-        final Sleeper sleeper = new Sleeper(new SleeperAwakeEvent() {
-            @Override
-            public boolean shouldWakeUp() {
-                return kitStateMachineThread.isAlive();
-            }
-        });
-
-        LOGGER.info("Waiting for the KitStateMachine start.");
-        final boolean eventOccurred = sleeper.waitFor(2000);
-
-        if (eventOccurred == false) {
-            return;
-        }
-        LOGGER.info("KitStateMachine started.");
+        LOGGER.info("ADI started.");
 
         try {
 
@@ -126,7 +101,7 @@ public final class AdiClientListenerRunnable implements Runnable {
                         eventSME = new ServerErrorConvertingPrimitiveSME();
                     }
 
-                    kitStateMachineRunnable.enqueueReceived(eventSME);
+                    eventQueue.enqueueReceived(eventSME);
 
                 }
                 else {
@@ -141,7 +116,7 @@ public final class AdiClientListenerRunnable implements Runnable {
                     dataInputTimeOut = true;
                     LOGGER.error("Time out. waitingTime=" + waitingTime);
                     final AdapterInErrorTimeOutSME errorSTY = new AdapterInErrorTimeOutSME(waitingTime);
-                    kitStateMachineRunnable.enqueueReceived(errorSTY);
+                    eventQueue.enqueueReceived(errorSTY);
                 }// if
 
             }// while
@@ -153,15 +128,17 @@ public final class AdiClientListenerRunnable implements Runnable {
         catch (final Exception e) {
             LOGGER.info("Unexpected Error.", e);
             final AdapterInInterrupedSME errorSTY = new AdapterInInterrupedSME(e);
-            kitStateMachineRunnable.enqueueReceived(errorSTY);
+            eventQueue.enqueueReceived(errorSTY);
         }
 
         LOGGER.info("Not receiving data anymore.");
 
         final AdapterInDataInputClosedSME eventSME = new AdapterInDataInputClosedSME();
-        kitStateMachineRunnable.enqueueReceived(eventSME);
+        eventQueue.enqueueReceived(eventSME);
 
         socket.closeDataInputStream();
+
+        LOGGER.info("runInternal() - finished");
 
     }
 

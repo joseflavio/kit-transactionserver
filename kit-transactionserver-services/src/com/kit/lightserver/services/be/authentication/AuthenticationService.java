@@ -7,7 +7,7 @@ import com.fap.framework.db.SelectQueryResult;
 import com.fap.framework.db.UpdateQueryResult;
 import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
-import com.kit.lightserver.domain.types.ConnectionInfo;
+import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
 import com.kit.lightserver.services.db.authenticate.TableLogConexoesConstants;
@@ -30,7 +30,7 @@ public final class AuthenticationService {
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dataSource);
     }
 
-    public AuthenticationServiceResponse authenticate(final ConnectionInfo connectionId, final String userClientId, final String password,
+    public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionId, final String userClientId, final String password,
             final InstallationIdSTY installationId, final long lastConnectionToken) {
 
         AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);

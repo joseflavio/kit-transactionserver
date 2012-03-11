@@ -49,15 +49,13 @@ CREATE NONCLUSTERED INDEX Index_KTClientId ON dbo.Authenticate(KTClientId);
 
 
 -- ----------------------------------------------------------------------------------------------------------
--- ----------------------------------------------------------------------------------------------------------
 -- Tabela Conhecimentos      
-      [KTFirstRead]
+-- ----------------------------------------------------------------------------------------------------------
+[KTFirstRead]
       [KTLastUpdate]
       [deliveryStatus]
-      [KTClientUpdate]
-      
-      [KTLastEdit]
-      
+      [KTClientUpdate]      
+      [KTLastEdit]      
 -- ----------------------------------------------------------------------------------------------------------
       [comments]
       [DtPrevEntrega]
@@ -83,8 +81,10 @@ EXEC sp_rename 'Conhecimentos.recipientName', 'KTFieldNomeDoDestinatario', 'COLU
 -- Campos que sao recebidos do celular
 EXEC sp_rename 'Conhecimentos.deliveryStatus', 'KTCelularEntregaStatus', 'COLUMN'
 
--- -- ADICIONANDO COLUNAS --
+-- ADICIONANDO COLUNAS --
 ALTER TABLE dbo.Conhecimentos ADD KTCelularDataPrimeiraLeitura datetime NULL DEFAULT NULL;
+ALTER TABLE dbo.Conhecimentos ADD KTCelularDataUltimaLeitura datetime NULL DEFAULT NULL;
+
 
 ALTER TABLE dbo.Conhecimentos ADD KTCelularEntregaData datetime NULL;
 ALTER TABLE dbo.Conhecimentos ADD KTCelularEntregaDataString nchar(48) NULL DEFAULT NULL;

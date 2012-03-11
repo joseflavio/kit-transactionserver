@@ -15,11 +15,13 @@ import org.slf4j.LoggerFactory;
 import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.adapters.adapterin.AdiClientListenerRunnable;
-import com.kit.lightserver.domain.types.ConnectionInfo;
 import com.kit.lightserver.domain.types.ConnectionInfoFactory;
+import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.loggers.connectionlogger.ConnectionsLogger;
 import com.kit.lightserver.network.JavaNetSocketWrapper;
 import com.kit.lightserver.network.SocketWrapper;
+import com.kit.lightserver.statemachine.KITStateMachineRunnable;
+import com.kit.lightserver.statemachine.KITStateMachineRunnable.EventQueue;
 
 public final class KITLightServer implements Runnable {
 
@@ -119,7 +121,7 @@ public final class KITLightServer implements Runnable {
             Socket clientSocket = serverSocket.accept(); // Blocks waiting to a Client connect
             InetAddress clientInetAddress = clientSocket.getInetAddress();
 
-            final ConnectionInfo connectionInfo = ConnectionInfoFactory.getInstance(clientInetAddress); // It creates a unique ID for the connection
+            final ConnectionInfoVO connectionInfo = ConnectionInfoFactory.getInstance(clientInetAddress); // It creates a unique ID for the connection
             LOGGER.info("Connection accepted. connectionInfo=" + connectionInfo);
             ConnectionsLogger.logConnection(connectionInfo, clientInetAddress);
 
@@ -127,8 +129,16 @@ public final class KITLightServer implements Runnable {
              * Forking a thread to deal with the external connection
              */
             SocketWrapper socketWrapper = new JavaNetSocketWrapper(clientSocket);
+
+            RichThreadFactory t2Factory = new RichThreadFactory("T2", connectionInfo);
+            KITStateMachineRunnable kitStateMachineRunnable = new KITStateMachineRunnable(socketWrapper, configAccessor, connectionInfo);
+            Thread t2thread = t2Factory.newThread(kitStateMachineRunnable);
+            t2thread.start();
+
+            EventQueue eventQueue = kitStateMachineRunnable.getEventQueue();
+
             RichThreadFactory richThreadFactory = new RichThreadFactory("T1", connectionInfo);
-            AdiClientListenerRunnable clientListenerRunnable = new AdiClientListenerRunnable(socketWrapper, configAccessor, connectionInfo);
+            AdiClientListenerRunnable clientListenerRunnable = new AdiClientListenerRunnable(socketWrapper, configAccessor, connectionInfo, eventQueue);
             Thread thread = richThreadFactory.newThread(clientListenerRunnable);
             thread.start();
 

@@ -3,12 +3,12 @@ package com.kit.lightserver.domain.types;
 import com.fap.thread.HasThreadName;
 
 
-public final class ConnectionInfo implements HasThreadName {
+public final class ConnectionInfoVO implements HasThreadName {
 
     private final String connectionUniqueId;
     private final String clientHostAddress;
 
-    ConnectionInfo(final String connectionUniqueId, final String clientHostAddress) {
+    ConnectionInfoVO(final String connectionUniqueId, final String clientHostAddress) {
         this.connectionUniqueId = connectionUniqueId;
         this.clientHostAddress = clientHostAddress;
     }

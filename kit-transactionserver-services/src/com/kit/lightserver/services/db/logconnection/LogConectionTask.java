@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.fap.framework.db.InsertQueryPrinter;
 import com.fap.framework.db.InsertQueryResult;
 import com.fap.framework.db.KitDataSource;
-import com.kit.lightserver.domain.types.ConnectionInfo;
+import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 
 public final class LogConectionTask implements Runnable {
@@ -15,13 +15,13 @@ public final class LogConectionTask implements Runnable {
 
     private final KitDataSource dataSource;
 
-    private final ConnectionInfo connectionInfo;
+    private final ConnectionInfoVO connectionInfo;
     private final InstallationIdSTY installationId;
     private final String userClientId;
     private final int status;
 
     public LogConectionTask(
-            final KitDataSource dataSource, final ConnectionInfo connectionInfo, final InstallationIdSTY installationId,
+            final KitDataSource dataSource, final ConnectionInfoVO connectionInfo, final InstallationIdSTY installationId,
             final String userClientId, final int status) {
 
         this.dataSource = dataSource;
