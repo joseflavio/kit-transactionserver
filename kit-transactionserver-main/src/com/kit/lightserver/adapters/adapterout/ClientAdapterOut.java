@@ -30,6 +30,11 @@ public final class ClientAdapterOut {
 
     public void sendBack(final AdoResponseEnvelope adoResponseEnvelope) {
 
+        if( sender.isValidToSend() == false ) {
+            LOGGER.error("The clientAdapterOut can not send. adoResponseEnvelope="+adoResponseEnvelope);
+            return;
+        }
+
         if( adoResponseEnvelope instanceof CloseDataOutputCommandRSTY ) {
             LOGGER.info("Closing data output stream to mobile. adoResponseEnvelope=" + adoResponseEnvelope);
             sender.closeOutput();
@@ -74,10 +79,6 @@ public final class ClientAdapterOut {
     private void unexpectedErrorOccurred() {
         sender.closeOutput();
         eventQueue.enqueueReceived( new AdapterOutUnexpectedErrorSME() );
-    }
-
-    public boolean isValidToSend() {
-        return sender.isValidToSend();
     }
 
 }// class

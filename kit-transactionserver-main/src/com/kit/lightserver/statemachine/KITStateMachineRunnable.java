@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.statemachine.StateMachine;
 import com.jfap.framework.statemachine.StateSME;
-import com.kit.lightserver.adapters.adapterout.AdoResponseEnvelope;
 import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.network.SocketWrapper;
@@ -20,8 +19,6 @@ import com.kit.lightserver.statemachine.states.KitEventSME;
 public final class KITStateMachineRunnable implements Runnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(KITStateMachineRunnable.class);
-
-    private final List<AdoResponseEnvelope> responseToSendQueue = Collections.synchronizedList(new LinkedList<AdoResponseEnvelope>());
 
     private final StateMachine<KitEventSME> kitStateState;
 
@@ -43,11 +40,6 @@ public final class KITStateMachineRunnable implements Runnable {
         return eventQueue;
     }
 
-    public synchronized boolean enqueueToSend(final AdoResponseEnvelope clientResponseRSTY) {
-        responseToSendQueue.add(clientResponseRSTY);
-        return true;
-    }
-
     @Override
     public void run() { // be careful it can never be synchronized can cause deadlocks
 
@@ -60,27 +52,9 @@ public final class KITStateMachineRunnable implements Runnable {
         LOGGER.info("Thread Started");
 
         boolean isMachineProcessingExternalEvents = true;
-        while(isMachineProcessingExternalEvents || responseToSendQueue.size() > 0 || eventQueue.hasEvents() == true ) {
+        while(isMachineProcessingExternalEvents || eventQueue.hasEvents() == true ) {
 
             boolean shouldThreadSleep = true;
-
-            if(responseToSendQueue.size() > 0) {
-
-                while( responseToSendQueue.size() > 0 ) {
-
-                    final AdoResponseEnvelope clientResponse = responseToSendQueue.remove(0);
-                    if( clientAdapterOut.isValidToSend() ) {
-                        clientAdapterOut.sendBack(clientResponse);
-                    }
-                    else {
-                        LOGGER.error("The clientAdapterOut can not send. clientResponse="+clientResponse);
-                    }
-
-                }// while
-
-                shouldThreadSleep = false;
-
-            }// if
 
             if( eventQueue.hasEvents() == true ) {
                 final KitEventSME primitive = eventQueue.dequeueFirst();
