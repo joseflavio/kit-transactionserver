@@ -31,6 +31,7 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
     public ProcessingResult<KitEventSME> transitionOccurred() {
         FormOperationUpdatedFormsRequestRSTY formOperationUpdatedRowsGetRSTY = new FormOperationUpdatedFormsRequestRSTY();
         AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(formOperationUpdatedRowsGetRSTY);
+        LOGGER.info("Requesting updated forms");
         context.getClientAdapterOut().sendBack(primitivesEnvelope);
         return new ResultWaitEvent<KitEventSME>();
     }

@@ -4,16 +4,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.fap.framework.db.SelectQueryResultAdapter;
+import com.kit.lightserver.domain.types.KTFlagVO;
 
-public final class SelectConhecimentoEspecificoAdapter implements SelectQueryResultAdapter<Boolean> {
+public final class SelectConhecimentoEspecificoAdapter implements SelectQueryResultAdapter<KTFlagVO> {
 
     @Override
-    public Boolean adaptResultSet(final ResultSet rs) throws SQLException {
+    public KTFlagVO adaptResultSet(final ResultSet rs) throws SQLException {
         while (rs.next()) {
             final boolean flagLido = rs.getBoolean("KTFlagLido");
-            return Boolean.valueOf(flagLido);
+            final KTFlagVO flag = new KTFlagVO("KTFlagLido", flagLido);
+            return flag;
         }
-        return null;
+        return new KTFlagVO("KTFlagLido");
     }
 
 }// class

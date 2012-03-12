@@ -45,17 +45,17 @@ public final class MachineEndedState implements StateSME<KitEventSME> {
                 final boolean logOffSuccessfull = authenticationService.logOff(clientInfo.getKtClientId(), clientMustResetInNextConnection);
 
                 if (logOffSuccessfull == true) {
-                    LOGGER.info("Success logging off. clientInfo=" + clientInfo);
+                    LOGGER.info("Success logging off. clientInfo={}", clientInfo);
                 } else {
-                    LOGGER.error("Failed logging off. clientInfo=" + clientInfo);
+                    LOGGER.error("Failed logging off. clientInfo={}", clientInfo);
                 }
 
             } else {
-                LOGGER.info("No need to log off. clientInfo=" + clientInfo);
+                LOGGER.info("No need to log off. clientInfo={}", clientInfo);
             }
 
         } else {
-            LOGGER.error("Can not log off. clientInfo=" + clientInfo);
+            LOGGER.error("Can not log off. clientInfo={}", clientInfo);
         }
 
         return new ResultMachineStopped<KitEventSME>();

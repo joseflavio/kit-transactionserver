@@ -21,6 +21,7 @@ import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
+import com.kit.lightserver.domain.types.KTFlagVO;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQueryResultAdapter;
@@ -129,11 +130,11 @@ public final class FormServices {
         LOGGER.info("flagFormsAsRead(..) - enter");
 
         SelectConhecimentoEspecifico selectQuery = new SelectConhecimentoEspecifico(ktClientId, conhecimentoIdSTY);
-        SelectQueryResult<Boolean> selectResult = dataSource.executeSelectQuery(selectQuery, new SelectConhecimentoEspecificoAdapter());
+        SelectQueryResult<KTFlagVO> selectResult = dataSource.executeSelectQuery(selectQuery, new SelectConhecimentoEspecificoAdapter());
 
         LOGGER.info("selectResult={}"+selectResult);
 
-        if( selectResult.getResult() == Boolean.FALSE ) {
+        if( selectResult.getResult().getValue() == Boolean.FALSE ) {
 
             UpdateConhecimentosFirstReadQuery updateQuery = new UpdateConhecimentosFirstReadQuery(ktClientId, conhecimentoIdSTY, dataDaLeitura);
             UpdateQueryResult queryResult = dataSource.executeUpdateQuery(updateQuery);
