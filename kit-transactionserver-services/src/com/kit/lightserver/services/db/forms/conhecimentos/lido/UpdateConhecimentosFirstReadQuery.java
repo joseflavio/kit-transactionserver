@@ -32,10 +32,11 @@ public final class UpdateConhecimentosFirstReadQuery implements UpdateQueryInter
 
     @Override
     public String getPreparedUpdateQueryString() {
+
         final String queryStr =
                 "UPDATE " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS +
                 " SET KTCelularDataPrimeiraLeitura=?, KTFlagLido=1, KTFlagLidoUpdateDBTime=GETDATE(), KTFormVersion=KTFormVersion+1" +
-                " WHERE KTClientId=? AND KTRowId=? AND KTFlagLido=0 AND KTCelularDataPrimeiraLeitura=NULL";
+                " WHERE KTClientId=? AND KTRowId=? AND KTFlagLido=0";
 
         return queryStr;
 

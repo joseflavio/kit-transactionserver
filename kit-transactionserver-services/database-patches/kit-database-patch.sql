@@ -83,8 +83,6 @@ EXEC sp_rename 'Conhecimentos.deliveryStatus', 'KTCelularEntregaStatus', 'COLUMN
 
 -- ADICIONANDO COLUNAS --
 ALTER TABLE dbo.Conhecimentos ADD KTCelularDataPrimeiraLeitura datetime NULL DEFAULT NULL;
-ALTER TABLE dbo.Conhecimentos ADD KTCelularDataUltimaLeitura datetime NULL DEFAULT NULL;
-
 
 ALTER TABLE dbo.Conhecimentos ADD KTCelularEntregaData datetime NULL;
 ALTER TABLE dbo.Conhecimentos ADD KTCelularEntregaDataString nchar(48) NULL DEFAULT NULL;

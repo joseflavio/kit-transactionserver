@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.conhecimentos.lido;
+package com.kit.lightserver.services.db.forms.conhecimentos.common;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +10,7 @@ import com.fap.framework.db.SelectQueryInterface;
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
 import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 
-public final class SelectConhecimentoEspecifico implements SelectQueryInterface {
+final class SelectConhecimentoEspecifico implements SelectQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 

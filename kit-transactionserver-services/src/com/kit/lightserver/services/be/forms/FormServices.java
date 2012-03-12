@@ -21,15 +21,11 @@ import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
-import com.kit.lightserver.domain.types.KTFlagVO;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQueryResultAdapter;
 import com.kit.lightserver.services.db.forms.conhecimentos.UpdateConhecimentosFlagsQuery;
-import com.kit.lightserver.services.db.forms.conhecimentos.lido.SelectConhecimentoEspecifico;
-import com.kit.lightserver.services.db.forms.conhecimentos.lido.SelectConhecimentoEspecificoAdapter;
 import com.kit.lightserver.services.db.forms.conhecimentos.lido.UpdateConhecimentosFirstReadQuery;
-import com.kit.lightserver.services.db.forms.conhecimentos.lido.UpdateConhecimentosLastReadQuery;
 import com.kit.lightserver.services.db.forms.notasfiscais.UpdateNotafiscaisFlagsQuery;
 
 public final class FormServices {
@@ -69,7 +65,8 @@ public final class FormServices {
         // TODO: Usar um método melhor de salvar estatisticas dos serviços
         final Chronometer chronometer = new Chronometer("NotasfiscaisServices.retrieveNotasfiscais");
         chronometer.start();
-        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = formNotasfiscaisOperations.retrieveNotasfiscais(conhecimentosList, retrieveNaoRecebidos);
+        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = formNotasfiscaisOperations
+                .retrieveNotasfiscais(conhecimentosList, retrieveNaoRecebidos);
         chronometer.stop();
         FormServices.LOGGER.info("Time to execute the service. chronometer={}", chronometer);
 
@@ -129,31 +126,15 @@ public final class FormServices {
 
         LOGGER.info("flagFormsAsRead(..) - enter");
 
-        SelectConhecimentoEspecifico selectQuery = new SelectConhecimentoEspecifico(ktClientId, conhecimentoIdSTY);
-        SelectQueryResult<KTFlagVO> selectResult = dataSource.executeSelectQuery(selectQuery, new SelectConhecimentoEspecificoAdapter());
-
-        LOGGER.info("selectResult={}"+selectResult);
-
-        if( selectResult.getResult().getValue() == Boolean.FALSE ) {
-
-            UpdateConhecimentosFirstReadQuery updateQuery = new UpdateConhecimentosFirstReadQuery(ktClientId, conhecimentoIdSTY, dataDaLeitura);
-            UpdateQueryResult queryResult = dataSource.executeUpdateQuery(updateQuery);
-            if (queryResult.isUpdateQuerySuccessful() == false) {
-                LOGGER.error("Error updating. query={}", new UpdateQueryPrinter(updateQuery));
-                return false;
-            }
-            else {
-                if( queryResult.getRowsUpdated() == 0 ) {
-                    LOGGER.warn("Unexpected result updating. getRowsUpdated={}", Integer.valueOf(queryResult.getRowsUpdated()) );
-                }
-            }
+        UpdateConhecimentosFirstReadQuery updateQuery = new UpdateConhecimentosFirstReadQuery(ktClientId, conhecimentoIdSTY, dataDaLeitura);
+        UpdateQueryResult queryResult = dataSource.executeUpdateQuery(updateQuery);
+        if (queryResult.isUpdateQuerySuccessful() == false) {
+            LOGGER.error("Error updating. query={}", new UpdateQueryPrinter(updateQuery));
+            return false;
         }
         else {
-            UpdateConhecimentosLastReadQuery updateQuery = new UpdateConhecimentosLastReadQuery(ktClientId, conhecimentoIdSTY, dataDaLeitura);
-            UpdateQueryResult queryResult = dataSource.executeUpdateQuery(updateQuery);
-            if (queryResult.isUpdateQuerySuccessful() == false) {
-                LOGGER.error("Error updating. query={}", new UpdateQueryPrinter(updateQuery));
-                return false;
+            if (queryResult.getRowsUpdated() == 0) {
+                LOGGER.error("Unexpected result updating. getRowsUpdated={}", Integer.valueOf(queryResult.getRowsUpdated()));
             }
         }
 
