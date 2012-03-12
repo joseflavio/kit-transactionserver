@@ -21,15 +21,23 @@ import com.kit.lightserver.KITLightServerGui.KitTrayIconListeners;
 import com.kit.lightserver.config.ServerConfig;
 import com.kit.lightserver.gui.resources.ImageIconLoader;
 
-public class KitTrayMenu {
+public final class KitTrayMenu {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(KitTrayMenu.class);
 
     private final TrayIcon trayIcon;
 
+    private final File currentDir = new File("logs");
+    private final String currentFullDir = currentDir.getAbsolutePath();
+    private final ProcessBuilder processBuilder = new ProcessBuilder("explorer.exe", currentFullDir);
+
+    private final long startTime;
+
     public KitTrayMenu(final ServerConfig serverConfig, final DatabaseConfig dbConfig, final KitTrayIconListeners kitTrayIconListeners) {
 
-        if (!SystemTray.isSupported()) {
+        startTime = System.currentTimeMillis();
+
+        if ( SystemTray.isSupported() == false ) {
             throw new RuntimeException("SystemTray is not supported");
         }
 
@@ -49,21 +57,21 @@ public class KitTrayMenu {
         popup.addSeparator();
         popup.add(shutDownItem);
 
-        this.trayIcon = new TrayIcon(imageIcon.getImage());
+        trayIcon = new TrayIcon(imageIcon.getImage());
         trayIcon.setPopupMenu(popup);
         trayIcon.setImageAutoSize(true);
 
         trayIcon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Servidor KeepInTouch esta executando.");
+                displayMessage();
             }
         });
 
         goToLogsItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                KitTrayMenu.launchExplorerInLogsDirectory();
+                launchExplorerInLogsDirectory();
             }
         });
 
@@ -76,10 +84,13 @@ public class KitTrayMenu {
 
     }
 
-    static protected void launchExplorerInLogsDirectory() {
-        File currentDir = new File("logs");
-        String currentFullDir = currentDir.getAbsolutePath();
-        ProcessBuilder processBuilder = new ProcessBuilder("explorer.exe", currentFullDir);
+    private void displayMessage() {
+        long runningTime = System.currentTimeMillis() - startTime;
+        long runningTimeInMinutes = runningTime / 60000;
+        JOptionPane.showMessageDialog(null, "Servidor KeepInTouch esta executando por "+runningTimeInMinutes+" minutos.");
+    }
+
+    private void launchExplorerInLogsDirectory() {
         try {
             processBuilder.start();
         }

@@ -2,7 +2,7 @@ package com.kit.lightserver.types.response;
 
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 
-public final class FormContentFullConhecimentoRSTY extends FormContentFullRSTY implements ClientResponseRSTY {
+public final class FormContentFullConhecimentoRSTY extends FormContentFullRSTY {
 
     private final ConhecimentoSTY conhecimentoSTY;
 

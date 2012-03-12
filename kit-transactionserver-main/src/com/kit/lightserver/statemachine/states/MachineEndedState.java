@@ -29,12 +29,15 @@ public final class MachineEndedState implements StateSME<KitEventSME> {
 
         final ClientInfoCTX clientInfo = context.getClientInfo();
 
-        if (clientInfo != null) {
+        if (clientInfo == null) {
+            LOGGER.error("Unexpected. clientInfo=null");
+        }
+        else {
 
             if (clientInfo.isAuthenticated()) {
 
                 final boolean clientMustResetInNextConnection;
-                if( ConversationFinishedStatusCTX.FINISHED_WITH_SUCCESS.equals(conversationFinishedStatusCTX) ) {
+                if ( ConversationFinishedStatusCTX.FINISHED_WITH_SUCCESS.equals(conversationFinishedStatusCTX) ) {
                     clientMustResetInNextConnection = false;
                 }
                 else {
@@ -46,16 +49,16 @@ public final class MachineEndedState implements StateSME<KitEventSME> {
 
                 if (logOffSuccessfull == true) {
                     LOGGER.info("Success logging off. clientInfo={}", clientInfo);
-                } else {
+                }
+                else {
                     LOGGER.error("Failed logging off. clientInfo={}", clientInfo);
                 }
 
-            } else {
+            }
+            else {
                 LOGGER.info("No need to log off. clientInfo={}", clientInfo);
             }
 
-        } else {
-            LOGGER.error("Can not log off. clientInfo={}", clientInfo);
         }
 
         return new ResultMachineStopped<KitEventSME>();

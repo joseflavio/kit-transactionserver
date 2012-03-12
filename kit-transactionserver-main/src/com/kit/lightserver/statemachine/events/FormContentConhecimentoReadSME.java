@@ -13,7 +13,7 @@ public final class FormContentConhecimentoReadSME implements KitEventSME {
 
     public FormContentConhecimentoReadSME(final ConhecimentoIdSTY conhecimentoId, final Date firstReadDate) {
         this.conhecimentoId = conhecimentoId;
-        this.firstReadDate = firstReadDate;
+        this.firstReadDate = new Date(firstReadDate.getTime());
     }
 
     public ConhecimentoIdSTY getConhecimentoId() {
@@ -21,7 +21,7 @@ public final class FormContentConhecimentoReadSME implements KitEventSME {
     }
 
     public Date getFirstReadDate() {
-        return firstReadDate;
+        return new Date(firstReadDate.getTime());
     }
 
     @Override
