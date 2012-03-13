@@ -8,6 +8,7 @@ import kit.primitives.forms.FormContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.collections.TransformFilter;
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
 import com.kit.lightserver.statemachine.states.KitEventSME;
@@ -42,19 +43,18 @@ final class AdiFormContent {
                 result = new ReceivedPrimitiveConverterResult<KitEventSME>();
             }
 		    else {
+
 		        Date lastEditDate = primitive.lastEditDate;
-		        String statusEntrega = AdiFormContent.getFieldByName(primitive, "statusEntrega");
-		        String dataEntrega = AdiFormContent.getFieldByName(primitive, "dataEntrega");
+
+		        AdiFieldResult<String> statusEntregaField = AdiFormContent.getFieldByName(primitive, "statusEntrega", new StringFieldConverter());
+		        AdiFieldResult<String> dataEntregaField = AdiFormContent.getFieldByName(primitive, "dataEntrega", new StringFieldConverter());
+
 		        LOGGER.error("lastEditDate={}", lastEditDate);
-		        LOGGER.error("statusEntrega={}", statusEntrega);
-		        if( dataEntrega == null ) {
-		            dataEntrega = "blah";
-		        }
-		        else {
-		            dataEntrega = "*" + dataEntrega + "*";
-		        }
-		        LOGGER.error("dataEntrega={}", dataEntrega);
+		        LOGGER.error("statusEntrega={}", statusEntregaField); // value=SU
+		        LOGGER.error("dataEntrega={}", dataEntregaField); // value=14/3/2012 8:50:0
+
 	            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
+
 		    }
 		}
 		else {
@@ -85,14 +85,50 @@ final class AdiFormContent {
 
 	}
 
-	static String getFieldByName(final FormContent primitive, final String fieldName) {
+	static <T> AdiFieldResult<T> getFieldByName(final FormContent primitive, final String fieldName,  final TransformFilter<T, String> converter) {
 	    for(int i=0; i < primitive.size(); ++i) {
 	        FieldAndContentBean current = primitive.get(i);
 	        if( fieldName.equals(current.getFieldName()) ) {
-	            return current.getContent();
+	            String originalValue = current.getContent();
+	            T transformedValue = converter.transform(originalValue);
+	            return new AdiFieldResult<T>(transformedValue);
 	        }
 	    }
-	    return null;
+	    return new AdiFieldResult<T>();
 	}
+
+	final static class StringFieldConverter implements TransformFilter<String, String> {
+        @Override
+        public String transform(final String input) {
+            if( input.equals("null")) {
+                return null;
+            }
+            return input;
+        }
+	}
+
+
+	final static class AdiFieldResult<T> {
+	    private final boolean exists;
+	    private final T value;
+	    public AdiFieldResult() {
+	        this.exists = false;
+	        this.value = null;
+	    }
+	    public AdiFieldResult(final T value) {
+	        this.exists = true;
+	        this.value = value;
+	    }
+	    public boolean isExists() {
+	        return exists;
+	    }
+	    public T getValue() {
+	        return value;
+	    }
+        @Override
+        public String toString() {
+            return "AdiFieldResult [exists=" + exists + ", value=" + value + "]";
+        }
+	}// class
 
 }// class
