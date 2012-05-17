@@ -1,5 +1,6 @@
 package com.kit.lightserver.adapters.adapterout;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -16,7 +17,7 @@ final class ClientAdapterOutSender {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(ClientAdapterOutSender.class);
 
-    private final ServerDataWriter dataOutputStream;
+    private final KitServerDataOutput<DataOutputStream> dataOutputStream;
 
     private boolean validToSend = false;
 
@@ -24,15 +25,18 @@ final class ClientAdapterOutSender {
 
     public ClientAdapterOutSender(final SocketWrapper socketWrapper) {
         this.socketWrapper = socketWrapper;
-        this.dataOutputStream = new ServerDataWriter(socketWrapper.getDataOutputStream());
+        this.dataOutputStream = new KitServerDataOutput<>(socketWrapper.getDataOutputStream());
         this.validToSend = true;
 
     }// constructor
 
     final boolean sendToTheClientSocket(final List<Primitive> primitiveList) {
         try {
-            AdaptersLogger.logSending(primitiveList);
-            PrimitiveStreamFactory.writePrimitive(dataOutputStream, primitiveList);
+            for(Primitive primitive : primitiveList) {
+                AdaptersLogger.logSending(primitive);
+                PrimitiveStreamFactory.writePrimitive(dataOutputStream, primitive);
+            }
+            dataOutputStream.flush();
             return true;
         } catch (final IOException e) {
             LOGGER.error("Could not send. primitiveList=" + primitiveList, e);

@@ -25,11 +25,14 @@ public final class AdiAuthenticationRequest {
         final byte type = primitive.type;
 
         final AuthenticationRequestTypeEnumSTY authenticationRequestType;
-        if( type == AuthenticationRequest.NEWLOGIN ) {
-            authenticationRequestType = AuthenticationRequestTypeEnumSTY.NEWLOGIN;
+        if( type == AuthenticationRequest.RES_MANUAL ) {
+            authenticationRequestType = AuthenticationRequestTypeEnumSTY.RES_MANUAL;
         }
-        else if( type == AuthenticationRequest.PREVIOUS ) {
-            authenticationRequestType = AuthenticationRequestTypeEnumSTY.PREVIOUS;
+        else if( type == AuthenticationRequest.RES_MANUAL_NEW_USER ) {
+            authenticationRequestType = AuthenticationRequestTypeEnumSTY.RES_MANUAL;
+        }
+        else if( type == AuthenticationRequest.RES_AUTOMATIC ) {
+            authenticationRequestType = AuthenticationRequestTypeEnumSTY.RES_AUTOMATIC;
         }
         else {
             LOGGER.error("Unknow type of AuthenticationRequest primitive. type=" + type);

@@ -16,11 +16,14 @@ final class PrimitiveNameTranslator {
         if (primitive instanceof AuthenticationRequest) {
             final AuthenticationRequest castedPrimitive = (AuthenticationRequest) primitive;
             final String typeStr;
-            if (castedPrimitive.type == AuthenticationRequest.NEWLOGIN) {
-                typeStr = "NEWLOGIN";
+            if (castedPrimitive.type == AuthenticationRequest.RES_MANUAL_NEW_USER) {
+                typeStr = "RES_MANUAL_NEW_USER(NEWLOGIN)";
             }
-            else if (castedPrimitive.type == AuthenticationRequest.PREVIOUS) {
-                typeStr = "PREVIOUS";
+            else if (castedPrimitive.type == AuthenticationRequest.RES_MANUAL) {
+                typeStr = "RES_MANUAL(PREVIOUS)";
+            }
+            else if (castedPrimitive.type == AuthenticationRequest.RES_AUTOMATIC) {
+                typeStr = "RES_AUTOMATIC";
             }
             else if (castedPrimitive.type == AuthenticationRequest.UNDEFINED) {
                 typeStr = "UNDEFINED";
@@ -36,20 +39,29 @@ final class PrimitiveNameTranslator {
             if (castedPrimitive.type == AuthenticationResponse.UNDEFINED) {
                 typeStr = "UNDEFINED";
             }
-            else if (castedPrimitive.type == AuthenticationResponse.SUCCESS) {
-                typeStr = "SUCCESS";
+            else if (castedPrimitive.type == AuthenticationResponse.INF_SUCCESS) {
+                typeStr = "INF_SUCCESS";
             }
-            else if (castedPrimitive.type == AuthenticationResponse.FAILED) {
-                typeStr = "FAILED";
+            else if (castedPrimitive.type == AuthenticationResponse.INF_FAILED) {
+                typeStr = "INF_FAILED";
             }
-            else if (castedPrimitive.type == AuthenticationResponse.REQUEST) {
-                typeStr = "REQUEST";
+            else if (castedPrimitive.type == AuthenticationResponse.CMD_AUTHENTICATION) {
+                typeStr = "CMD_AUTHENTICATION(REQUEST)";
             }
-            else if (castedPrimitive.type == AuthenticationResponse.DATABASEERROR) {
-                typeStr = "DATABASEERROR";
+            else if (castedPrimitive.type == AuthenticationResponse.INF_DATABASE_ERROR) {
+                typeStr = "INF_DATABASE_ERROR";
             }
-            else if (castedPrimitive.type == AuthenticationResponse.CLIENTALREADYLOGGED) {
-                typeStr = "CLIENTALREADYLOGGED";
+            else if (castedPrimitive.type == AuthenticationResponse.INF_SIMULTAENOUS_USER) {
+                typeStr = "INF_SIMULTAENOUS_USER(CLIENTALREADYLOGGED)";
+            }
+            else if (castedPrimitive.type == AuthenticationResponse.INF_INEXISTENT_USER) {
+                typeStr = "INF_INEXISTENT_USER";
+            }
+            else if (castedPrimitive.type == AuthenticationResponse.INF_INCORRECT_PASSWORD) {
+                typeStr = "INF_INCORRECT_PASSWORD";
+            }
+            else if (castedPrimitive.type == AuthenticationResponse.CMD_LOGOUT) {
+                typeStr = "CMD_LOGOUT";
             }
             else {
                 typeStr = ERROR_TYPE;

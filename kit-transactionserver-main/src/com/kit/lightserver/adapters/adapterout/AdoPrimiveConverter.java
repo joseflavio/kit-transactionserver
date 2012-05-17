@@ -34,26 +34,26 @@ final class AdoPrimiveConverter {
         }
         else if (clientResponseRSTY instanceof AuthenticationResponseSuccessRSTY) {
             final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-            authenticationResponse.type = AuthenticationResponse.SUCCESS;
+            authenticationResponse.type = AuthenticationResponse.INF_SUCCESS;
             final boolean success = true;
             converterResult = new ConverterResult(success, authenticationResponse);
 
         }
         else if (clientResponseRSTY instanceof AuthenticationResponseFailedWrongPassowordRSTY) {
             final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-            authenticationResponse.type = AuthenticationResponse.FAILED;
+            authenticationResponse.type = AuthenticationResponse.INF_INCORRECT_PASSWORD; // INF_FAILED ?
             final boolean success = true;
             converterResult = new ConverterResult(success, authenticationResponse);
         }
         else if (clientResponseRSTY instanceof AuthenticationResponseFailedUserAlreadyLoggedRSTY) {
             final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-            authenticationResponse.type = AuthenticationResponse.CLIENTALREADYLOGGED;
+            authenticationResponse.type = AuthenticationResponse.INF_SIMULTAENOUS_USER;
             final boolean success = true;
             converterResult = new ConverterResult(success, authenticationResponse);
         }
         else if (clientResponseRSTY instanceof AuthenticationResponseFailedDatabaseErrorRSTY) {
             final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-            authenticationResponse.type = AuthenticationResponse.DATABASEERROR;
+            authenticationResponse.type = AuthenticationResponse.INF_DATABASE_ERROR;
             final boolean success = true;
             converterResult = new ConverterResult(success, authenticationResponse);
         }

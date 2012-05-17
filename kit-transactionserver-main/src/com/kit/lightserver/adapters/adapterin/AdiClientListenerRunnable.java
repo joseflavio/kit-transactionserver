@@ -1,5 +1,7 @@
 package com.kit.lightserver.adapters.adapterin;
 
+import java.io.DataInputStream;
+
 import kit.primitives.base.Primitive;
 import kit.primitives.factory.PrimitiveStreamFactory;
 
@@ -72,8 +74,11 @@ public final class AdiClientListenerRunnable implements Runnable {
 
         try {
 
+
             //socket.dataOutputCanBeClosed(); // Analyze that
-            ServerDataReader dataInputStream = new ServerDataReader(socket.getDataInputStream());
+            final DataInputStream dataInputStream = socket.getDataInputStream();
+            final KitServerDataInput dataInput = new KitServerDataInput(dataInputStream);
+
             boolean dataInputTimeOut = false;
 
             long totalAvailable = 0;
@@ -83,7 +88,7 @@ public final class AdiClientListenerRunnable implements Runnable {
                 int availableBytes = dataInputStream.available();
                 if (availableBytes > 0) {
 
-                    final Primitive clientPrimitive = PrimitiveStreamFactory.readPrimitive(dataInputStream);
+                    final Primitive clientPrimitive = PrimitiveStreamFactory.readPrimitive(dataInput);
                     lastEventTime = System.currentTimeMillis();
 
                     totalAvailable += availableBytes;
@@ -106,7 +111,7 @@ public final class AdiClientListenerRunnable implements Runnable {
                 }
                 else {
                     SimpleSleeper.sleep(100);
-                }// if-else
+                }
 
                 /*
                  * Checking for timeout
@@ -122,7 +127,7 @@ public final class AdiClientListenerRunnable implements Runnable {
             }// while
 
             LOGGER.info("totalAvailable="+totalAvailable);
-            LOGGER.info("dataInputStream.getTotalBytes="+dataInputStream.getTotalBytes());
+            LOGGER.info("dataInputStream.getTotalBytes="+dataInput.getTotalBytes());
 
         }
         catch (final Exception e) {
