@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/sqljdbc_3.0/sqljdbc4.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/kit-transactionserver-simplestatemachine"/>
 	<classpathentry kind="lib" path="lib/commons-dbcp-1.4.jar" sourcepath="C:/Users/jfaguilarpaulino/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-pool-1.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
