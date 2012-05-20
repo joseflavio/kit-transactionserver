@@ -18,11 +18,11 @@ public final class LogConectionTask implements Runnable {
     private final ConnectionInfoVO connectionInfo;
     private final InstallationIdSTY installationId;
     private final String userClientId;
-    private final int status;
+    private final Integer status;
 
     public LogConectionTask(
             final KitDataSource dataSource, final ConnectionInfoVO connectionInfo, final InstallationIdSTY installationId,
-            final String userClientId, final int status) {
+            final String userClientId, final Integer status) {
 
         this.dataSource = dataSource;
         this.connectionInfo = connectionInfo;

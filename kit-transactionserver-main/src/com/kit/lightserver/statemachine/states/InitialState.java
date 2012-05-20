@@ -21,7 +21,6 @@ import com.kit.lightserver.statemachine.types.ClientInfoCTX;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.AuthenticationResponseFailedDatabaseErrorRSTY;
 import com.kit.lightserver.types.response.AuthenticationResponseFailedWrongPassowordRSTY;
-import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 
 public final class InitialState extends BaseState implements StateSME<KitEventSME> {
 
@@ -114,22 +113,28 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
     private StateSME<KitEventSME> authenticationError(final AuthenticationServiceResponse authenticationResponse) {
 
+        /*
+         * In case of Authenticate error, we just need to send the auth response with error and the client should send
+         * back the Channel Notification End Channel (We don't need to request it)
+         */
+
         final StateSME<KitEventSME> newState;
         if (authenticationResponse.equals(AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST)
                 || authenticationResponse.equals(AuthenticationServiceResponse.FAILED_INVALID_PASSWORD)) {
 
             AuthenticationResponseFailedWrongPassowordRSTY failed = new AuthenticationResponseFailedWrongPassowordRSTY();
-            ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
-            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(failed, endConversation);
+            //ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
+            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(failed);
             context.getClientAdapterOut().sendBack(primitivesEnvelope);
             newState = WaitForEventEndConversationState.getInstance(context);
 
         }
-        else if (authenticationResponse.equals(AuthenticationServiceResponse.ERROR)) {
+        else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_DATABASE_ERROR ||
+                  authenticationResponse == AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR ) {
 
             AuthenticationResponseFailedDatabaseErrorRSTY failed = new AuthenticationResponseFailedDatabaseErrorRSTY();
-            ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
-            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(failed, endConversation);
+            //ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
+            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(failed);
             context.getClientAdapterOut().sendBack(primitivesEnvelope);
             newState = WaitForEventEndConversationState.getInstance(context);
 

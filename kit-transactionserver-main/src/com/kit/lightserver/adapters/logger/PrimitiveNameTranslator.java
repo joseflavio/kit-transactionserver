@@ -74,6 +74,18 @@ final class PrimitiveNameTranslator {
             if(castedPrimitive.type == ChannelNotification.END_CHANNEL) {
                 typeStr = "END_CHANNEL";
             }
+            else
+            if(castedPrimitive.type == ChannelNotification.ERROR_OUT_OF_MEMORY) {
+                typeStr = "ERROR_OUT_OF_MEMORY";
+            }
+            else
+            if(castedPrimitive.type == ChannelNotification.ERROR_PROTOCOL) {
+                typeStr = "ERROR_PROTOCOL";
+            }
+            else
+            if(castedPrimitive.type == ChannelNotification.ERROR_SERVER) {
+                typeStr = "ERROR_SERVER";
+            }
             else {
                 typeStr = "(type=" + castedPrimitive.type + ")";
             }

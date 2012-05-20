@@ -8,7 +8,7 @@ import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
-import com.kit.lightserver.statemachine.events.ChannelNotificationEndConversationSME;
+import com.kit.lightserver.statemachine.events.ChannelNotificationSME;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 
 public final class WaitForEventEndConversationState implements StateSME<KitEventSME> {
@@ -28,23 +28,33 @@ public final class WaitForEventEndConversationState implements StateSME<KitEvent
 
     @Override
     public ProcessingResult<KitEventSME> transitionOccurred() {
-        return new ResultWaitEvent<KitEventSME>();
+        return new ResultWaitEvent<>();
     }
 
     @Override
     public ProcessingResult<KitEventSME> processEvent(final KitEventSME event) {
 
-        final StateSME<KitEventSME> newState;
+        final ProcessingResult<KitEventSME> result;
 
-        if( (event instanceof ChannelNotificationEndConversationSME) == false) {
+        if( (event instanceof ChannelNotificationSME) == false ) {
             LOGGER.error("Unexpected Event. event="+event);
-            newState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_ERROR_UNEXPECTED_EVENT);
+            StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_ERROR_UNEXPECTED_EVENT);
+            result = new ResultStateTransition<>(errorState);
         }
         else {
-            newState = FinishAndWaitForDataInputCloseState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_WITH_SUCCESS);
+
+            ChannelNotificationSME channelNotificationEvent = (ChannelNotificationSME)event;
+            if( channelNotificationEvent.getType() == ChannelNotificationSME.Type.END_CHANNEL ) {
+                StateSME<KitEventSME> finishedState = FinishAndWaitForDataInputCloseState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_WITH_SUCCESS);
+                result = new ResultStateTransition<>(finishedState);
+            }
+            else {
+                LOGGER.warn("Problem in the protocol (Maybe an old mobile client). event="+event);
+                result = new ResultWaitEvent<>();
+            }
         }
 
-        return new ResultStateTransition<KitEventSME>(newState);
+        return result;
 
     }
 

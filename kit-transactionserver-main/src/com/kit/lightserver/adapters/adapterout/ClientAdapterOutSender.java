@@ -17,7 +17,7 @@ final class ClientAdapterOutSender {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(ClientAdapterOutSender.class);
 
-    private final KitServerDataOutput<DataOutputStream> dataOutputStream;
+    private final KitServerDataOutput<DataOutputStream> socketDataOutput;
 
     private boolean validToSend = false;
 
@@ -25,7 +25,7 @@ final class ClientAdapterOutSender {
 
     public ClientAdapterOutSender(final SocketWrapper socketWrapper) {
         this.socketWrapper = socketWrapper;
-        this.dataOutputStream = new KitServerDataOutput<>(socketWrapper.getDataOutputStream());
+        this.socketDataOutput = new KitServerDataOutput<>(socketWrapper.getDataOutputStream());
         this.validToSend = true;
 
     }// constructor
@@ -34,9 +34,9 @@ final class ClientAdapterOutSender {
         try {
             for(Primitive primitive : primitiveList) {
                 AdaptersLogger.logSending(primitive);
-                PrimitiveStreamFactory.writePrimitive(dataOutputStream, primitive);
+                PrimitiveStreamFactory.writePrimitive(socketDataOutput, primitive);
             }
-            dataOutputStream.flush();
+            socketDataOutput.flush();
             return true;
         } catch (final IOException e) {
             LOGGER.error("Could not send. primitiveList=" + primitiveList, e);
@@ -45,9 +45,10 @@ final class ClientAdapterOutSender {
     }
 
     void closeOutput() {
-        LOGGER.info("dataOutputStream.getTotalBytesSent="+dataOutputStream.getTotalBytesSent());
-        validToSend = false;
         socketWrapper.closeDataOutputStream();
+        validToSend = false;
+        LOGGER.info("socketDataOutput.getTotalBytesSent()="+socketDataOutput.getTotalBytesSent());
+        LOGGER.info("socketDataOutput.getFlushCount()="+socketDataOutput.getFlushCount());
     }
 
     boolean isValidToSend() {

@@ -18,8 +18,12 @@ final class  KitServerDataOutput <T extends Flushable & DataOutput>  implements 
         this.dataOutputStream = source;
     }
 
-    public String getTotalBytesSent() {
-        return "totalBytesSent=" + totalBytesSent + ", flushCount="+flushCount;
+    public int getTotalBytesSent() {
+        return totalBytesSent;
+    }
+
+    public int getFlushCount() {
+        return totalBytesSent;
     }
 
     @Override

@@ -16,8 +16,6 @@ final public class DatabaseConfig {
         return dbConfig;
     }
 
-    //static private final ConfigurationAccessor CONFIG = ConfigurationReader.getConfiguration(DatabaseConfiguration.class);
-
     private final String dbHost;
     private final int dbPort;
     private final String dbName;
@@ -52,8 +50,7 @@ final public class DatabaseConfig {
 
     @Override
     public String toString() {
-        return "DatabaseConfiguration [dbHost=" + dbHost + ", dbPort=" + dbPort + ", dbName=" + dbName + ", dbUser=" + dbUser + ", dbPassword=" + dbPassword
-                + "]";
+        return "DatabaseConfig [dbHost=" + dbHost + ", dbPort=" + dbPort + ", dbName=" + dbName + ", dbUser=" + dbUser + ", dbPassword=(not loggable)]";
     }
 
 }// class

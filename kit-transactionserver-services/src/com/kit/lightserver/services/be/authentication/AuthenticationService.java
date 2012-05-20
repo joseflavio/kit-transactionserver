@@ -1,5 +1,8 @@
 package com.kit.lightserver.services.be.authentication;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fap.framework.db.DatabaseConfig;
 import com.fap.framework.db.KitDataSource;
 import com.fap.framework.db.KitDataSourceSimple;
@@ -10,10 +13,11 @@ import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdSTY;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
-import com.kit.lightserver.services.db.authenticate.TableLogConexoesConstants;
 import com.kit.lightserver.services.db.logconnection.LogConectionTask;
 
 public final class AuthenticationService {
+
+    static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
         DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
@@ -33,15 +37,22 @@ public final class AuthenticationService {
     public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionId, final String userClientId, final String password,
             final InstallationIdSTY installationId, final long lastConnectionToken) {
 
-        AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
-        int status = TableLogConexoesConstants.convertToStatus(authenticationResponse);
+        try {
 
-        LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionId, installationId, userClientId, status);
-        RichThreadFactory t3Factory = new RichThreadFactory("T3", connectionId);
-        Thread logConectionThread = t3Factory.newThread(logConectionTask);
-        logConectionThread.start();
+            AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
+            Integer status = AuthenticationServiceStatusConstants.convertToStatus(authenticationResponse);
 
-        return authenticationResponse;
+            LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionId, installationId, userClientId, status);
+            RichThreadFactory t3Factory = new RichThreadFactory("T3", connectionId);
+            Thread logConectionThread = t3Factory.newThread(logConectionTask);
+            logConectionThread.start();
+
+            return authenticationResponse;
+
+        } catch (Exception e) {
+            LOGGER.error("Unexpected Error (Should never occur)", e);
+            return AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR;
+        }
 
     }
 
@@ -50,7 +61,7 @@ public final class AuthenticationService {
         final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(userClientId);
 
         if( resultContainer.isQuerySuccessful() == false ) { // Just checking if the query was successful
-            return AuthenticationServiceResponse.ERROR;
+            return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
         }
 
         /*
@@ -75,7 +86,7 @@ public final class AuthenticationService {
          */
         final UpdateQueryResult updateLastAuthenticationResultContainer = tableAuthenticateOperations.updateClientLoggedIn(userClientId);
         if( updateLastAuthenticationResultContainer.isUpdateQuerySuccessful() == false ) {
-            return AuthenticationServiceResponse.ERROR;
+            return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
         }
 
         final boolean deveResetar = result.isKtDeveResetar().booleanValue();

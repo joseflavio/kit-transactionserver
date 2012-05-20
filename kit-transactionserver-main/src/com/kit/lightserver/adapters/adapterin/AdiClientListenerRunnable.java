@@ -74,10 +74,8 @@ public final class AdiClientListenerRunnable implements Runnable {
 
         try {
 
-
-            //socket.dataOutputCanBeClosed(); // Analyze that
             final DataInputStream dataInputStream = socket.getDataInputStream();
-            final KitServerDataInput dataInput = new KitServerDataInput(dataInputStream);
+            final KitServerDataInput socketDataInput = new KitServerDataInput(dataInputStream);
 
             boolean dataInputTimeOut = false;
 
@@ -88,7 +86,7 @@ public final class AdiClientListenerRunnable implements Runnable {
                 int availableBytes = dataInputStream.available();
                 if (availableBytes > 0) {
 
-                    final Primitive clientPrimitive = PrimitiveStreamFactory.readPrimitive(dataInput);
+                    final Primitive clientPrimitive = PrimitiveStreamFactory.readPrimitive(socketDataInput);
                     lastEventTime = System.currentTimeMillis();
 
                     totalAvailable += availableBytes;
@@ -126,8 +124,8 @@ public final class AdiClientListenerRunnable implements Runnable {
 
             }// while
 
-            LOGGER.info("totalAvailable="+totalAvailable);
-            LOGGER.info("dataInputStream.getTotalBytes="+dataInput.getTotalBytes());
+            LOGGER.info("dataInputStream.totalAvailable="+totalAvailable);
+            LOGGER.info("dataInputStream.getTotalBytes="+socketDataInput.getTotalBytes());
 
         }
         catch (final Exception e) {
