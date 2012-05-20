@@ -19,8 +19,8 @@ import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.AuthenticationRequestSME;
 import com.kit.lightserver.statemachine.types.ClientInfoCTX;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
-import com.kit.lightserver.types.response.AuthenticationResponseFailedDatabaseErrorRSTY;
 import com.kit.lightserver.types.response.AuthenticationResponseFailedWrongPassowordRSTY;
+import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 
 public final class InitialState extends BaseState implements StateSME<KitEventSME> {
 
@@ -115,36 +115,33 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
         /*
          * In case of Authenticate error, we just need to send the auth response with error and the client should send
-         * back the Channel Notification End Channel (We don't need to request it)
+         * back the Channel Notification End Channel (We don't need to request it)? depend on the case in case of protocol error yes, in database error no
          */
-
-        final StateSME<KitEventSME> newState;
-        if (authenticationResponse.equals(AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST)
-                || authenticationResponse.equals(AuthenticationServiceResponse.FAILED_INVALID_PASSWORD)) {
-
-            AuthenticationResponseFailedWrongPassowordRSTY failed = new AuthenticationResponseFailedWrongPassowordRSTY();
-            //ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
-            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(failed);
-            context.getClientAdapterOut().sendBack(primitivesEnvelope);
-            newState = WaitForEventEndConversationState.getInstance(context);
-
+        final AuthenticationResponseFailedWrongPassowordRSTY response;
+        if ( authenticationResponse == AuthenticationServiceResponse.FAILED_INVALID_PASSWORD ) {
+            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_INCORRECT_PASSWORD);
         }
-        else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_DATABASE_ERROR ||
-                  authenticationResponse == AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR ) {
-
-            AuthenticationResponseFailedDatabaseErrorRSTY failed = new AuthenticationResponseFailedDatabaseErrorRSTY();
-            //ChannelNotificationEndConversationRSTY endConversation = new ChannelNotificationEndConversationRSTY();
-            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(failed);
-            context.getClientAdapterOut().sendBack(primitivesEnvelope);
-            newState = WaitForEventEndConversationState.getInstance(context);
-
+        else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST ) {
+            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_INEXISTENT_CLIENTID);
+        }
+        else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_DATABASE_ERROR ) {
+            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_DATABASE_ERROR);
+        }
+        else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR ) {
+            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_UNEXPECTED_ERROR);
         }
         else {
             // This should *NEVER* happen
-            LOGGER.error("Unexpected service response=" + authenticationResponse);
-            newState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
+            LOGGER.error("UNEXPECTED.  authenticationResponse=" + authenticationResponse);
+            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_UNEXPECTED_ERROR);
         }
 
+        ChannelNotificationEndConversationRSTY endConversationRSTY = new ChannelNotificationEndConversationRSTY();
+        AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(response, endConversationRSTY);
+
+        context.getClientAdapterOut().sendBack(primitivesEnvelope);
+
+        final StateSME<KitEventSME> newState = WaitForEventEndConversationState.getInstance(context);
         return newState;
 
     }
