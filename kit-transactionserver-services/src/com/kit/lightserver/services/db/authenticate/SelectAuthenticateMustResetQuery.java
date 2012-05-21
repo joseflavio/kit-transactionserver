@@ -7,11 +7,11 @@ import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.QueryStringParameter;
 import com.fap.framework.db.SelectQueryInterface;
 
-final class SelectAuthenticateByClientIdQuery implements SelectQueryInterface {
+final class SelectAuthenticateMustResetQuery implements SelectQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    SelectAuthenticateByClientIdQuery(final String ktClientId) {
+    SelectAuthenticateMustResetQuery(final String ktClientId) {
 
         final QueryStringParameter ktClientIdParam = new QueryStringParameter(ktClientId);
         queryParameters.add(ktClientIdParam);
@@ -20,8 +20,12 @@ final class SelectAuthenticateByClientIdQuery implements SelectQueryInterface {
 
     @Override
     public String getPreparedSelectQueryString() {
-        final String selectQueryStr = "SELECT KTClientId, KTPassword FROM " + TableAuthenticateConstants.TABLE_AUTHENTICATE + " WHERE KTClientId=?";
+
+        final String selectQueryStr = "SELECT KTClientId, KTDeveResetar FROM "
+                + TableAuthenticateConstants.TABLE_AUTHENTICATE_DEVERESETAR + " WHERE KTClientId=?";
+
         return selectQueryStr;
+
     }
 
     @Override

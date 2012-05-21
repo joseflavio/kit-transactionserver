@@ -63,7 +63,7 @@ public final class SelectQueryExecuter<T> {
             rs.close();
 
         } catch (final SQLException e) {
-            LOGGER.error("Error executing the query.", e);
+            LOGGER.error("Error executing the query. selectQuery={}", new SelectQueryPrinter(selectQuery), e);
             result = new SelectQueryResult<T>();
         } finally {
 

@@ -7,6 +7,7 @@ import com.fap.framework.db.DatabaseConfig;
 import com.fap.framework.db.KitDataSource;
 import com.fap.framework.db.KitDataSourceSimple;
 import com.fap.framework.db.SelectQueryResult;
+import com.fap.framework.db.SelectQueryResultSingleBoolean;
 import com.fap.framework.db.UpdateQueryResult;
 import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
@@ -43,6 +44,7 @@ public final class AuthenticationService {
             Integer status = AuthenticationServiceStatusConstants.convertToStatus(authenticationResponse);
 
             LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionId, installationId, userClientId, status);
+
             RichThreadFactory t3Factory = new RichThreadFactory("T3", connectionId);
             Thread logConectionThread = t3Factory.newThread(logConectionTask);
             logConectionThread.start();
@@ -60,12 +62,12 @@ public final class AuthenticationService {
 
         final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(userClientId);
 
-        if( resultContainer.isQuerySuccessful() == false ) { // Just checking if the query was successful
+        if( resultContainer.isSelectQuerySuccessful() == false ) { // Just checking if the query was successful
             return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
         }
 
         /*
-         * Failed Cases
+         * Failure cases due to Incorrect Password
          */
         final AuthenticateQueryResult result = resultContainer.getResult();
         final boolean userExists = result.isUserExists().booleanValue();
@@ -77,19 +79,34 @@ public final class AuthenticationService {
             return AuthenticationServiceResponse.FAILED_INVALID_PASSWORD;
         }
 
-//        if( result.isKtUsuarioConectado() == true ) {
-//            return AuthenticationServiceResponse.FAILED_USER_ALREADY_LOGGEDIN;
-//        }
+        /*
+         * Decide if must reset
+         */
+        SelectQueryResult<SelectQueryResultSingleBoolean> mustResetResultContainer = tableAuthenticateOperations.selectMustReset(userClientId);
+        if( mustResetResultContainer.isSelectQuerySuccessful() == false ) {
+            return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+        }
 
         /*
-         * Success ...but it still needs to update the last authentication.
+         * Updating the time of the Last Successful Authentication
          */
         final UpdateQueryResult updateLastAuthenticationResultContainer = tableAuthenticateOperations.updateClientLoggedIn(userClientId);
         if( updateLastAuthenticationResultContainer.isUpdateQuerySuccessful() == false ) {
             return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
         }
 
-        final boolean deveResetar = result.isKtDeveResetar().booleanValue();
+        /*
+         * Success cases
+         */
+        final boolean deveResetar;
+        if( mustResetResultContainer.getResult().isAvailable() == false ) {
+            LOGGER.warn("ClientId not found in the AuthenticateDeveResetar table. userClientId="+userClientId);
+            deveResetar = false;
+        }
+        else {
+            deveResetar = mustResetResultContainer.getResult().getValue();
+        }
+
         if( deveResetar == true ) {
             return AuthenticationServiceResponse.SUCCESS_MUST_RESET;
 

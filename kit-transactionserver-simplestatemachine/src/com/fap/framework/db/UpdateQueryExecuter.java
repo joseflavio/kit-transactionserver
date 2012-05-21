@@ -53,7 +53,7 @@ public final class UpdateQueryExecuter {
 
         }
         catch (final SQLException e) {
-            LOGGER.error("Error executing the query.", e);
+            LOGGER.error("Error executing the query. updateQuery={}", new UpdateQueryPrinter(updateQuery), e);
             return new UpdateQueryResult();
         }
         catch (final Exception e) {

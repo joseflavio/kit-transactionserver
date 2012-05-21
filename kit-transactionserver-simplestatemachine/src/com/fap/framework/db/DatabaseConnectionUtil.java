@@ -30,7 +30,7 @@ public final class DatabaseConnectionUtil {
          */
         try {
             Class.forName(driverClassName);
-            DatabaseConnectionUtil.LOGGER.info("Success loading jdbc driver class. driverClassName="+driverClassName);
+            DatabaseConnectionUtil.LOGGER.trace("Success loading jdbc driver class. driverClassName="+driverClassName);
         } catch (final ClassNotFoundException e) {
             throw new RuntimeException("Could not load jdbc driver class. driverClassName="+driverClassName, e);
         }

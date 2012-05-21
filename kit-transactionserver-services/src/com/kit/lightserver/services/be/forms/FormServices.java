@@ -54,7 +54,7 @@ public final class FormServices {
         SelectConhecimentosQueryResultAdapter queryAdapter = new SelectConhecimentosQueryResultAdapter();
         SelectConhecimentosQuery query = new SelectConhecimentosQuery(ktUserClientId, retrieveNaoRecebidos);
         SelectQueryResult<List<ConhecimentoSTY>> conhecimentosQueryResult = dataSource.executeSelectQuery(query, queryAdapter);
-        if (conhecimentosQueryResult.isQuerySuccessful() == false) {
+        if (conhecimentosQueryResult.isSelectQuerySuccessful() == false) {
             final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();
             return errorServiceResponse;
         }

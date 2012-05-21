@@ -17,7 +17,7 @@ public final class SelectQueryResult<T> {
 		this.result = null;
 	}// constructor
 
-	public boolean isQuerySuccessful() {
+	public boolean isSelectQuerySuccessful() {
 		return success;
 	}
 

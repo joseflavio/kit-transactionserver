@@ -75,9 +75,9 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
              authenticationResponse.equals(AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET) ) {
 
 
-            final AuthenticationRequestTypeEnumSTY authenticationRequestType =  authenticationRequestSME.getAuthenticationRequestType();
+            final AuthenticationRequestTypeEnumSTY authRequestType =  authenticationRequestSME.getAuthenticationRequestType();
             final boolean mustReset;
-            if( AuthenticationRequestTypeEnumSTY.RES_MANUAL.equals(authenticationRequestType) || AuthenticationServiceResponse.SUCCESS_MUST_RESET.equals(authenticationResponse) ) {
+            if( AuthenticationRequestTypeEnumSTY.RES_MANUAL == authRequestType || AuthenticationServiceResponse.SUCCESS_MUST_RESET == authenticationResponse ) {
                 LOGGER.info("MUST RESET. userClientId="+userClientId);
                 mustReset = true;
             }
@@ -94,7 +94,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         else {
 
             clientInfo = new ClientInfoCTX(userClientId, authenticationResponse, false, false);
-            newState = authenticationError(authenticationResponse);
+            newState = processAuthenticationError(authenticationResponse);
 
         }// if-else
 
@@ -111,7 +111,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         return channelProgress;
     }
 
-    private StateSME<KitEventSME> authenticationError(final AuthenticationServiceResponse authenticationResponse) {
+    private StateSME<KitEventSME> processAuthenticationError(final AuthenticationServiceResponse authenticationResponse) {
 
         /*
          * In case of Authenticate error, we just need to send the auth response with error and the client should send

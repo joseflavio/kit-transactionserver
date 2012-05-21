@@ -1,9 +1,21 @@
 USE "TESTDEV_JOSEFLAVIO_KEEPIN3_MIRA_DBV20111129";
 
+
+-- ----------------------------------------------------------------------------------------------------------
+-- Novas Tabelas
+-- ----------------------------------------------------------------------------------------------------------
+	CREATE TABLE [dbo].[AuthenticateDeveResetar] (
+	    [KTClientId] [varchar](16) NOT NULL,
+	    [KTDeveResetar] [bit] NOT NULL,
+	    CONSTRAINT [PK_AuthenticateDeveResetar_KTClientId] PRIMARY KEY CLUSTERED  ([KTClientId] ASC) )
+
+
 -- ----------------------------------------------------------------------------------------------------------
 -- Table KTStatus (Deve ser removida depois)
 -- ----------------------------------------------------------------------------------------------------------
 INSERT INTO dbo.KTStatus (KTStatus) VALUES ('moved_to_new_version')
+
+
 INSERT INTO dbo.KTStatus (KTStatus) VALUES ('atualizado_para_nova_versao')
 SELECT KTStatus, count(KTRowId) FROM dbo.Conhecimentos GROUP BY KTStatus
 
@@ -41,8 +53,7 @@ ALTER TABLE dbo.LogConexoes DROP COLUMN tempRowId;
 -- ----------------------------------------------------------------------------------------------------------
 
 EXEC sp_rename 'Authenticate.KTLastAuthentication', 'KTLastAuthenticationDbDateTime', 'COLUMN'
--- ALTER TABLE dbo.Authenticate ADD KTUsuarioConectado bit NOT NULL DEFAULT 0; REMOVE
-ALTER TABLE dbo.Authenticate ADD KTDeveResetar bit NOT NULL DEFAULT 0;
+
 ALTER TABLE dbo.Authenticate ADD KTLastDisconnectionDbDateTime datetime NULL DEFAULT NULL;
 CREATE NONCLUSTERED INDEX Index_KTClientId ON dbo.Authenticate(KTClientId);
 

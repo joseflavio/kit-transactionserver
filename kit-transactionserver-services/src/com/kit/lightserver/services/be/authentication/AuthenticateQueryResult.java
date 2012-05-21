@@ -5,20 +5,17 @@ public final class AuthenticateQueryResult {
     private final Boolean userExists;
     private final String ktClientId;
     private final String ktPassword;
-    private final Boolean ktDeveResetar;
 
     public AuthenticateQueryResult() {
         this.userExists = Boolean.FALSE;
         this.ktClientId = null;
         this.ktPassword = null;
-        this.ktDeveResetar = null;
     }// constructor
 
-    public AuthenticateQueryResult(final String ktClientId, final String ktPassword, final boolean ktDeveResetar) {
+    public AuthenticateQueryResult(final String ktClientId, final String ktPassword) {
         this.userExists = Boolean.TRUE;
         this.ktClientId = ktClientId;
         this.ktPassword = ktPassword;
-        this.ktDeveResetar = Boolean.valueOf(ktDeveResetar);
     }// constructor
 
     public Boolean isUserExists() {
@@ -33,14 +30,9 @@ public final class AuthenticateQueryResult {
         return ktPassword;
     }
 
-    public Boolean isKtDeveResetar() {
-        return ktDeveResetar;
-    }
-
     @Override
     public String toString() {
-        return "AuthenticateQueryResult [userExists=" + userExists + ", ktClientId=" + ktClientId + ", ktPassword=" + ktPassword + ", ktDeveResetar="
-                + ktDeveResetar + "]";
+        return "AuthenticateQueryResult [userExists=" + userExists + ", ktClientId=" + ktClientId + ", ktPassword=" + ktPassword + "]";
     }
 
 }// class

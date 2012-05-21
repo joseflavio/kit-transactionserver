@@ -39,7 +39,7 @@ final class FormNotasfiscaisOperations {
             SelectNotasfiscaisQueryResultAdapter notasfiscaisAdapter = new SelectNotasfiscaisQueryResultAdapter();
             SelectNotasfiscaisQuery notasfiscaisQuery = new SelectNotasfiscaisQuery(parentKnowledgeRowIdList, retrieveSomenteNaoRecebidos);
             SelectQueryResult<List<NotafiscalSTY>> notasfiscaisQueryResult = dataSource.executeSelectQuery(notasfiscaisQuery, notasfiscaisAdapter);
-            if (notasfiscaisQueryResult.isQuerySuccessful() == false) {
+            if (notasfiscaisQueryResult.isSelectQuerySuccessful() == false) {
                 final SimpleServiceResponse<List<NotafiscalSTY>> errorServiceResponse = new SimpleServiceResponse<List<NotafiscalSTY>>();
                 return errorServiceResponse;
             }
