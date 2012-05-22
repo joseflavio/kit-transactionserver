@@ -1,5 +1,6 @@
 package com.kit.lightserver.services.db.authenticate;
 
+import com.fap.framework.db.InsertQueryResult;
 import com.fap.framework.db.KitDataSource;
 import com.fap.framework.db.SelectQueryResult;
 import com.fap.framework.db.SelectQueryResultAdapterBoolean;
@@ -26,8 +27,14 @@ public final class TableAuthenticateOperations {
     }
 
     public SelectQueryResult<SelectQueryResultSingleBoolean> selectMustReset(final String userClientId) {
-        SelectAuthenticateMustResetQuery selectQuery = new SelectAuthenticateMustResetQuery(userClientId);
+        SelectAuthenticateDeveResetarQuery selectQuery = new SelectAuthenticateDeveResetarQuery(userClientId);
         SelectQueryResult<SelectQueryResultSingleBoolean> result = dataSource.executeSelectQuery(selectQuery, selectMustResetResultAdapter);
+        return result;
+    }
+
+    public InsertQueryResult insertMustReset(final String userClientId) {
+        InsertAuthenticateDeveResetarQuery insertQuery = new InsertAuthenticateDeveResetarQuery(userClientId);
+        InsertQueryResult result = dataSource.executeInsertQuery(insertQuery);
         return result;
     }
 
@@ -37,12 +44,16 @@ public final class TableAuthenticateOperations {
         return result;
     }
 
-    public UpdateQueryResult updateClientLoggedOff(final String userClientId, final boolean mustResetInNextConnection) {
-        UpdateAuthenticateUserLogOffQuery updateQuery = new UpdateAuthenticateUserLogOffQuery(userClientId, mustResetInNextConnection);
+    public UpdateQueryResult updateMustReset(final String userClientId, final boolean mustResetInNextConnection) {
+        UpdateAuthenticateDeveResetarQuery updateQuery = new UpdateAuthenticateDeveResetarQuery(userClientId, mustResetInNextConnection);
         UpdateQueryResult result = dataSource.executeUpdateQuery(updateQuery);
         return result;
     }
 
-
+    public UpdateQueryResult updateLastDisconnection(final String userClientId) {
+        UpdateAuthenticateLastDisconnectionQuery updateQuery = new UpdateAuthenticateLastDisconnectionQuery(userClientId);
+        UpdateQueryResult result = dataSource.executeUpdateQuery(updateQuery);
+        return result;
+    }
 
 }// class

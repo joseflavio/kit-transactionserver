@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fap.framework.db.DatabaseConfig;
+import com.fap.framework.db.InsertQueryResult;
 import com.fap.framework.db.KitDataSource;
 import com.fap.framework.db.KitDataSourceSimple;
 import com.fap.framework.db.SelectQueryResult;
@@ -87,6 +88,19 @@ public final class AuthenticationService {
             return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
         }
 
+        final boolean deveResetar;
+        if( mustResetResultContainer.getResult().isAvailable() == false ) {
+            LOGGER.warn("ClientId not found in the AuthenticateDeveResetar table. userClientId="+userClientId);
+            InsertQueryResult insertMustResetResult = tableAuthenticateOperations.insertMustReset(userClientId);
+            if(insertMustResetResult.isQuerySuccessfullyExecuted() == false) {
+                return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+            }
+            deveResetar = false;
+        }
+        else {
+            deveResetar = mustResetResultContainer.getResult().getValue();
+        }
+
         /*
          * Updating the time of the Last Successful Authentication
          */
@@ -98,15 +112,6 @@ public final class AuthenticationService {
         /*
          * Success cases
          */
-        final boolean deveResetar;
-        if( mustResetResultContainer.getResult().isAvailable() == false ) {
-            LOGGER.warn("ClientId not found in the AuthenticateDeveResetar table. userClientId="+userClientId);
-            deveResetar = false;
-        }
-        else {
-            deveResetar = mustResetResultContainer.getResult().getValue();
-        }
-
         if( deveResetar == true ) {
             return AuthenticationServiceResponse.SUCCESS_MUST_RESET;
 
@@ -117,14 +122,21 @@ public final class AuthenticationService {
 
     }
 
-    public boolean logOff(final String ktClientId, final boolean mustResetInNextConnection) {
+    public boolean logOff(final String userClientId, final boolean mustResetInNextConnection) {
 
-        final UpdateQueryResult result = tableAuthenticateOperations.updateClientLoggedOff(ktClientId, mustResetInNextConnection);
-        if (result.isUpdateQuerySuccessful() == false) {
+        UpdateQueryResult updateMustResetResult = tableAuthenticateOperations.updateMustReset(userClientId, mustResetInNextConnection);
+        if (updateMustResetResult.isUpdateQuerySuccessful() == false) {
+            return false;
+        }
+        if (updateMustResetResult.getRowsUpdated() != 1) {
             return false;
         }
 
-        if (result.getRowsUpdated() != 1) {
+        UpdateQueryResult updateLastDisconnectionResult = tableAuthenticateOperations.updateLastDisconnection(userClientId);
+        if (updateLastDisconnectionResult.isUpdateQuerySuccessful() == false) {
+            return false;
+        }
+        if (updateLastDisconnectionResult.getRowsUpdated() != 1) {
             return false;
         }
 

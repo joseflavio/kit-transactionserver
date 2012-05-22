@@ -33,7 +33,9 @@ final class InternalQueryPrinter {
 
         String replacedQueryString = queryString;
         for (final QueryParameter queryParam : queryParameters) {
-            replacedQueryString = replacedQueryString.replaceFirst("\\?", queryParam.getValueToPrint().toString());
+            final Object paramValue = queryParam.getValueToPrint();
+            final String printedParam = InternalQueryPrinter.convertParameterToPrint(paramValue);
+            replacedQueryString = replacedQueryString.replaceFirst("\\?", printedParam);
         }
 
         return replacedQueryString;

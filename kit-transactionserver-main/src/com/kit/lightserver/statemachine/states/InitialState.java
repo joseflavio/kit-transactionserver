@@ -77,7 +77,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
             final AuthenticationRequestTypeEnumSTY authRequestType =  authenticationRequestSME.getAuthenticationRequestType();
             final boolean mustReset;
-            if( AuthenticationRequestTypeEnumSTY.RES_MANUAL == authRequestType || AuthenticationServiceResponse.SUCCESS_MUST_RESET == authenticationResponse ) {
+            if( AuthenticationRequestTypeEnumSTY.RES_MANUAL_NEW_USER == authRequestType || AuthenticationServiceResponse.SUCCESS_MUST_RESET == authenticationResponse ) {
                 LOGGER.info("MUST RESET. userClientId="+userClientId);
                 mustReset = true;
             }

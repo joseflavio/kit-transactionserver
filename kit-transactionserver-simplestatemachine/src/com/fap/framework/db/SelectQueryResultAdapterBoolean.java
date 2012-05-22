@@ -10,7 +10,7 @@ public final class SelectQueryResultAdapterBoolean implements SelectQueryResultA
     @Override
     public SelectQueryResultSingleBoolean adaptResultSet(final ResultSet rs) throws SQLException {
         if( rs.next() ) {
-            boolean result = MsSqlBitConverter.convert(rs.getInt("KTFlagRecebido"));
+            boolean result = MsSqlBitConverter.convert(rs.getInt(1));
             return new SelectQueryResultSingleBoolean(result);
         }
         return new SelectQueryResultSingleBoolean();

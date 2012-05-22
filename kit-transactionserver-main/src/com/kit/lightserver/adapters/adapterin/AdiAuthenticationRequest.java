@@ -29,7 +29,7 @@ public final class AdiAuthenticationRequest {
             authenticationRequestType = AuthenticationRequestTypeEnumSTY.RES_MANUAL;
         }
         else if( type == AuthenticationRequest.RES_MANUAL_NEW_USER ) {
-            authenticationRequestType = AuthenticationRequestTypeEnumSTY.RES_MANUAL;
+            authenticationRequestType = AuthenticationRequestTypeEnumSTY.RES_MANUAL_NEW_USER;
         }
         else if( type == AuthenticationRequest.RES_AUTOMATIC ) {
             authenticationRequestType = AuthenticationRequestTypeEnumSTY.RES_AUTOMATIC;
