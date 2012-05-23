@@ -1,7 +1,7 @@
 package com.kit.lightserver.statemachine.events;
 
 import com.kit.lightserver.domain.AuthenticationRequestTypeEnumSTY;
-import com.kit.lightserver.domain.types.InstallationIdSTY;
+import com.kit.lightserver.domain.types.InstallationIdAbVO;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
 
@@ -10,10 +10,10 @@ public final class AuthenticationRequestSME implements KitEventSME {
 	private final String clientId;
 	private final String password;
 	private final AuthenticationRequestTypeEnumSTY authenticationRequestType;
-	private final InstallationIdSTY installationIdSTY;
+	private final InstallationIdAbVO installationIdSTY;
 
 	public AuthenticationRequestSME(final String clientId, final String password,
-			final AuthenticationRequestTypeEnumSTY authenticationRequestType, final InstallationIdSTY installationIdSTY) {
+			final AuthenticationRequestTypeEnumSTY authenticationRequestType, final InstallationIdAbVO installationIdSTY) {
 
 		this.clientId = clientId;
 		this.password = password;
@@ -34,7 +34,7 @@ public final class AuthenticationRequestSME implements KitEventSME {
 		return authenticationRequestType;
 	}
 
-	public InstallationIdSTY getInstallationIdSTY() {
+	public InstallationIdAbVO getInstallationIdSTY() {
 		return installationIdSTY;
 	}
 

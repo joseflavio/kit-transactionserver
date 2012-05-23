@@ -8,12 +8,12 @@ import com.fap.framework.db.InsertQueryResult;
 import com.fap.framework.db.KitDataSource;
 import com.fap.framework.db.KitDataSourceSimple;
 import com.fap.framework.db.SelectQueryResult;
-import com.fap.framework.db.SelectQueryResultSingleBoolean;
+import com.fap.framework.db.SelectQuerySingleResult;
 import com.fap.framework.db.UpdateQueryResult;
 import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
-import com.kit.lightserver.domain.types.InstallationIdSTY;
+import com.kit.lightserver.domain.types.InstallationIdAbVO;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
 import com.kit.lightserver.services.db.logconnection.LogConectionTask;
 
@@ -37,11 +37,11 @@ public final class AuthenticationService {
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionId, final String userClientId, final String password,
-            final InstallationIdSTY installationId, final long lastConnectionToken) {
+            final InstallationIdAbVO installationId, final long lastConnectionToken) {
 
         try {
 
-            AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
+            AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password, installationId, connectionId);
             Integer status = AuthenticationServiceStatusConstants.convertToStatus(authenticationResponse);
 
             LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionId, installationId, userClientId, status);
@@ -59,7 +59,8 @@ public final class AuthenticationService {
 
     }
 
-    private AuthenticationServiceResponse checkAuthentication(final String userClientId, final String password) {
+    private AuthenticationServiceResponse checkAuthentication(
+            final String userClientId, final String password, final InstallationIdAbVO installationId, final ConnectionInfoVO connectionId) {
 
         final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(userClientId);
 
@@ -83,7 +84,7 @@ public final class AuthenticationService {
         /*
          * Decide if must reset
          */
-        SelectQueryResult<SelectQueryResultSingleBoolean> mustResetResultContainer = tableAuthenticateOperations.selectMustReset(userClientId);
+        SelectQueryResult<SelectQuerySingleResult<Boolean>> mustResetResultContainer = tableAuthenticateOperations.selectMustReset(userClientId);
         if( mustResetResultContainer.isSelectQuerySuccessful() == false ) {
             return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
         }
@@ -91,22 +92,31 @@ public final class AuthenticationService {
         final boolean deveResetar;
         if( mustResetResultContainer.getResult().isAvailable() == false ) {
             LOGGER.warn("ClientId not found in the AuthenticateDeveResetar table. userClientId="+userClientId);
-            InsertQueryResult insertMustResetResult = tableAuthenticateOperations.insertMustReset(userClientId);
-            if(insertMustResetResult.isQuerySuccessfullyExecuted() == false) {
+            InsertQueryResult firstInsertMustResetResult = tableAuthenticateOperations.firstInsertMustReset(userClientId);
+            if(firstInsertMustResetResult.isQuerySuccessfullyExecuted() == false) {
                 return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
             }
             deveResetar = false;
         }
         else {
-            deveResetar = mustResetResultContainer.getResult().getValue();
+            Boolean deveResetarBoolean = mustResetResultContainer.getResult().getValue();
+            deveResetar = deveResetarBoolean.booleanValue();
         }
 
         /*
          * Updating the time of the Last Successful Authentication
          */
-        final UpdateQueryResult updateLastAuthenticationResultContainer = tableAuthenticateOperations.updateClientLoggedIn(userClientId);
-        if( updateLastAuthenticationResultContainer.isUpdateQuerySuccessful() == false ) {
+        SelectQueryResult<SelectQuerySingleResult<String>> selectLastConnectionQueryResult = tableAuthenticateOperations.selectLastConnection(userClientId);
+        if( selectLastConnectionQueryResult.isSelectQuerySuccessful() == false ) {
             return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+        }
+
+        if( selectLastConnectionQueryResult.getResult().isAvailable() == false ) {
+            LOGGER.warn("ClientId not found in the AuthenticateUltimaConexao table. userClientId="+userClientId);
+            InsertQueryResult firstInsertLastConnectionResult = tableAuthenticateOperations.firstInsertLastConnection(userClientId, installationId, connectionId);
+            if( firstInsertLastConnectionResult.isQuerySuccessfullyExecuted() == false ) {
+                return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+            }
         }
 
         /*

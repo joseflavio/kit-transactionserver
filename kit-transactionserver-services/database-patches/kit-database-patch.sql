@@ -4,12 +4,21 @@ USE "TESTDEV_JOSEFLAVIO_KEEPIN3_MIRA_DBV20111129";
 -- ----------------------------------------------------------------------------------------------------------
 -- Novas Tabelas
 -- ----------------------------------------------------------------------------------------------------------
-	CREATE TABLE [dbo].[AuthenticateDeveResetar] (
-	    [KTClientId] [varchar](16) NOT NULL,
-	    [KTDeveResetar] [bit] NOT NULL,
-	    CONSTRAINT [PK_AuthenticateDeveResetar_KTClientId] PRIMARY KEY CLUSTERED  ([KTClientId] ASC) )
+CREATE TABLE [dbo].[AuthenticateDeveResetar] (
+    [KTClientId] [varchar](16) NOT NULL,
+    [KTDeveResetar] [bit] NOT NULL,
+    CONSTRAINT [PK_AuthenticateDeveResetar_KTClientId] PRIMARY KEY CLUSTERED  ([KTClientId] ASC) )
 
 
+CREATE TABLE [dbo].[AuthenticateUltimaConexao] (
+    [KTLastUpdateDBTime] [datetime] NOT NULL,    
+    [KTClientId] [char](16) NOT NULL,
+    [KTCelularIdAB] [nchar](33) NOT NULL,
+    [KTConexaoID] [nchar](19) NOT NULL,
+    CONSTRAINT [PK_AuthenticateUltimaConexao_KTClientId] PRIMARY KEY CLUSTERED  ([KTClientId] ASC) )
+
+
+	    
 -- ----------------------------------------------------------------------------------------------------------
 -- Table KTStatus (Deve ser removida depois)
 -- ----------------------------------------------------------------------------------------------------------

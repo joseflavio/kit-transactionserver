@@ -1,32 +1,30 @@
 package com.fap.framework.db;
 
-public final class SelectQueryResultSingleBoolean {
+public final class SelectQuerySingleResult<T> {
 
     private final boolean available;
 
-    private final boolean value;
+    private final T value;
 
-    public SelectQueryResultSingleBoolean(final boolean value) {
+    public SelectQuerySingleResult(final T value) {
         this.available = true;
         this.value = value;
     }
 
-    public SelectQueryResultSingleBoolean() {
+    public SelectQuerySingleResult() {
         this.available = false;
-        this.value = false;
+        this.value = null;
     }
 
     public boolean isAvailable() {
         return available;
     }
 
-    public boolean getValue() {
+    public T getValue() {
         if( available == false ) {
             throw new RuntimeException("Value not available");
         }
         return value;
     }
-
-
 
 }// class

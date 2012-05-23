@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.domain.AuthenticationRequestTypeEnumSTY;
-import com.kit.lightserver.domain.types.InstallationIdSTY;
+import com.kit.lightserver.domain.types.InstallationIdAbVO;
 import com.kit.lightserver.statemachine.events.AuthenticationRequestSME;
 
 public final class AdiAuthenticationRequest {
@@ -20,7 +20,7 @@ public final class AdiAuthenticationRequest {
 
         final long installationId1 = primitive.installationId1;
         final long installationId2 = primitive.installationId2;
-        final InstallationIdSTY installationIdSTY = new InstallationIdSTY(installationId1, installationId2);
+        final InstallationIdAbVO installationIdSTY = new InstallationIdAbVO(installationId1, installationId2);
 
         final byte type = primitive.type;
 

@@ -12,7 +12,7 @@ import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
 import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.domain.AuthenticationRequestTypeEnumSTY;
-import com.kit.lightserver.domain.types.InstallationIdSTY;
+import com.kit.lightserver.domain.types.InstallationIdAbVO;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 import com.kit.lightserver.services.be.authentication.AuthenticationServiceResponse;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
@@ -59,7 +59,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
         String userClientId = authenticationRequestSME.getUserClientId();
         String password = authenticationRequestSME.getPassword();
-        InstallationIdSTY installationId = authenticationRequestSME.getInstallationIdSTY();
+        InstallationIdAbVO installationId = authenticationRequestSME.getInstallationIdSTY();
 
         AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
 
