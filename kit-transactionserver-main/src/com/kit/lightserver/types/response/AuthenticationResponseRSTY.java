@@ -1,11 +1,11 @@
 package com.kit.lightserver.types.response;
 
 
-public final class AuthenticationResponseFailedWrongPassowordRSTY implements ClientResponseRSTY {
+public final class AuthenticationResponseRSTY implements ClientResponseRSTY {
 
     private final Type type;
 
-    public AuthenticationResponseFailedWrongPassowordRSTY(final Type type) {
+    public AuthenticationResponseRSTY(final Type type) {
         this.type = type;
     }
 

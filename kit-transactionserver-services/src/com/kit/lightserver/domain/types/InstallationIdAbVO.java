@@ -30,4 +30,23 @@ public final class InstallationIdAbVO {
         return idABStr;
     }
 
+    static public InstallationIdAbVO fromDbString(final String lastInstallationIdAbStr) {
+        try {
+            final String[] parts = lastInstallationIdAbStr.split("\\:");
+            final long idA = InstallationIdAbVO.properParseLong(parts[0]);
+            final long idB = InstallationIdAbVO.properParseLong(parts[1]);
+            return new InstallationIdAbVO(idA, idB);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static private long properParseLong(final String s) {
+        final String least = s.substring(0, 8);
+        final String most = s.substring(8, 16);
+        return (Long.parseLong(least, 16)<<32) | Long.parseLong(most, 16);
+    }
+
 }// class

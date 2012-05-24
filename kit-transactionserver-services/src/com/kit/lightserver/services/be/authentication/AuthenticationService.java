@@ -14,6 +14,7 @@ import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
+import com.kit.lightserver.services.db.authenticate.SelectAuthenticateLastSuccessResult;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
 import com.kit.lightserver.services.db.logconnection.LogConectionTask;
 
@@ -36,12 +37,44 @@ public final class AuthenticationService {
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dataSource);
     }
 
+    public AuthenticateLastSuccessfulServiceResponse getLastSuccessfulAuthentication(
+            final String userClientId, final InstallationIdAbVO installationId, final ConnectionInfoVO connectionId) {
+
+        /*
+         * Updating the time of the Last Successful Authentication
+         */
+        SelectQueryResult<SelectAuthenticateLastSuccessResult> selectLastConnectionQueryResult =
+                tableAuthenticateOperations.selectLastSuccessAuthentication(userClientId);
+
+        if( selectLastConnectionQueryResult.isSelectQuerySuccessful() == false ) {
+            return AuthenticateLastSuccessfulServiceResponse.FAILED_DATABASE_ERROR;
+        }
+
+        if( selectLastConnectionQueryResult.getResult().isAvailable() == false ) {
+            LOGGER.warn("ClientId not found in the table. userClientId="+userClientId);
+            InsertQueryResult firstInsertLastConnectionResult = tableAuthenticateOperations.firstInsertLastConnection(userClientId, installationId, connectionId);
+            if( firstInsertLastConnectionResult.isQuerySuccessfullyExecuted() == false ) {
+                return AuthenticateLastSuccessfulServiceResponse.FAILED_DATABASE_ERROR;
+            }
+            else {
+                return new AuthenticateLastSuccessfulServiceResponse(installationId, 1);
+            }
+        }
+
+        String lastInstallationIdAbStr = selectLastConnectionQueryResult.getResult().getLastInstallationIdAb();
+        InstallationIdAbVO lastInstallationIdAb = InstallationIdAbVO.fromDbString(lastInstallationIdAbStr);
+        int lastVersion = selectLastConnectionQueryResult.getResult().getLastVersion();
+
+        return new AuthenticateLastSuccessfulServiceResponse(lastInstallationIdAb, lastVersion);
+
+    }
+
     public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionId, final String userClientId, final String password,
-            final InstallationIdAbVO installationId, final long lastConnectionToken) {
+            final InstallationIdAbVO installationId) {
 
         try {
 
-            AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password, installationId, connectionId);
+            AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
             Integer status = AuthenticationServiceStatusConstants.convertToStatus(authenticationResponse);
 
             LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionId, installationId, userClientId, status);
@@ -59,8 +92,7 @@ public final class AuthenticationService {
 
     }
 
-    private AuthenticationServiceResponse checkAuthentication(
-            final String userClientId, final String password, final InstallationIdAbVO installationId, final ConnectionInfoVO connectionId) {
+    private AuthenticationServiceResponse checkAuthentication(final String userClientId, final String password) {
 
         final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(userClientId);
 
@@ -103,21 +135,7 @@ public final class AuthenticationService {
             deveResetar = deveResetarBoolean.booleanValue();
         }
 
-        /*
-         * Updating the time of the Last Successful Authentication
-         */
-        SelectQueryResult<SelectQuerySingleResult<String>> selectLastConnectionQueryResult = tableAuthenticateOperations.selectLastConnection(userClientId);
-        if( selectLastConnectionQueryResult.isSelectQuerySuccessful() == false ) {
-            return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
-        }
 
-        if( selectLastConnectionQueryResult.getResult().isAvailable() == false ) {
-            LOGGER.warn("ClientId not found in the AuthenticateUltimaConexao table. userClientId="+userClientId);
-            InsertQueryResult firstInsertLastConnectionResult = tableAuthenticateOperations.firstInsertLastConnection(userClientId, installationId, connectionId);
-            if( firstInsertLastConnectionResult.isQuerySuccessfullyExecuted() == false ) {
-                return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
-            }
-        }
 
         /*
          * Success cases

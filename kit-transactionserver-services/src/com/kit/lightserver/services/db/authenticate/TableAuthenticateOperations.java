@@ -4,7 +4,6 @@ import com.fap.framework.db.InsertQueryResult;
 import com.fap.framework.db.KitDataSource;
 import com.fap.framework.db.SelectQueryResult;
 import com.fap.framework.db.SelectQueryResultAdapterBoolean;
-import com.fap.framework.db.SelectQueryResultAdapterString;
 import com.fap.framework.db.SelectQuerySingleResult;
 import com.fap.framework.db.UpdateQueryResult;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
@@ -23,7 +22,7 @@ public final class TableAuthenticateOperations {
 
     private final SelectQueryResultAdapterBoolean selectMustResetResultAdapter = new SelectQueryResultAdapterBoolean();
 
-    private final SelectQueryResultAdapterString selectCelularIdABAdapter = new SelectQueryResultAdapterString();
+    private final SelectAuthenticateLastSuccessResultAdapter selectLastSuccessAuthenticationAdapter = new SelectAuthenticateLastSuccessResultAdapter();
 
     public SelectQueryResult<AuthenticateQueryResult> selectClientIdExists(final String userClientId) {
         SelectAuthenticateByClientIdQuery selectQuery = new SelectAuthenticateByClientIdQuery(userClientId);
@@ -55,9 +54,9 @@ public final class TableAuthenticateOperations {
         return result;
     }
 
-    public SelectQueryResult<SelectQuerySingleResult<String>> selectLastConnection(final String userClientId) {
-        SelectAuthenticateUltimaConexaoQuery selectQuery = new SelectAuthenticateUltimaConexaoQuery(userClientId);
-        SelectQueryResult<SelectQuerySingleResult<String>> result = dataSource.executeSelectQuery(selectQuery, selectCelularIdABAdapter);
+    public SelectQueryResult<SelectAuthenticateLastSuccessResult> selectLastSuccessAuthentication(final String userClientId) {
+        SelectAuthenticateLastSuccessQuery selectQuery = new SelectAuthenticateLastSuccessQuery(userClientId);
+        SelectQueryResult<SelectAuthenticateLastSuccessResult> result = dataSource.executeSelectQuery(selectQuery, selectLastSuccessAuthenticationAdapter);
         return result;
     }
 

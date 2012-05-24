@@ -5,21 +5,22 @@ import kit.primitives.channel.ChannelProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.framework.uniqueids.LastConnectionTokenGenerator;
 import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
 import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.domain.AuthenticationRequestTypeEnumSTY;
+import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
+import com.kit.lightserver.services.be.authentication.AuthenticateLastSuccessfulServiceResponse;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 import com.kit.lightserver.services.be.authentication.AuthenticationServiceResponse;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.AuthenticationRequestSME;
 import com.kit.lightserver.statemachine.types.ClientInfoCTX;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
-import com.kit.lightserver.types.response.AuthenticationResponseFailedWrongPassowordRSTY;
+import com.kit.lightserver.types.response.AuthenticationResponseRSTY;
 import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 
 public final class InitialState extends BaseState implements StateSME<KitEventSME> {
@@ -63,9 +64,28 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
         AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
 
-        long lastConnectionToken = LastConnectionTokenGenerator.generateRandomConnectionId();
-        final AuthenticationServiceResponse authenticationResponse = authenticationService.authenticate(context.getConnectionInfo(), userClientId, password,
-                installationId, lastConnectionToken);
+        ConnectionInfoVO connectionInfo = context.getConnectionInfo();
+
+        AuthenticateLastSuccessfulServiceResponse lastSuccessfulAuthenticationResult =
+                authenticationService.getLastSuccessfulAuthentication(userClientId, installationId, connectionInfo);
+
+        boolean newDevice;
+        if( lastSuccessfulAuthenticationResult.getLastInstallationIdAb().equals(installationId) == false ) {
+            LOGGER.error("new device detected");
+            newDevice = true;
+        }
+        else {
+            newDevice = false;
+        }
+
+
+        final AuthenticationServiceResponse authenticationResponse;
+        if( newDevice == false ) {
+            authenticationResponse = authenticationService.authenticate(connectionInfo, userClientId, password, installationId);
+        }
+        else {
+            authenticationResponse = AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+        }
 
         LOGGER.info("Authentication complete. authenticationResponse=" + authenticationResponse);
 
@@ -117,23 +137,23 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
          * In case of Authenticate error, we just need to send the auth response with error and the client should send
          * back the Channel Notification End Channel (We don't need to request it)? depend on the case in case of protocol error yes, in database error no
          */
-        final AuthenticationResponseFailedWrongPassowordRSTY response;
+        final AuthenticationResponseRSTY response;
         if ( authenticationResponse == AuthenticationServiceResponse.FAILED_INVALID_PASSWORD ) {
-            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_INCORRECT_PASSWORD);
+            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_INCORRECT_PASSWORD);
         }
         else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST ) {
-            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_INEXISTENT_CLIENTID);
+            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_INEXISTENT_CLIENTID);
         }
         else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_DATABASE_ERROR ) {
-            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_DATABASE_ERROR);
+            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_DATABASE_ERROR);
         }
         else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR ) {
-            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_UNEXPECTED_ERROR);
+            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_UNEXPECTED_ERROR);
         }
         else {
             // This should *NEVER* happen
             LOGGER.error("UNEXPECTED.  authenticationResponse=" + authenticationResponse);
-            response = new AuthenticationResponseFailedWrongPassowordRSTY(AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_UNEXPECTED_ERROR);
+            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_UNEXPECTED_ERROR);
         }
 
         ChannelNotificationEndConversationRSTY endConversationRSTY = new ChannelNotificationEndConversationRSTY();

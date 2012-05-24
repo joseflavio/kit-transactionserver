@@ -8,7 +8,7 @@ import kit.primitives.channel.ChannelProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kit.lightserver.types.response.AuthenticationResponseFailedWrongPassowordRSTY;
+import com.kit.lightserver.types.response.AuthenticationResponseRSTY;
 import com.kit.lightserver.types.response.AuthenticationResponseSuccessRSTY;
 import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 import com.kit.lightserver.types.response.ChannelNotificationServerErrorRSTY;
@@ -37,24 +37,24 @@ final class AdoPrimiveConverter {
             converterResult = new ConverterResult(success, authenticationResponse);
 
         }
-        else if (responseRSTY instanceof AuthenticationResponseFailedWrongPassowordRSTY) {
+        else if (responseRSTY instanceof AuthenticationResponseRSTY) {
 
-            AuthenticationResponseFailedWrongPassowordRSTY authenticationResponseFailed = (AuthenticationResponseFailedWrongPassowordRSTY)responseRSTY;
+            AuthenticationResponseRSTY authenticationResponseFailed = (AuthenticationResponseRSTY)responseRSTY;
 
             final byte primitiveType;
-            if( authenticationResponseFailed.getType() == AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_INCORRECT_PASSWORD ) {
+            if( authenticationResponseFailed.getType() == AuthenticationResponseRSTY.Type.FAILED_INCORRECT_PASSWORD ) {
                 primitiveType = AuthenticationResponse.INF_INCORRECT_PASSWORD;
             }
             else
-            if( authenticationResponseFailed.getType() == AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_INEXISTENT_CLIENTID ) {
+            if( authenticationResponseFailed.getType() == AuthenticationResponseRSTY.Type.FAILED_INEXISTENT_CLIENTID ) {
                 primitiveType = AuthenticationResponse.INF_INEXISTENT_USER;
             }
             else
-            if( authenticationResponseFailed.getType() == AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_ALREADY_CONNECTED_OTHER_DEVICE ) {
+            if( authenticationResponseFailed.getType() == AuthenticationResponseRSTY.Type.FAILED_ALREADY_CONNECTED_OTHER_DEVICE ) {
                 primitiveType = AuthenticationResponse.INF_SIMULTAENOUS_USER;
             }
             else
-            if( authenticationResponseFailed.getType() == AuthenticationResponseFailedWrongPassowordRSTY.Type.FAILED_DATABASE_ERROR ) {
+            if( authenticationResponseFailed.getType() == AuthenticationResponseRSTY.Type.FAILED_DATABASE_ERROR ) {
                 primitiveType = AuthenticationResponse.INF_DATABASE_ERROR;
             }
             else {
