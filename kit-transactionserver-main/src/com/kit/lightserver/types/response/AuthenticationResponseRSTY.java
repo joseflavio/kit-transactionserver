@@ -1,15 +1,17 @@
 package com.kit.lightserver.types.response;
 
+import com.kit.lightserver.services.be.authentication.AuthenticationServiceResponse;
+
 
 public final class AuthenticationResponseRSTY implements ClientResponseRSTY {
 
-    private final Type type;
+    private final AuthenticationServiceResponse type;
 
-    public AuthenticationResponseRSTY(final Type type) {
+    public AuthenticationResponseRSTY(final AuthenticationServiceResponse type) {
         this.type = type;
     }
 
-    public Type getType() {
+    public AuthenticationServiceResponse getType() {
         return type;
     }
 
@@ -18,8 +20,5 @@ public final class AuthenticationResponseRSTY implements ClientResponseRSTY {
         return "AuthenticationResponseFailedWrongPassowordRSTY [type=" + type + "]";
     }
 
-    public enum Type {
-        FAILED_INCORRECT_PASSWORD, FAILED_INEXISTENT_CLIENTID, FAILED_ALREADY_CONNECTED_OTHER_DEVICE, FAILED_DATABASE_ERROR, FAILED_UNEXPECTED_ERROR
-    }
 
 }// class

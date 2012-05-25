@@ -22,7 +22,7 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
     public InsertLogConexoesQuery(final InstallationIdAbVO installationIdSTY, final String ktClientId, final Integer status,
             final ConnectionInfoVO connectionInfo) {
 
-        final String idABStr = InstallationIdAbVO.toDBString(installationIdSTY);
+        final String idABStr = installationIdSTY.getIdABStr();
 
         final String mobileNetworkAddress = connectionInfo.getClientHostAddress();
         final String properMobileNetworkAddress;

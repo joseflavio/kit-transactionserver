@@ -12,7 +12,8 @@ public final class SelectAuthenticateLastSuccessResultAdapter implements SelectQ
         if( rs.next() == true ) {
             final String lastInstallationIdAb = rs.getString("KTCelularIdAB");
             final int lastVersion = rs.getInt("KTVersao");
-            final SelectAuthenticateLastSuccessResult result = new SelectAuthenticateLastSuccessResult(lastInstallationIdAb, lastVersion);
+            final String lastConnectionUniqueId = rs.getString("KTConexaoID");
+            final SelectAuthenticateLastSuccessResult result = new SelectAuthenticateLastSuccessResult(lastInstallationIdAb, lastConnectionUniqueId, lastVersion);
             return result;
         }
         return new SelectAuthenticateLastSuccessResult();

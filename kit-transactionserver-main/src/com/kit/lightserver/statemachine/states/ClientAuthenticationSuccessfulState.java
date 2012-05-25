@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.StateSME;
-import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
@@ -17,7 +16,6 @@ import com.kit.lightserver.services.be.forms.FormServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.types.CommunicationCTX;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
-import com.kit.lightserver.types.response.AuthenticationResponseSuccessRSTY;
 
 final class ClientAuthenticationSuccessfulState extends BaseState implements StateSME<KitEventSME> {
 
@@ -29,14 +27,6 @@ final class ClientAuthenticationSuccessfulState extends BaseState implements Sta
 
     @Override
     public ProcessingResult<KitEventSME> transitionOccurred() {
-
-        /*
-         * This means the the client have changed in the mobile and so must be reseted
-         */
-        // final boolean clientNewLogin = PrimitiveTranslator.isAuthenticationRequest_NEWLOGIN(requestPrimitive);
-        final AuthenticationResponseSuccessRSTY success = new AuthenticationResponseSuccessRSTY();
-        final AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(success);
-        context.getClientAdapterOut().sendBack(primitivesEnvelope);
 
         /*
          * GETTING ALL THE FORMS HERE, SHOULD IT BE HERE???

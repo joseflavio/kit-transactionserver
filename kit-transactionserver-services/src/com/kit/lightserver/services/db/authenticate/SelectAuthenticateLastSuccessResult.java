@@ -5,6 +5,7 @@ public final class SelectAuthenticateLastSuccessResult {
     private final boolean available;
     private final int lastVersion;
     private final String lastInstallationIdAb;
+    private String lastConnectionUniqueId;
 
     public SelectAuthenticateLastSuccessResult() {
         this.available = false;
@@ -12,9 +13,10 @@ public final class SelectAuthenticateLastSuccessResult {
         this.lastVersion = -1;
     }
 
-    public SelectAuthenticateLastSuccessResult(final String lastInstallationIdAb, final int lastVersion) {
+    public SelectAuthenticateLastSuccessResult(final String lastInstallationIdAb, final String lastConnectionUniqueId, final int lastVersion) {
         this.available = true;
         this.lastInstallationIdAb = lastInstallationIdAb;
+        this.lastConnectionUniqueId = lastConnectionUniqueId;
         this.lastVersion = lastVersion;
     }
 
@@ -28,6 +30,10 @@ public final class SelectAuthenticateLastSuccessResult {
 
     public String getLastInstallationIdAb() {
         return lastInstallationIdAb;
+    }
+
+    public String getLastConnectionUniqueId() {
+        return lastConnectionUniqueId;
     }
 
 }// class

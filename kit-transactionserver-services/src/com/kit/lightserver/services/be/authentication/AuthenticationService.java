@@ -12,6 +12,7 @@ import com.fap.framework.db.SelectQuerySingleResult;
 import com.fap.framework.db.UpdateQueryResult;
 import com.fap.thread.RichThreadFactory;
 import com.jfap.framework.configuration.ConfigAccessor;
+import com.kit.lightserver.domain.types.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
 import com.kit.lightserver.services.db.authenticate.SelectAuthenticateLastSuccessResult;
@@ -37,8 +38,70 @@ public final class AuthenticationService {
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dataSource);
     }
 
-    public AuthenticateLastSuccessfulServiceResponse getLastSuccessfulAuthentication(
-            final String userClientId, final InstallationIdAbVO installationId, final ConnectionInfoVO connectionId) {
+    public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionInfo, final String userClientId, final String password,
+            final InstallationIdAbVO installIdAb, final AuthenticationRequestTypeEnumSTY authRequestType) {
+
+        AuthenticationServiceResponse authenticationResponse = this.authenticate2(connectionInfo, userClientId, password, installIdAb, authRequestType);
+
+        Integer status = AuthenticationServiceStatusConstants.convertToStatus(authenticationResponse);
+        LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionInfo, installIdAb, userClientId, status);
+
+        RichThreadFactory t3Factory = new RichThreadFactory("T3", connectionInfo);
+        Thread logConectionThread = t3Factory.newThread(logConectionTask);
+        logConectionThread.start();
+
+        return authenticationResponse;
+
+    }
+
+    public AuthenticationServiceResponse authenticate2(final ConnectionInfoVO connectionInfo, final String userClientId, final String password,
+            final InstallationIdAbVO installIdAb, final AuthenticationRequestTypeEnumSTY authRequestType) {
+
+        try {
+
+            AuthenticateLastSuccessfulServiceResponse lastSuccessfulAuthenticationResult =
+                    this.getLastSuccessfulAuthentication(userClientId, installIdAb, connectionInfo);
+
+            if( AuthenticationRequestTypeEnumSTY.RES_MANUAL == authRequestType || AuthenticationRequestTypeEnumSTY.RES_AUTOMATIC == authRequestType ) {
+                if( lastSuccessfulAuthenticationResult.getLastInstallationIdAb().equals(installIdAb) == false ) {
+                    return AuthenticationServiceResponse.FAILED_NEWINSTALLATIONID_NO_AUTO_UPDATE;
+                }
+            }
+
+            /*
+             * Checking the password
+             */
+            AuthenticationServiceResponse checkPasswordResponse = this.checkPassword(userClientId, password, authRequestType);
+
+            if( checkPasswordResponse == AuthenticationServiceResponse.SUCCESS_MUST_RESET ||
+                checkPasswordResponse == AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET ) {
+
+                /*
+                 * Updating last successful authentication table
+                 */
+                UpdateQueryResult result = tableAuthenticateOperations.updateAuthUltimoSucesso(
+                        installIdAb,  connectionInfo, userClientId, lastSuccessfulAuthenticationResult);
+
+                if( result.isUpdateQuerySuccessful() == false ) {
+                    return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+                }
+                if( result.getRowsUpdated() != 1 ) {
+                    return AuthenticationServiceResponse.FAILED_SIMULTANEUS_LOGIN;
+                }
+
+            }
+
+            return checkPasswordResponse;
+
+        } catch (Exception e) {
+            LOGGER.error("Unexpected Error (Should never occur)", e);
+            return AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR;
+        }
+
+    }
+
+    private AuthenticateLastSuccessfulServiceResponse getLastSuccessfulAuthentication(
+            final String userClientId, final InstallationIdAbVO installationId, final ConnectionInfoVO connectionInfo) {
 
         /*
          * Updating the time of the Last Successful Authentication
@@ -52,47 +115,25 @@ public final class AuthenticationService {
 
         if( selectLastConnectionQueryResult.getResult().isAvailable() == false ) {
             LOGGER.warn("ClientId not found in the table. userClientId="+userClientId);
-            InsertQueryResult firstInsertLastConnectionResult = tableAuthenticateOperations.firstInsertLastConnection(userClientId, installationId, connectionId);
+            InsertQueryResult firstInsertLastConnectionResult = tableAuthenticateOperations.firstInsertLastConnection(userClientId, installationId, connectionInfo);
             if( firstInsertLastConnectionResult.isQuerySuccessfullyExecuted() == false ) {
                 return AuthenticateLastSuccessfulServiceResponse.FAILED_DATABASE_ERROR;
             }
             else {
-                return new AuthenticateLastSuccessfulServiceResponse(installationId, 1);
+                return new AuthenticateLastSuccessfulServiceResponse(installationId, connectionInfo.getConnectionUniqueId(), 1);
             }
         }
 
         String lastInstallationIdAbStr = selectLastConnectionQueryResult.getResult().getLastInstallationIdAb();
-        InstallationIdAbVO lastInstallationIdAb = InstallationIdAbVO.fromDbString(lastInstallationIdAbStr);
+        InstallationIdAbVO lastInstallationIdAb = new InstallationIdAbVO(lastInstallationIdAbStr);
+        String lastConnectionUniqueId = selectLastConnectionQueryResult.getResult().getLastConnectionUniqueId();
         int lastVersion = selectLastConnectionQueryResult.getResult().getLastVersion();
 
-        return new AuthenticateLastSuccessfulServiceResponse(lastInstallationIdAb, lastVersion);
+        return new AuthenticateLastSuccessfulServiceResponse(lastInstallationIdAb, lastConnectionUniqueId, lastVersion);
 
     }
 
-    public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionId, final String userClientId, final String password,
-            final InstallationIdAbVO installationId) {
-
-        try {
-
-            AuthenticationServiceResponse authenticationResponse = this.checkAuthentication(userClientId, password);
-            Integer status = AuthenticationServiceStatusConstants.convertToStatus(authenticationResponse);
-
-            LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionId, installationId, userClientId, status);
-
-            RichThreadFactory t3Factory = new RichThreadFactory("T3", connectionId);
-            Thread logConectionThread = t3Factory.newThread(logConectionTask);
-            logConectionThread.start();
-
-            return authenticationResponse;
-
-        } catch (Exception e) {
-            LOGGER.error("Unexpected Error (Should never occur)", e);
-            return AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR;
-        }
-
-    }
-
-    private AuthenticationServiceResponse checkAuthentication(final String userClientId, final String password) {
+    private AuthenticationServiceResponse checkPassword(final String userClientId, final String password, final AuthenticationRequestTypeEnumSTY authRequestType) {
 
         final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(userClientId);
 
@@ -135,18 +176,18 @@ public final class AuthenticationService {
             deveResetar = deveResetarBoolean.booleanValue();
         }
 
-
-
         /*
          * Success cases
          */
+        if( AuthenticationRequestTypeEnumSTY.RES_MANUAL_NEW_USER == authRequestType ) {
+            return AuthenticationServiceResponse.SUCCESS_MUST_RESET;
+        }
+
         if( deveResetar == true ) {
             return AuthenticationServiceResponse.SUCCESS_MUST_RESET;
+        }
 
-        }
-        else {
-            return AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET;
-        }
+        return AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET;
 
     }
 

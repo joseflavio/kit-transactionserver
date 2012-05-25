@@ -15,12 +15,9 @@ final class InsertAuthenticateUltimaConexaoQuery implements InsertQueryInterface
 
     InsertAuthenticateUltimaConexaoQuery(final String ktClientId, final InstallationIdAbVO installationIdSTY, final ConnectionInfoVO connectionInfo) {
 
-        final String installationIdABStr = InstallationIdAbVO.toDBString(installationIdSTY);
-        final String connectionUniqueId = connectionInfo.getConnectionUniqueId();
-
         final QueryStringParameter ktClientIdParam = new QueryStringParameter( ktClientId.toUpperCase() );
-        final QueryStringParameter installationIdAbParam = new QueryStringParameter(installationIdABStr);
-        final QueryStringParameter connectionUniqueIdParam = new QueryStringParameter(connectionUniqueId);
+        final QueryStringParameter installationIdAbParam = new QueryStringParameter( installationIdSTY.getIdABStr() );
+        final QueryStringParameter connectionUniqueIdParam = new QueryStringParameter( connectionInfo.getConnectionUniqueId() );
 
         queryParameters.add(ktClientIdParam);
         queryParameters.add(installationIdAbParam);

@@ -9,11 +9,9 @@ import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
 import com.jfap.framework.statemachine.StateSME;
-import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
-import com.kit.lightserver.domain.AuthenticationRequestTypeEnumSTY;
+import com.kit.lightserver.domain.types.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
-import com.kit.lightserver.services.be.authentication.AuthenticateLastSuccessfulServiceResponse;
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 import com.kit.lightserver.services.be.authentication.AuthenticationServiceResponse;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
@@ -66,38 +64,20 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
         ConnectionInfoVO connectionInfo = context.getConnectionInfo();
 
-        AuthenticateLastSuccessfulServiceResponse lastSuccessfulAuthenticationResult =
-                authenticationService.getLastSuccessfulAuthentication(userClientId, installationId, connectionInfo);
+        AuthenticationRequestTypeEnumSTY authRequestType =  authenticationRequestSME.getAuthenticationRequestType();
 
-        boolean newDevice;
-        if( lastSuccessfulAuthenticationResult.getLastInstallationIdAb().equals(installationId) == false ) {
-            LOGGER.error("new device detected");
-            newDevice = true;
-        }
-        else {
-            newDevice = false;
-        }
-
-
-        final AuthenticationServiceResponse authenticationResponse;
-        if( newDevice == false ) {
-            authenticationResponse = authenticationService.authenticate(connectionInfo, userClientId, password, installationId);
-        }
-        else {
-            authenticationResponse = AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
-        }
-
-        LOGGER.info("Authentication complete. authenticationResponse=" + authenticationResponse);
+        final AuthenticationServiceResponse authServResponse =
+                authenticationService.authenticate(connectionInfo, userClientId, password, installationId, authRequestType);
 
         final StateSME<KitEventSME> newState;
         final ClientInfoCTX clientInfo;
-        if ( authenticationResponse.equals(AuthenticationServiceResponse.SUCCESS_MUST_RESET) ||
-             authenticationResponse.equals(AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET) ) {
+        if ( authServResponse == AuthenticationServiceResponse.SUCCESS_MUST_RESET ||
+             authServResponse == AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET ) {
 
+            LOGGER.info("Authentication successful. authServResponse=" + authServResponse);
 
-            final AuthenticationRequestTypeEnumSTY authRequestType =  authenticationRequestSME.getAuthenticationRequestType();
             final boolean mustReset;
-            if( AuthenticationRequestTypeEnumSTY.RES_MANUAL_NEW_USER == authRequestType || AuthenticationServiceResponse.SUCCESS_MUST_RESET == authenticationResponse ) {
+            if( AuthenticationServiceResponse.SUCCESS_MUST_RESET == authServResponse ) {
                 LOGGER.info("MUST RESET. userClientId="+userClientId);
                 mustReset = true;
             }
@@ -106,15 +86,28 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
                 mustReset = false;
             }
 
-            clientInfo = new ClientInfoCTX(userClientId, authenticationResponse, true, mustReset);
+            clientInfo = new ClientInfoCTX(userClientId, authServResponse, true, mustReset);
 
             newState = new ClientAuthenticationSuccessfulState(context);
+
+            final AuthenticationResponseRSTY success = new AuthenticationResponseRSTY(authServResponse);
+            context.getClientAdapterOut().sendBack(success);
 
         }
         else {
 
-            clientInfo = new ClientInfoCTX(userClientId, authenticationResponse, false, false);
-            newState = processAuthenticationError(authenticationResponse);
+            LOGGER.warn("Authentication failed. authServResponse=" + authServResponse);
+
+            /*
+             * In case of Authenticate error, we just need to send the auth response with error and the client should send
+             * back the Channel Notification End Channel (We don't need to request it)? depend on the case in case of protocol error yes, in database error no
+             */
+            final AuthenticationResponseRSTY clientAuthResponse =  new AuthenticationResponseRSTY(authServResponse);
+            final ChannelNotificationEndConversationRSTY clientEndConversation = new ChannelNotificationEndConversationRSTY();
+            context.getClientAdapterOut().sendBack(clientAuthResponse, clientEndConversation);
+
+            clientInfo = new ClientInfoCTX(userClientId, authServResponse, false, false);
+            newState = WaitForEventEndConversationState.getInstance(context);
 
         }// if-else
 
@@ -129,41 +122,6 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         final ChannelProgress channelProgress = new ChannelProgress();
         channelProgress.numberOfSteps = totalSteps;
         return channelProgress;
-    }
-
-    private StateSME<KitEventSME> processAuthenticationError(final AuthenticationServiceResponse authenticationResponse) {
-
-        /*
-         * In case of Authenticate error, we just need to send the auth response with error and the client should send
-         * back the Channel Notification End Channel (We don't need to request it)? depend on the case in case of protocol error yes, in database error no
-         */
-        final AuthenticationResponseRSTY response;
-        if ( authenticationResponse == AuthenticationServiceResponse.FAILED_INVALID_PASSWORD ) {
-            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_INCORRECT_PASSWORD);
-        }
-        else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST ) {
-            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_INEXISTENT_CLIENTID);
-        }
-        else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_DATABASE_ERROR ) {
-            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_DATABASE_ERROR);
-        }
-        else if ( authenticationResponse == AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR ) {
-            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_UNEXPECTED_ERROR);
-        }
-        else {
-            // This should *NEVER* happen
-            LOGGER.error("UNEXPECTED.  authenticationResponse=" + authenticationResponse);
-            response = new AuthenticationResponseRSTY(AuthenticationResponseRSTY.Type.FAILED_UNEXPECTED_ERROR);
-        }
-
-        ChannelNotificationEndConversationRSTY endConversationRSTY = new ChannelNotificationEndConversationRSTY();
-        AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(response, endConversationRSTY);
-
-        context.getClientAdapterOut().sendBack(primitivesEnvelope);
-
-        final StateSME<KitEventSME> newState = WaitForEventEndConversationState.getInstance(context);
-        return newState;
-
     }
 
 }// class

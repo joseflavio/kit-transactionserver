@@ -10,18 +10,29 @@ public final class AuthenticateLastSuccessfulServiceResponse {
 
     private final InstallationIdAbVO lastInstallationIdAb;
 
+    private String lastConnectionUniqueId;
+
     private final int lastVersion;
 
-    public AuthenticateLastSuccessfulServiceResponse() {
+    private AuthenticateLastSuccessfulServiceResponse() {
         this.success = false;
         this.lastInstallationIdAb = null;
         this.lastVersion = -1;
     }
 
-    public AuthenticateLastSuccessfulServiceResponse(final InstallationIdAbVO lastInstallationIdAb, final int lastVersion) {
+    public AuthenticateLastSuccessfulServiceResponse(final InstallationIdAbVO lastInstallationIdAb, final String lastConnectionUniqueId, final int lastVersion) {
         this.success = true;
         this.lastInstallationIdAb = lastInstallationIdAb;
+        this.lastConnectionUniqueId = lastConnectionUniqueId;
         this.lastVersion = lastVersion;
+    }
+
+    public String getLastConnectionUniqueId() {
+        return lastConnectionUniqueId;
+    }
+
+    public void setLastConnectionUniqueId(final String lastConnectionUniqueId) {
+        this.lastConnectionUniqueId = lastConnectionUniqueId;
     }
 
     public boolean isSuccess() {

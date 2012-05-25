@@ -28,6 +28,11 @@ public final class ClientAdapterOut {
 
     }// constructor
 
+    public void sendBack(final ClientResponseRSTY... responses) {
+        final AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(responses);
+        this.sendBack(primitivesEnvelope);
+    }
+
     public void sendBack(final AdoResponseEnvelope adoResponseEnvelope) {
 
         if( sender.isValidToSend() == false ) {

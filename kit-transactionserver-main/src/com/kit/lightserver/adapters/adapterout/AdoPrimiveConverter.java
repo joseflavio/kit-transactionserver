@@ -8,8 +8,8 @@ import kit.primitives.channel.ChannelProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kit.lightserver.services.be.authentication.AuthenticationServiceResponse;
 import com.kit.lightserver.types.response.AuthenticationResponseRSTY;
-import com.kit.lightserver.types.response.AuthenticationResponseSuccessRSTY;
 import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 import com.kit.lightserver.types.response.ChannelNotificationServerErrorRSTY;
 import com.kit.lightserver.types.response.ChannelProgressRSTY;
@@ -21,70 +21,70 @@ final class AdoPrimiveConverter {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(AdoPrimiveConverter.class);
 
-    static public AdoConverterResult<Primitive> convert(final ClientResponseRSTY responseRSTY) {
+    static public AdoConverterResult<Primitive> convert(final ClientResponseRSTY genericResponseRSTY) {
 
         final ConverterResult converterResult;
-        if (responseRSTY instanceof ChannelNotificationEndConversationRSTY) {
+        if (genericResponseRSTY instanceof ChannelNotificationEndConversationRSTY) {
             final ChannelNotification channelNotification = new ChannelNotification();
             channelNotification.type = ChannelNotification.END_CHANNEL;
             final boolean success = true;
             converterResult = new ConverterResult(success, channelNotification);
         }
-        else if (responseRSTY instanceof AuthenticationResponseSuccessRSTY) {
-            final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-            authenticationResponse.type = AuthenticationResponse.INF_SUCCESS;
-            final boolean success = true;
-            converterResult = new ConverterResult(success, authenticationResponse);
+        else if (genericResponseRSTY instanceof AuthenticationResponseRSTY) {
 
-        }
-        else if (responseRSTY instanceof AuthenticationResponseRSTY) {
-
-            AuthenticationResponseRSTY authenticationResponseFailed = (AuthenticationResponseRSTY)responseRSTY;
-
+            final AuthenticationResponseRSTY responseRSTY = (AuthenticationResponseRSTY)genericResponseRSTY;
             final byte primitiveType;
-            if( authenticationResponseFailed.getType() == AuthenticationResponseRSTY.Type.FAILED_INCORRECT_PASSWORD ) {
-                primitiveType = AuthenticationResponse.INF_INCORRECT_PASSWORD;
+            if( responseRSTY.getType() == AuthenticationServiceResponse.SUCCESS_MUST_RESET ) {
+                primitiveType = AuthenticationResponse.INF_SUCCESS;
             }
             else
-            if( authenticationResponseFailed.getType() == AuthenticationResponseRSTY.Type.FAILED_INEXISTENT_CLIENTID ) {
+            if( responseRSTY.getType() == AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET ) {
+                primitiveType = AuthenticationResponse.INF_SUCCESS;
+            }
+            else
+            if( responseRSTY.getType() == AuthenticationServiceResponse.FAILED_INVALID_PASSWORD ) {
+                primitiveType = AuthenticationResponse.INF_FAILED; // soon should be INF_INCORRECT_PASSWORD;
+            }
+            else
+            if( responseRSTY.getType() == AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST ) {
                 primitiveType = AuthenticationResponse.INF_INEXISTENT_USER;
             }
             else
-            if( authenticationResponseFailed.getType() == AuthenticationResponseRSTY.Type.FAILED_ALREADY_CONNECTED_OTHER_DEVICE ) {
-                primitiveType = AuthenticationResponse.INF_SIMULTAENOUS_USER;
+            if( responseRSTY.getType() == AuthenticationServiceResponse.FAILED_NEWINSTALLATIONID_NO_AUTO_UPDATE ) {
+                primitiveType = AuthenticationResponse.CMD_LOGOUT;
             }
             else
-            if( authenticationResponseFailed.getType() == AuthenticationResponseRSTY.Type.FAILED_DATABASE_ERROR ) {
+            if( responseRSTY.getType() == AuthenticationServiceResponse.FAILED_DATABASE_ERROR ) {
                 primitiveType = AuthenticationResponse.INF_DATABASE_ERROR;
             }
             else {
-                primitiveType = AuthenticationResponse.INF_FAILED;
+                primitiveType = AuthenticationResponse.UNDEFINED;
             }
 
-            AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+            final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
             authenticationResponse.type = primitiveType;
             converterResult = new ConverterResult(true, authenticationResponse);
 
         }
-        else if (responseRSTY instanceof ChannelNotificationServerErrorRSTY) {
+        else if (genericResponseRSTY instanceof ChannelNotificationServerErrorRSTY) {
             final ChannelNotification channelNotification = new ChannelNotification();
             channelNotification.type = ChannelNotification.ERROR_SERVER;
             final boolean success = true;
             converterResult = new ConverterResult(success, channelNotification);
         }
-        else if (responseRSTY instanceof ChannelProgressRSTY) {
-            final ChannelProgressRSTY channelProgressRSTY = (ChannelProgressRSTY)responseRSTY;
+        else if (genericResponseRSTY instanceof ChannelProgressRSTY) {
+            final ChannelProgressRSTY channelProgressRSTY = (ChannelProgressRSTY)genericResponseRSTY;
             final ChannelProgress channelProgress = new ChannelProgress();
             channelProgress.numberOfSteps = (short) channelProgressRSTY.getNumberOfSteps();
             final boolean success = true;
             converterResult = new ConverterResult(success, channelProgress);
         }
-        else if (responseRSTY instanceof FormOperationRSTY) {
-            final FormOperationRSTY casted = (FormOperationRSTY) responseRSTY;
+        else if (genericResponseRSTY instanceof FormOperationRSTY) {
+            final FormOperationRSTY casted = (FormOperationRSTY) genericResponseRSTY;
             converterResult = AdoFormOperationConverter.converter(casted);
         }
-        else if (responseRSTY instanceof FormContentFullRSTY) {
-            final FormContentFullRSTY formContentFullRSTY = (FormContentFullRSTY) responseRSTY;
+        else if (genericResponseRSTY instanceof FormContentFullRSTY) {
+            final FormContentFullRSTY formContentFullRSTY = (FormContentFullRSTY) genericResponseRSTY;
             converterResult = FormContentFullConverter.convertForm(formContentFullRSTY);
         }
         else {
@@ -104,7 +104,7 @@ final class AdoPrimiveConverter {
 
         } else {
 
-            LOGGER.error("Unable to convert primitive. Error will be sent to client. primitiveSTY=" + responseRSTY);
+            LOGGER.error("Unable to convert primitive. Error will be sent to client. primitiveSTY=" + genericResponseRSTY);
             final boolean success = false;
             final ChannelNotification channelNotification = new ChannelNotification();
             channelNotification.type = ChannelNotification.ERROR_SERVER;

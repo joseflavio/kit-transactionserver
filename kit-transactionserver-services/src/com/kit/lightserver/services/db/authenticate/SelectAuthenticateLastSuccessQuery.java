@@ -21,7 +21,7 @@ final class SelectAuthenticateLastSuccessQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        final String selectQueryStr = "SELECT [KTCelularIdAB], [KTVersao] FROM "
+        final String selectQueryStr = "SELECT [KTCelularIdAB], [KTVersao], [KTConexaoID] FROM "
                 + TableAuthenticateConstants.TABLE_AUTHENTICATE_ULTIMACONEXAO + " WHERE [KTClientId]=?";
 
         return selectQueryStr;
