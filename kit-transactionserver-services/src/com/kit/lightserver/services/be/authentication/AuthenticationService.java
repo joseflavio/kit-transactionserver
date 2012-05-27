@@ -15,8 +15,9 @@ import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.domain.types.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
-import com.kit.lightserver.services.db.authenticate.SelectAuthenticateLastSuccessResult;
+import com.kit.lightserver.services.db.authenticate.SelectAuthenticateUltimoSucessoResult;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
+import com.kit.lightserver.services.db.connectionlog.TableLogConexoesOperations;
 import com.kit.lightserver.services.db.logconnection.LogConectionTask;
 
 public final class AuthenticationService {
@@ -33,9 +34,12 @@ public final class AuthenticationService {
 
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
+    private final TableLogConexoesOperations tableLogConexoesOperations;
+
     private AuthenticationService(final KitDataSource dataSource) {
         this.dataSource = dataSource;
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dataSource);
+        this.tableLogConexoesOperations = new TableLogConexoesOperations(dataSource);
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionInfo, final String userClientId, final String password,
@@ -43,8 +47,8 @@ public final class AuthenticationService {
 
         AuthenticationServiceResponse authenticationResponse = this.authenticate2(connectionInfo, userClientId, password, installIdAb, authRequestType);
 
-        Integer status = AuthenticationServiceStatusConstants.convertToStatus(authenticationResponse);
-        LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionInfo, installIdAb, userClientId, status);
+        int responseStatusForLog = AuthenticationServiceStatusConverter.convertToStatus(authenticationResponse);
+        LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionInfo, installIdAb, userClientId, responseStatusForLog);
 
         RichThreadFactory t3Factory = new RichThreadFactory("T3", connectionInfo);
         Thread logConectionThread = t3Factory.newThread(logConectionTask);
@@ -106,7 +110,7 @@ public final class AuthenticationService {
         /*
          * Updating the time of the Last Successful Authentication
          */
-        SelectQueryResult<SelectAuthenticateLastSuccessResult> selectLastConnectionQueryResult =
+        SelectQueryResult<SelectAuthenticateUltimoSucessoResult> selectLastConnectionQueryResult =
                 tableAuthenticateOperations.selectLastSuccessAuthentication(userClientId);
 
         if( selectLastConnectionQueryResult.isSelectQuerySuccessful() == false ) {
@@ -145,12 +149,12 @@ public final class AuthenticationService {
          * Failure cases due to Incorrect Password
          */
         final AuthenticateQueryResult result = resultContainer.getResult();
-        final boolean userExists = result.isUserExists().booleanValue();
+        final boolean userExists = result.isUserExists();
         if(  userExists == false ) {
             return AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST;
         }
 
-        if( result.getKtPassword().equals(password) == false ) {
+        if( result.getPassword().equals(password) == false ) {
             return AuthenticationServiceResponse.FAILED_INVALID_PASSWORD;
         }
 
@@ -191,9 +195,9 @@ public final class AuthenticationService {
 
     }
 
-    public boolean logOff(final String userClientId, final boolean mustResetInNextConnection) {
+    public boolean logOff(final String clientUserId, final boolean mustResetInNextConnection) {
 
-        UpdateQueryResult updateMustResetResult = tableAuthenticateOperations.updateMustReset(userClientId, mustResetInNextConnection);
+        UpdateQueryResult updateMustResetResult = tableAuthenticateOperations.updateMustReset(clientUserId, mustResetInNextConnection);
         if (updateMustResetResult.isUpdateQuerySuccessful() == false) {
             return false;
         }
@@ -201,7 +205,7 @@ public final class AuthenticationService {
             return false;
         }
 
-        UpdateQueryResult updateLastDisconnectionResult = tableAuthenticateOperations.updateLastDisconnection(userClientId);
+        UpdateQueryResult updateLastDisconnectionResult = tableLogConexoesOperations.updateLastDisconnection(clientUserId);
         if (updateLastDisconnectionResult.isUpdateQuerySuccessful() == false) {
             return false;
         }

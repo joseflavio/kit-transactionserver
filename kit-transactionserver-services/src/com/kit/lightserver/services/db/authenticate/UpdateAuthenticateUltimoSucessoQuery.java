@@ -41,11 +41,11 @@ final class UpdateAuthenticateUltimoSucessoQuery implements UpdateQueryInterface
 
         final String queryStr =
                 "UPDATE " + TableAuthenticateConstants.TABLE_AUTHENTICATE_ULTIMACONEXAO + " SET " +
-                " [KTLastUpdateDBTime]=GETDATE()," +
-                " [KTCelularIdAB]=?," +
-                " [KTConexaoID]=?," +
-                " [KTVersao]=([KTVersao]+1)" +
-                " WHERE [KTClientId]=? AND [KTCelularIdAB]=? AND [KTConexaoID]=? AND KTVersao=?";
+                " [KTUpdateDBTime]=GETDATE()," +
+                " [KTClientInstallIdAB]=?," +
+                " [KTConnectionId]=?," +
+                " [KTVersion]=([KTVersion]+1)" +
+                " WHERE [KTClientUserId]=? AND [KTClientInstallIdAB]=? AND [KTConnectionId]=? AND [KTVersion]=?";
 
         return queryStr;
 

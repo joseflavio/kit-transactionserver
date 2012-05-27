@@ -19,15 +19,15 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public InsertLogConexoesQuery(final InstallationIdAbVO installationIdSTY, final String ktClientId, final Integer status,
+    public InsertLogConexoesQuery(final InstallationIdAbVO installationIdSTY, final String userClientId, final int status,
             final ConnectionInfoVO connectionInfo) {
 
         final String idABStr = installationIdSTY.getIdABStr();
 
         final String mobileNetworkAddress = connectionInfo.getClientHostAddress();
         final String properMobileNetworkAddress;
-        if( mobileNetworkAddress.length() > 15 ) {
-            LOGGER.error("mobileNetworkAddress is too long. mobileNetworkAddress="+mobileNetworkAddress);
+        if( mobileNetworkAddress.length() > 42 ) {
+            LOGGER.error("The mobileNetworkAddress is too long. mobileNetworkAddress="+mobileNetworkAddress);
             properMobileNetworkAddress = mobileNetworkAddress.substring(0, 15);
         }
         else {
@@ -38,8 +38,8 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
 
         final QueryStringParameter ktConexaoIdParam = new QueryStringParameter(connectionUniqueId);
         final QueryStringParameter idABParam = new QueryStringParameter(idABStr);
-        final QueryStringParameter ktClientIdParam = new QueryStringParameter(ktClientId);
-        final QueryIntegerParameter statusParam = new QueryIntegerParameter(status);
+        final QueryStringParameter ktClientIdParam = new QueryStringParameter(userClientId.toUpperCase());
+        final QueryIntegerParameter statusParam = new QueryIntegerParameter( Integer.valueOf(status) );
         final QueryStringParameter networkAddressParam = new QueryStringParameter(properMobileNetworkAddress);
 
         queryParameters.add(idABParam);
@@ -56,7 +56,7 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
 
         final String queryStr =
                 "INSERT INTO " + TableLogConexoesConstants.TABLE_LOG_CONEXOES
-                + " (KTConexaoDBTime, KTCelularIdAB, KTClientID, KTStatusDaConexao, KTConexaoID, KTCelularNetworkAddress) VALUES (GETDATE(), ?, ?, ?, ?, ?)";
+                + " ([KTInsertDBTime], [KTClientInstallIdAB], [KTClientUserId], [KTConnectionStatus], [KTConnectionId], [KTClientNetworkAddress]) VALUES (GETDATE(), ?, ?, ?, ?, ?)";
 
         return queryStr;
 

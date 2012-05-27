@@ -2,37 +2,38 @@ package com.kit.lightserver.services.be.authentication;
 
 public final class AuthenticateQueryResult {
 
-    private final Boolean userExists;
-    private final String ktClientId;
-    private final String ktPassword;
+    private final boolean userExists;
+    private final String userClientId;
+    private final String password;
 
     public AuthenticateQueryResult() {
-        this.userExists = Boolean.FALSE;
-        this.ktClientId = null;
-        this.ktPassword = null;
+        this.userExists = false;
+        this.userClientId = null;
+        this.password = null;
     }// constructor
 
     public AuthenticateQueryResult(final String ktClientId, final String ktPassword) {
-        this.userExists = Boolean.TRUE;
-        this.ktClientId = ktClientId;
-        this.ktPassword = ktPassword;
+        this.userExists = true;
+        this.userClientId = ktClientId;
+        this.password = ktPassword;
     }// constructor
 
-    public Boolean isUserExists() {
+    public boolean isUserExists() {
         return userExists;
     }
 
-    public String getKtClientId() {
-        return ktClientId;
+    public String getClientUserId() {
+        return userClientId;
     }
 
-    public String getKtPassword() {
-        return ktPassword;
+    public String getPassword() {
+        assert( this.userExists == true );
+        return password;
     }
 
     @Override
     public String toString() {
-        return "AuthenticateQueryResult [userExists=" + userExists + ", ktClientId=" + ktClientId + ", ktPassword=" + ktPassword + "]";
+        return "AuthenticateQueryResult [userExists=" + userExists + ", userClientId=" + userClientId + ", password=" + password + "]";
     }
 
 }// class

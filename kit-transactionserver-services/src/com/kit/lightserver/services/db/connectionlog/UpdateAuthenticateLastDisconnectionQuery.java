@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.authenticate;
+package com.kit.lightserver.services.db.connectionlog;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.QueryStringParameter;
 import com.fap.framework.db.UpdateQueryInterface;
+import com.kit.lightserver.services.db.authenticate.TableAuthenticateConstants;
 
 final class UpdateAuthenticateLastDisconnectionQuery implements UpdateQueryInterface {
 
@@ -19,7 +20,7 @@ final class UpdateAuthenticateLastDisconnectionQuery implements UpdateQueryInter
     @Override
     public String getPreparedUpdateQueryString() {
         final String queryStr =
-                "UPDATE " + TableAuthenticateConstants.TABLE_AUTHENTICATE +
+                "UPDATE " + TableAuthenticateConstants.TABLE_AUTHENTICATEPASSWORD +
                 " SET KTLastDisconnectionDbDateTime=GETDATE() WHERE KTClientId=?";
         return queryStr;
     }

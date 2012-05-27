@@ -8,3 +8,8 @@ SELECT TOP 1000 * FROM [dbo].[Conhecimentos] where [KTFlagHistorico]=0 and [KTCo
 
 SELECT KTRowId, KTClientId, KTStatus, KTFlagRecebido, KTFlagLido, KTFlagEditado, knowledgeNumber, knowledgeSerial, subsidiaryCode, senderId, recipientName, deliveryStatus, deliveryDate FROM dbo.Conhecimentos WHERE KTClientId='adaniel' and KTFlagHistorico=0 and KTControleProntoParaEnviar=1
 
+
+USE "TESTDEV_JOSEFLAVIO_KEEPIN3_MIRA_DBV20111129";
+
+INSERT INTO AuthenticatePassword ([KTClientUserId], [KTPassword]) values ('CNORRIS', '666')
+INSERT INTO AuthenticatePassword ([KTClientUserId], [KTPassword]) values ('ADANIEL', '123')

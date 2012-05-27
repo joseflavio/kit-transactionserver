@@ -5,8 +5,8 @@ public final class InstallationIdAbVO {
     private final String idABStr;
 
     public InstallationIdAbVO(final long installationId1, final long installationId2) {
-        final String idAStr = Long.toHexString(installationId1);
-        final String idBStr = Long.toHexString(installationId2);
+        final String idAStr = Long.toHexString(installationId1).toUpperCase();
+        final String idBStr = Long.toHexString(installationId2).toUpperCase();
         this.idABStr = idAStr + ":" + idBStr;
     }
 

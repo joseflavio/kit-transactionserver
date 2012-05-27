@@ -1,19 +1,19 @@
 package com.kit.lightserver.services.db.authenticate;
 
-public final class SelectAuthenticateLastSuccessResult {
+public final class SelectAuthenticateUltimoSucessoResult {
 
     private final boolean available;
     private final int lastVersion;
     private final String lastInstallationIdAb;
     private String lastConnectionUniqueId;
 
-    public SelectAuthenticateLastSuccessResult() {
+    public SelectAuthenticateUltimoSucessoResult() {
         this.available = false;
         this.lastInstallationIdAb = null;
         this.lastVersion = -1;
     }
 
-    public SelectAuthenticateLastSuccessResult(final String lastInstallationIdAb, final String lastConnectionUniqueId, final int lastVersion) {
+    public SelectAuthenticateUltimoSucessoResult(final String lastInstallationIdAb, final String lastConnectionUniqueId, final int lastVersion) {
         this.available = true;
         this.lastInstallationIdAb = lastInstallationIdAb;
         this.lastConnectionUniqueId = lastConnectionUniqueId;

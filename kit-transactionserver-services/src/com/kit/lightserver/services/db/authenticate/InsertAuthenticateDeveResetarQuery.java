@@ -23,7 +23,7 @@ final class InsertAuthenticateDeveResetarQuery implements InsertQueryInterface {
 
         final String insertQueryStr =
                 "INSERT INTO " + TableAuthenticateConstants.TABLE_AUTHENTICATE_DEVERESETAR +
-                " ([KTClientId], [KTDeveResetar]) VALUES (?, 0)";
+                " ([KTClientUserId], [KTClientMustReset]) VALUES (?, 0)";
 
         return insertQueryStr;
 

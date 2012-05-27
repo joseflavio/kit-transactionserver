@@ -30,7 +30,7 @@ final class InsertAuthenticateUltimaConexaoQuery implements InsertQueryInterface
 
         final String selectQueryStr =
                 "INSERT INTO " + TableAuthenticateConstants.TABLE_AUTHENTICATE_ULTIMACONEXAO +
-                " ([KTLastUpdateDBTime], [KTClientId], [KTCelularIdAB], [KTConexaoID], [KTVersao]) VALUES (GETDATE(), ?, ?, ?, 1)";
+                " ([KTUpdateDBTime], [KTClientUserId], [KTClientInstallIdAB], [KTConnectionId], [KTVersion]) VALUES (GETDATE(), ?, ?, ?, 1)";
 
         return selectQueryStr;
 

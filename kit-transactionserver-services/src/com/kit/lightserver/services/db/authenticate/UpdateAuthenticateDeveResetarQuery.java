@@ -26,7 +26,7 @@ final class UpdateAuthenticateDeveResetarQuery implements UpdateQueryInterface {
     public String getPreparedUpdateQueryString() {
         final String queryStr =
                 "UPDATE " + TableAuthenticateConstants.TABLE_AUTHENTICATE_DEVERESETAR +
-                " SET KTDeveResetar=? WHERE KTClientId=?";
+                " SET [KTClientMustReset]=? WHERE [KTClientUserId]=?";
         return queryStr;
     }
 

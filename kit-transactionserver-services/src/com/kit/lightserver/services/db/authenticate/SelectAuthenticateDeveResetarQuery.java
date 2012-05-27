@@ -21,8 +21,8 @@ final class SelectAuthenticateDeveResetarQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        final String selectQueryStr = "SELECT KTDeveResetar FROM "
-                + TableAuthenticateConstants.TABLE_AUTHENTICATE_DEVERESETAR + " WHERE KTClientId=?";
+        final String selectQueryStr = "SELECT [KTClientMustReset] FROM "
+                + TableAuthenticateConstants.TABLE_AUTHENTICATE_DEVERESETAR + " WHERE KTClientUserId=?";
 
         return selectQueryStr;
 

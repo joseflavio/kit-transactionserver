@@ -7,11 +7,11 @@ import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.QueryStringParameter;
 import com.fap.framework.db.SelectQueryInterface;
 
-final class SelectAuthenticateLastSuccessQuery implements SelectQueryInterface {
+final class SelectAuthenticateUltimoSucessoQuery implements SelectQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    SelectAuthenticateLastSuccessQuery(final String ktClientId) {
+    SelectAuthenticateUltimoSucessoQuery(final String ktClientId) {
 
         final QueryStringParameter ktClientIdParam = new QueryStringParameter(ktClientId);
         queryParameters.add(ktClientIdParam);
@@ -21,8 +21,8 @@ final class SelectAuthenticateLastSuccessQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        final String selectQueryStr = "SELECT [KTCelularIdAB], [KTVersao], [KTConexaoID] FROM "
-                + TableAuthenticateConstants.TABLE_AUTHENTICATE_ULTIMACONEXAO + " WHERE [KTClientId]=?";
+        final String selectQueryStr = "SELECT [KTClientInstallIdAB], [KTVersion], [KTConnectionId] FROM "
+                + TableAuthenticateConstants.TABLE_AUTHENTICATE_ULTIMACONEXAO + " WHERE [KTClientUserId]=?";
 
         return selectQueryStr;
 

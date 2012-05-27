@@ -3,22 +3,32 @@ USE "TESTDEV_JOSEFLAVIO_KEEPIN3_MIRA_DBV20111129";
 -- ----------------------------------------------------------------------------------------------------------
 -- Novas Tabelas
 -- ----------------------------------------------------------------------------------------------------------
-CREATE TABLE [dbo].[AuthenticateDeveResetar] (
-    [KTClientId] [varchar](16) NOT NULL,
-    [KTDeveResetar] [bit] NOT NULL,
-    CONSTRAINT [PK_AuthenticateDeveResetar_KTClientId] PRIMARY KEY CLUSTERED  ([KTClientId] ASC) )
+CREATE TABLE [dbo].[AuthenticatePassword] (
+    [KTClientUserId] [nvarchar](32) NOT NULL,
+    [KTPassword] [nvarchar](50) NOT NULL,
+    CONSTRAINT [PK_AuthenticatePassword_KTClientUserId] PRIMARY KEY CLUSTERED  ([KTClientUserId] ASC) )
 
+CREATE TABLE [dbo].[AuthenticateDeveResetar] (
+    [KTClientUserId] [nvarchar](32) NOT NULL,
+    [KTClientMustReset] [bit] NOT NULL,
+    CONSTRAINT [PK_AuthenticateDeveResetar_KTClientUserId] PRIMARY KEY CLUSTERED  ([KTClientUserId] ASC) )
 
 CREATE TABLE [dbo].[AuthenticateUltimoSucesso] (
-    [KTLastUpdateDBTime] [datetime] NOT NULL,    
-    [KTClientId] [char](16) NOT NULL,
-    [KTCelularIdAB] [nchar](33) NOT NULL,
-    [KTConexaoID] [nchar](19) NOT NULL,
-    [KTVersao] [int] NOT NULL,
-    CONSTRAINT [PK_AuthenticateUltimaConexao_KTClientId] PRIMARY KEY CLUSTERED  ([KTClientId] ASC) )
+    [KTUpdateDBTime] [datetime] NOT NULL,    
+    [KTClientUserId] [nvarchar](32) NOT NULL,
+    [KTClientInstallIdAB] [nchar](33) NOT NULL,
+    [KTConnectionId] [nchar](19) NOT NULL,
+    [KTVersion] [int] NOT NULL,
+    CONSTRAINT [PK_AuthenticateUltimaConexao_KTClientUserId] PRIMARY KEY CLUSTERED  ([KTClientUserId] ASC) )
+   
+CREATE TABLE [dbo].[LogConexoes](
+    [KTInsertDBTime] [datetime] NOT NULL,
+    [KTClientUserId] [nvarchar](32) NOT NULL,    
+    [KTClientInstallIdAB] [nchar](33) NOT NULL,   
+    [KTClientNetworkAddress] [nchar](42) NOT NULL,
+    [KTConnectionId] [nchar](19) NOT NULL,
+    [KTConnectionStatus] [smallint] NOT NULL )
 
-
-	    
 -- ----------------------------------------------------------------------------------------------------------
 -- Table KTStatus (Deve ser removida depois)
 -- ----------------------------------------------------------------------------------------------------------

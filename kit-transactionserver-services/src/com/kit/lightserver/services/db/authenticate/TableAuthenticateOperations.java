@@ -19,14 +19,14 @@ public final class TableAuthenticateOperations {
         this.dataSource = dataSource;
     }
 
-    private final SelectClientIdAndPasswordResultAdapter queryResultAdapter = new SelectClientIdAndPasswordResultAdapter();
+    private final SelectAuthenticatePasswordQueryResultAdapter queryResultAdapter = new SelectAuthenticatePasswordQueryResultAdapter();
 
     private final SelectQueryResultAdapterBoolean selectMustResetResultAdapter = new SelectQueryResultAdapterBoolean();
 
-    private final SelectAuthenticateLastSuccessResultAdapter selectLastSuccessAuthenticationAdapter = new SelectAuthenticateLastSuccessResultAdapter();
+    private final SelectAuthenticateUltimoSucessoResultAdapter selectLastSuccessAuthenticationAdapter = new SelectAuthenticateUltimoSucessoResultAdapter();
 
     public SelectQueryResult<AuthenticateQueryResult> selectClientIdExists(final String userClientId) {
-        SelectAuthenticateByClientIdQuery selectQuery = new SelectAuthenticateByClientIdQuery(userClientId);
+        SelectAuthenticatePasswordQuery selectQuery = new SelectAuthenticatePasswordQuery(userClientId);
         SelectQueryResult<AuthenticateQueryResult> result = dataSource.executeSelectQuery(selectQuery, queryResultAdapter);
         return result;
     }
@@ -49,9 +49,9 @@ public final class TableAuthenticateOperations {
         return result;
     }
 
-    public SelectQueryResult<SelectAuthenticateLastSuccessResult> selectLastSuccessAuthentication(final String userClientId) {
-        SelectAuthenticateLastSuccessQuery selectQuery = new SelectAuthenticateLastSuccessQuery(userClientId);
-        SelectQueryResult<SelectAuthenticateLastSuccessResult> result = dataSource.executeSelectQuery(selectQuery, selectLastSuccessAuthenticationAdapter);
+    public SelectQueryResult<SelectAuthenticateUltimoSucessoResult> selectLastSuccessAuthentication(final String userClientId) {
+        SelectAuthenticateUltimoSucessoQuery selectQuery = new SelectAuthenticateUltimoSucessoQuery(userClientId);
+        SelectQueryResult<SelectAuthenticateUltimoSucessoResult> result = dataSource.executeSelectQuery(selectQuery, selectLastSuccessAuthenticationAdapter);
         return result;
     }
 
@@ -78,13 +78,6 @@ public final class TableAuthenticateOperations {
 
         return result;
 
-    }
-
-
-    public UpdateQueryResult updateLastDisconnection(final String userClientId) {
-        UpdateAuthenticateLastDisconnectionQuery updateQuery = new UpdateAuthenticateLastDisconnectionQuery(userClientId);
-        UpdateQueryResult result = dataSource.executeUpdateQuery(updateQuery);
-        return result;
     }
 
 }// class

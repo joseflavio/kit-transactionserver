@@ -3,11 +3,11 @@ package com.kit.lightserver.services.be.authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class AuthenticationServiceStatusConstants {
+final class AuthenticationServiceStatusConverter {
 
-    static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceStatusConstants.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceStatusConverter.class);
 
-    static public Integer convertToStatus(final AuthenticationServiceResponse authenticationResponse) {
+    static public int convertToStatus(final AuthenticationServiceResponse authenticationResponse) {
 
         final int status;
 
@@ -28,6 +28,12 @@ final class AuthenticationServiceStatusConstants {
         case FAILED_DATABASE_ERROR:
             status = 220;
             break;
+        case FAILED_SIMULTANEUS_LOGIN:
+            status = 230;
+            break;
+        case FAILED_NEWINSTALLATIONID_NO_AUTO_UPDATE:
+            status = 240;
+            break;
         case FAILED_UNEXPECTED_ERROR:
             status = 666;
             break;
@@ -42,4 +48,4 @@ final class AuthenticationServiceStatusConstants {
 
     }
 
-}
+}// class
