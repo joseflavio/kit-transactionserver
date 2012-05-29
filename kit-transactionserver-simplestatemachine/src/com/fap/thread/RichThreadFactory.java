@@ -1,17 +1,13 @@
 package com.fap.thread;
 
-import java.util.concurrent.ThreadFactory;
 
-public class RichThreadFactory implements ThreadFactory {
+public final class RichThreadFactory {
 
-    private final String threadName;
-
-    public RichThreadFactory(final String namePrefix, final HasThreadName o) {
-        this.threadName = namePrefix + ":" + o.getThreadName();
+    private RichThreadFactory() {
     }
 
-    @Override
-    public Thread newThread(final Runnable r) {
+    static public Thread newThread(final NamedRunnable r, final HasThreadSufixName o) {
+        final String threadName = r.getThreadNamePrefix() + ":" + o.getThreadNameSufix();
         final Thread thread = new Thread(r, threadName);
         return thread;
     }

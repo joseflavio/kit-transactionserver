@@ -49,10 +49,10 @@ public final class FormServices {
         this.formNotasfiscaisOperations = new FormNotasfiscaisOperations(dataSource);
     }
 
-    public SimpleServiceResponse<FormsParaEnviarCTX> retrieveCurrentForms(final String ktUserClientId, final boolean retrieveNaoRecebidos) {
+    public SimpleServiceResponse<FormsParaEnviarCTX> retrieveCurrentForms(final String ktClientUserId, final boolean retrieveNaoRecebidos) {
 
         SelectConhecimentosQueryResultAdapter queryAdapter = new SelectConhecimentosQueryResultAdapter();
-        SelectConhecimentosQuery query = new SelectConhecimentosQuery(ktUserClientId, retrieveNaoRecebidos);
+        SelectConhecimentosQuery query = new SelectConhecimentosQuery(ktClientUserId, retrieveNaoRecebidos);
         SelectQueryResult<List<ConhecimentoSTY>> conhecimentosQueryResult = dataSource.executeSelectQuery(query, queryAdapter);
         if (conhecimentosQueryResult.isSelectQuerySuccessful() == false) {
             final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();

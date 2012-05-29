@@ -22,7 +22,7 @@ public final class AuthenticationRequestSME implements KitEventSME {
 
 	}// constructor
 
-	public String getUserClientId() {
+	public String getClientUserId() {
 		return clientId;
 	}
 

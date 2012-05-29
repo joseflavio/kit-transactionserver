@@ -5,6 +5,7 @@ import kit.primitives.channel.ChannelProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.chronometer.Chronometer;
 import com.jfap.framework.statemachine.ProcessingResult;
 import com.jfap.framework.statemachine.ResultStateTransition;
 import com.jfap.framework.statemachine.ResultWaitEvent;
@@ -56,7 +57,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
          */
         AuthenticationRequestSME authenticationRequestSME = (AuthenticationRequestSME) event;
 
-        String userClientId = authenticationRequestSME.getUserClientId();
+        String clientUserId = authenticationRequestSME.getClientUserId();
         String password = authenticationRequestSME.getPassword();
         InstallationIdAbVO installationId = authenticationRequestSME.getInstallationIdSTY();
 
@@ -66,8 +67,13 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
         AuthenticationRequestTypeEnumSTY authRequestType =  authenticationRequestSME.getAuthenticationRequestType();
 
+        Chronometer c = new Chronometer("authenticationService.authenticate");
+        c.start();
         final AuthenticationServiceResponse authServResponse =
-                authenticationService.authenticate(connectionInfo, userClientId, password, installationId, authRequestType);
+                authenticationService.authenticate(connectionInfo, clientUserId, password, installationId, authRequestType);
+        c.stop();
+        LOGGER.info(c.toString());
+
 
         final StateSME<KitEventSME> newState;
         final ClientInfoCTX clientInfo;
@@ -78,15 +84,15 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
             final boolean mustReset;
             if( AuthenticationServiceResponse.SUCCESS_MUST_RESET == authServResponse ) {
-                LOGGER.info("MUST RESET. userClientId="+userClientId);
+                LOGGER.info("MUST RESET. clientUserId="+clientUserId);
                 mustReset = true;
             }
             else {
-                LOGGER.info("NO NEED TO RESET. userClientId="+userClientId);
+                LOGGER.info("NO NEED TO RESET. clientUserId="+clientUserId);
                 mustReset = false;
             }
 
-            clientInfo = new ClientInfoCTX(userClientId, authServResponse, true, mustReset);
+            clientInfo = new ClientInfoCTX(clientUserId, authServResponse, true, mustReset);
 
             newState = new ClientAuthenticationSuccessfulState(context);
 
@@ -106,7 +112,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
             final ChannelNotificationEndConversationRSTY clientEndConversation = new ChannelNotificationEndConversationRSTY();
             context.getClientAdapterOut().sendBack(clientAuthResponse, clientEndConversation);
 
-            clientInfo = new ClientInfoCTX(userClientId, authServResponse, false, false);
+            clientInfo = new ClientInfoCTX(clientUserId, authServResponse, false, false);
             newState = WaitForEventEndConversationState.getInstance(context);
 
         }// if-else

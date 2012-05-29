@@ -21,14 +21,27 @@ CREATE TABLE [dbo].[AuthenticateUltimoSucesso] (
     [KTVersion] [int] NOT NULL,
     CONSTRAINT [PK_AuthenticateUltimaConexao_KTClientUserId] PRIMARY KEY CLUSTERED  ([KTClientUserId] ASC) )
    
-CREATE TABLE [dbo].[LogConexoes](
+CREATE TABLE [dbo].[LogConexoesIniciadas](
     [KTInsertDBTime] [datetime] NOT NULL,
     [KTClientUserId] [nvarchar](32) NOT NULL,    
     [KTClientInstallIdAB] [nchar](33) NOT NULL,   
     [KTClientNetworkAddress] [nchar](42) NOT NULL,
     [KTConnectionId] [nchar](19) NOT NULL,
-    [KTConnectionStatus] [smallint] NOT NULL )
+    [KTConnectionAuthStatus] [smallint] NOT NULL )
 
+CREATE TABLE [dbo].[LogConexoesFinalizadas](
+    [KTInsertDBTime] [datetime] NOT NULL,
+    [KTClientUserId] [nvarchar](32) NOT NULL,    
+    [KTConnectionId] [nchar](19) NOT NULL,
+    [KTConnectionEndStatus] [smallint] NOT NULL, 
+    [KTConnectionTotalTime] [int] NOT NULL,
+    [KTFormsSent] [int] NOT NULL,
+    [KTFormsReceived] [int] NOT NULL,
+    [KTBytesSent] [int] NOT NULL,
+    [KTBytesReceived] [int] NOT NULL,
+    [KTPrimitivesSent] [int] NOT NULL,
+    [KTPrimitivesReceived] [int] NOT NULL )
+    
 -- ----------------------------------------------------------------------------------------------------------
 -- Table KTStatus (Deve ser removida depois)
 -- ----------------------------------------------------------------------------------------------------------

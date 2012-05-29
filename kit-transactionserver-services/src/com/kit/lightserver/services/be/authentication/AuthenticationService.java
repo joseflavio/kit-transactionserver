@@ -17,8 +17,8 @@ import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
 import com.kit.lightserver.services.db.authenticate.SelectAuthenticateUltimoSucessoResult;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
-import com.kit.lightserver.services.db.connectionlog.TableLogConexoesOperations;
-import com.kit.lightserver.services.db.logconnection.LogConectionTask;
+import com.kit.lightserver.services.db.log.LogConexoesFinalizadasTask;
+import com.kit.lightserver.services.db.log.LogConexoesIniciadasTask;
 
 public final class AuthenticationService {
 
@@ -34,37 +34,33 @@ public final class AuthenticationService {
 
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
-    private final TableLogConexoesOperations tableLogConexoesOperations;
-
     private AuthenticationService(final KitDataSource dataSource) {
         this.dataSource = dataSource;
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dataSource);
-        this.tableLogConexoesOperations = new TableLogConexoesOperations(dataSource);
     }
 
-    public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionInfo, final String userClientId, final String password,
+    public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionInfo, final String clientUserId, final String password,
             final InstallationIdAbVO installIdAb, final AuthenticationRequestTypeEnumSTY authRequestType) {
 
-        AuthenticationServiceResponse authenticationResponse = this.authenticate2(connectionInfo, userClientId, password, installIdAb, authRequestType);
+        AuthenticationServiceResponse authenticationResponse = this.authenticate2(connectionInfo, clientUserId, password, installIdAb, authRequestType);
 
         int responseStatusForLog = AuthenticationServiceStatusConverter.convertToStatus(authenticationResponse);
-        LogConectionTask logConectionTask = new LogConectionTask(dataSource, connectionInfo, installIdAb, userClientId, responseStatusForLog);
+        LogConexoesIniciadasTask logConectionTask = new LogConexoesIniciadasTask(dataSource, connectionInfo, installIdAb, clientUserId, responseStatusForLog);
 
-        RichThreadFactory t3Factory = new RichThreadFactory("T3", connectionInfo);
-        Thread logConectionThread = t3Factory.newThread(logConectionTask);
+        Thread logConectionThread = RichThreadFactory.newThread(logConectionTask, connectionInfo);
         logConectionThread.start();
 
         return authenticationResponse;
 
     }
 
-    public AuthenticationServiceResponse authenticate2(final ConnectionInfoVO connectionInfo, final String userClientId, final String password,
+    private AuthenticationServiceResponse authenticate2(final ConnectionInfoVO connectionInfo, final String clientUserId, final String password,
             final InstallationIdAbVO installIdAb, final AuthenticationRequestTypeEnumSTY authRequestType) {
 
         try {
 
             AuthenticateLastSuccessfulServiceResponse lastSuccessfulAuthenticationResult =
-                    this.getLastSuccessfulAuthentication(userClientId, installIdAb, connectionInfo);
+                    this.getLastSuccessfulAuthentication(clientUserId, installIdAb, connectionInfo);
 
             if( AuthenticationRequestTypeEnumSTY.RES_MANUAL == authRequestType || AuthenticationRequestTypeEnumSTY.RES_AUTOMATIC == authRequestType ) {
                 if( lastSuccessfulAuthenticationResult.getLastInstallationIdAb().equals(installIdAb) == false ) {
@@ -75,7 +71,7 @@ public final class AuthenticationService {
             /*
              * Checking the password
              */
-            AuthenticationServiceResponse checkPasswordResponse = this.checkPassword(userClientId, password, authRequestType);
+            AuthenticationServiceResponse checkPasswordResponse = this.checkPassword(clientUserId, password, authRequestType);
 
             if( checkPasswordResponse == AuthenticationServiceResponse.SUCCESS_MUST_RESET ||
                 checkPasswordResponse == AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET ) {
@@ -84,7 +80,7 @@ public final class AuthenticationService {
                  * Updating last successful authentication table
                  */
                 UpdateQueryResult result = tableAuthenticateOperations.updateAuthUltimoSucesso(
-                        installIdAb,  connectionInfo, userClientId, lastSuccessfulAuthenticationResult);
+                        installIdAb,  connectionInfo, clientUserId, lastSuccessfulAuthenticationResult);
 
                 if( result.isUpdateQuerySuccessful() == false ) {
                     return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
@@ -105,22 +101,22 @@ public final class AuthenticationService {
     }
 
     private AuthenticateLastSuccessfulServiceResponse getLastSuccessfulAuthentication(
-            final String userClientId, final InstallationIdAbVO installationId, final ConnectionInfoVO connectionInfo) {
+            final String clientUserId, final InstallationIdAbVO installationId, final ConnectionInfoVO connectionInfo) {
 
         /*
          * Updating the time of the Last Successful Authentication
          */
         SelectQueryResult<SelectAuthenticateUltimoSucessoResult> selectLastConnectionQueryResult =
-                tableAuthenticateOperations.selectLastSuccessAuthentication(userClientId);
+                tableAuthenticateOperations.selectLastSuccessAuthentication(clientUserId);
 
         if( selectLastConnectionQueryResult.isSelectQuerySuccessful() == false ) {
             return AuthenticateLastSuccessfulServiceResponse.FAILED_DATABASE_ERROR;
         }
 
         if( selectLastConnectionQueryResult.getResult().isAvailable() == false ) {
-            LOGGER.warn("ClientId not found in the table. userClientId="+userClientId);
-            InsertQueryResult firstInsertLastConnectionResult = tableAuthenticateOperations.firstInsertLastConnection(userClientId, installationId, connectionInfo);
-            if( firstInsertLastConnectionResult.isQuerySuccessfullyExecuted() == false ) {
+            LOGGER.warn("ClientId not found in the table. clientUserId="+clientUserId);
+            InsertQueryResult firstInsertLastConnectionResult = tableAuthenticateOperations.firstInsertLastConnection(clientUserId, installationId, connectionInfo);
+            if( firstInsertLastConnectionResult.isInsertQuerySuccessfull() == false ) {
                 return AuthenticateLastSuccessfulServiceResponse.FAILED_DATABASE_ERROR;
             }
             else {
@@ -137,9 +133,9 @@ public final class AuthenticationService {
 
     }
 
-    private AuthenticationServiceResponse checkPassword(final String userClientId, final String password, final AuthenticationRequestTypeEnumSTY authRequestType) {
+    private AuthenticationServiceResponse checkPassword(final String clientUserId, final String password, final AuthenticationRequestTypeEnumSTY authRequestType) {
 
-        final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(userClientId);
+        final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(clientUserId);
 
         if( resultContainer.isSelectQuerySuccessful() == false ) { // Just checking if the query was successful
             return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
@@ -161,16 +157,16 @@ public final class AuthenticationService {
         /*
          * Decide if must reset
          */
-        SelectQueryResult<SelectQuerySingleResult<Boolean>> mustResetResultContainer = tableAuthenticateOperations.selectMustReset(userClientId);
+        SelectQueryResult<SelectQuerySingleResult<Boolean>> mustResetResultContainer = tableAuthenticateOperations.selectMustReset(clientUserId);
         if( mustResetResultContainer.isSelectQuerySuccessful() == false ) {
             return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
         }
 
         final boolean deveResetar;
         if( mustResetResultContainer.getResult().isAvailable() == false ) {
-            LOGGER.warn("ClientId not found in the AuthenticateDeveResetar table. userClientId="+userClientId);
-            InsertQueryResult firstInsertMustResetResult = tableAuthenticateOperations.firstInsertMustReset(userClientId);
-            if(firstInsertMustResetResult.isQuerySuccessfullyExecuted() == false) {
+            LOGGER.warn("ClientId not found in the AuthenticateDeveResetar table. clientUserId="+clientUserId);
+            InsertQueryResult firstInsertMustResetResult = tableAuthenticateOperations.firstInsertMustReset(clientUserId);
+            if(firstInsertMustResetResult.isInsertQuerySuccessfull() == false) {
                 return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
             }
             deveResetar = false;
@@ -195,25 +191,27 @@ public final class AuthenticationService {
 
     }
 
-    public boolean logOff(final String clientUserId, final boolean mustResetInNextConnection) {
+    public boolean logOff(final String clientUserId, final boolean mustResetInNextConnection, final ConnectionInfoVO connectionInfo) {
 
         UpdateQueryResult updateMustResetResult = tableAuthenticateOperations.updateMustReset(clientUserId, mustResetInNextConnection);
+
+        final boolean successLogOff;
         if (updateMustResetResult.isUpdateQuerySuccessful() == false) {
-            return false;
+            successLogOff = false;
         }
+        else
         if (updateMustResetResult.getRowsUpdated() != 1) {
-            return false;
+            successLogOff = false;
+        }
+        else {
+            successLogOff = true;
         }
 
-        UpdateQueryResult updateLastDisconnectionResult = tableLogConexoesOperations.updateLastDisconnection(clientUserId);
-        if (updateLastDisconnectionResult.isUpdateQuerySuccessful() == false) {
-            return false;
-        }
-        if (updateLastDisconnectionResult.getRowsUpdated() != 1) {
-            return false;
-        }
+        LogConexoesFinalizadasTask logConectionTask = new LogConexoesFinalizadasTask(dataSource, clientUserId);
+        Thread logConectionThread = RichThreadFactory.newThread(logConectionTask, connectionInfo);
+        logConectionThread.start();
 
-        return true;
+        return successLogOff;
 
     }
 

@@ -20,7 +20,7 @@ public final class InsertQueryResult {
         return rowsInserted;
     }
 
-    public boolean isQuerySuccessfullyExecuted() {
+    public boolean isInsertQuerySuccessfull() {
         return querySuccessfullyExecuted;
     }
 

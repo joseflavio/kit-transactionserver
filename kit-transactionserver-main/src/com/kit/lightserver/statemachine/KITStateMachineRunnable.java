@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.thread.NamedRunnable;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.jfap.framework.statemachine.StateMachine;
 import com.jfap.framework.statemachine.StateSME;
@@ -16,7 +17,7 @@ import com.kit.lightserver.network.SocketWrapper;
 import com.kit.lightserver.statemachine.states.InitialState;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
-public final class KITStateMachineRunnable implements Runnable {
+public final class KITStateMachineRunnable implements NamedRunnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(KITStateMachineRunnable.class);
 
@@ -35,6 +36,11 @@ public final class KITStateMachineRunnable implements Runnable {
         this.kitStateState = new StateMachine<KitEventSME>();
 
     }// constructor
+
+    @Override
+    public String getThreadNamePrefix() {
+        return "T1";
+    }
 
     public EventQueue getEventQueue() {
         return eventQueue;

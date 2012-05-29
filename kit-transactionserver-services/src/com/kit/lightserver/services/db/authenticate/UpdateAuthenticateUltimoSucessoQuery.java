@@ -15,7 +15,7 @@ final class UpdateAuthenticateUltimoSucessoQuery implements UpdateQueryInterface
 
     UpdateAuthenticateUltimoSucessoQuery(
             final InstallationIdAbVO newInstallationIdAb, final String newConnectionUniqueId,
-            final String userClientId, final InstallationIdAbVO lastInstallationIdAb, final String lastConnectionUniqueId, final int lastVersion) {
+            final String clientUserId, final InstallationIdAbVO lastInstallationIdAb, final String lastConnectionUniqueId, final int lastVersion) {
 
         final QueryStringParameter newInstallIdAbParam = new QueryStringParameter( newInstallationIdAb.getIdABStr() );
         final QueryStringParameter newConnectionUniqueIdParam = new QueryStringParameter( newConnectionUniqueId );
@@ -23,13 +23,13 @@ final class UpdateAuthenticateUltimoSucessoQuery implements UpdateQueryInterface
         queryParameters.add(newInstallIdAbParam);
         queryParameters.add(newConnectionUniqueIdParam);
 
-        final QueryStringParameter userClientIdParam = new QueryStringParameter( userClientId.toUpperCase() );
+        final QueryStringParameter clientUserIdParam = new QueryStringParameter( clientUserId.toUpperCase() );
         final QueryStringParameter lastInstallIdAbParam = new QueryStringParameter( lastInstallationIdAb.getIdABStr() );
         final QueryStringParameter lastConnectionUniqueIdParam = new QueryStringParameter( lastConnectionUniqueId );
         final QueryIntegerParameter lastVersionParam = new QueryIntegerParameter(Integer.valueOf(lastVersion));
 
 
-        queryParameters.add(userClientIdParam);
+        queryParameters.add(clientUserIdParam);
         queryParameters.add(lastInstallIdAbParam);
         queryParameters.add(lastConnectionUniqueIdParam);
         queryParameters.add(lastVersionParam);

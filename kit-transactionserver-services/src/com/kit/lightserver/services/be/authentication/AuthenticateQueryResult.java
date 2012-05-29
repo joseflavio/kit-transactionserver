@@ -3,18 +3,18 @@ package com.kit.lightserver.services.be.authentication;
 public final class AuthenticateQueryResult {
 
     private final boolean userExists;
-    private final String userClientId;
+    private final String clientUserId;
     private final String password;
 
     public AuthenticateQueryResult() {
         this.userExists = false;
-        this.userClientId = null;
+        this.clientUserId = null;
         this.password = null;
     }// constructor
 
     public AuthenticateQueryResult(final String ktClientId, final String ktPassword) {
         this.userExists = true;
-        this.userClientId = ktClientId;
+        this.clientUserId = ktClientId;
         this.password = ktPassword;
     }// constructor
 
@@ -23,7 +23,7 @@ public final class AuthenticateQueryResult {
     }
 
     public String getClientUserId() {
-        return userClientId;
+        return clientUserId;
     }
 
     public String getPassword() {
@@ -33,7 +33,7 @@ public final class AuthenticateQueryResult {
 
     @Override
     public String toString() {
-        return "AuthenticateQueryResult [userExists=" + userExists + ", userClientId=" + userClientId + ", password=" + password + "]";
+        return "AuthenticateQueryResult [userExists=" + userExists + ", clientUserId=" + clientUserId + ", password=" + password + "]";
     }
 
 }// class

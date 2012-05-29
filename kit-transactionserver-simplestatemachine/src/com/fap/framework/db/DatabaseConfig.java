@@ -12,7 +12,7 @@ final public class DatabaseConfig {
 
     static public DatabaseConfig getInstance(final ConfigAccessor accessor) {
         final DatabaseConfig dbConfig = new DatabaseConfig(accessor);
-        LOGGER.info("Configuration loaded. dbConfig="+dbConfig);
+        LOGGER.warn("Configuration loaded. dbConfig="+dbConfig);
         return dbConfig;
     }
 

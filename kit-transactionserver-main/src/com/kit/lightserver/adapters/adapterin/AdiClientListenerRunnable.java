@@ -8,6 +8,7 @@ import kit.primitives.factory.PrimitiveStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.thread.NamedRunnable;
 import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.adapters.logger.AdaptersLogger;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
@@ -20,7 +21,7 @@ import com.kit.lightserver.statemachine.events.AdapterInInterrupedSME;
 import com.kit.lightserver.statemachine.events.ServerErrorConvertingPrimitiveSME;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
-public final class AdiClientListenerRunnable implements Runnable {
+public final class AdiClientListenerRunnable implements NamedRunnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(AdiClientListenerRunnable.class);
 
@@ -32,18 +33,18 @@ public final class AdiClientListenerRunnable implements Runnable {
 
     private final EventQueue eventQueue;
 
-    //private final KITStateMachineRunnable kitStateMachineRunnable;
-
-    //private final Thread kitStateMachineThread;
-
     public AdiClientListenerRunnable(final SocketWrapper givenSocket, final ConfigAccessor config, final ConnectionInfoVO connectionInfo, final EventQueue eventQueue) {
 
         this.socket = givenSocket;
         this.connectionInfo = connectionInfo;
         this.eventQueue = eventQueue;
 
-
     }// constructor
+
+    @Override
+    public String getThreadNamePrefix() {
+        return "T2";
+    }
 
     @Override
     public void run() {

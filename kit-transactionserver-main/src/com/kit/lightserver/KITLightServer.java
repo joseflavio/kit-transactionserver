@@ -130,16 +130,14 @@ public final class KITLightServer implements Runnable {
              */
             SocketWrapper socketWrapper = new JavaNetSocketWrapper(clientSocket);
 
-            RichThreadFactory t2Factory = new RichThreadFactory("T2", connectionInfo);
             KITStateMachineRunnable kitStateMachineRunnable = new KITStateMachineRunnable(socketWrapper, configAccessor, connectionInfo);
-            Thread t2thread = t2Factory.newThread(kitStateMachineRunnable);
+            Thread t2thread = RichThreadFactory.newThread(kitStateMachineRunnable, connectionInfo);
             t2thread.start();
 
             EventQueue eventQueue = kitStateMachineRunnable.getEventQueue();
 
-            RichThreadFactory richThreadFactory = new RichThreadFactory("T1", connectionInfo);
             AdiClientListenerRunnable clientListenerRunnable = new AdiClientListenerRunnable(socketWrapper, configAccessor, connectionInfo, eventQueue);
-            Thread thread = richThreadFactory.newThread(clientListenerRunnable);
+            Thread thread = RichThreadFactory.newThread(clientListenerRunnable, connectionInfo);
             thread.start();
 
         }

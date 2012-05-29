@@ -1,9 +1,9 @@
 package com.kit.lightserver.domain.types;
 
-import com.fap.thread.HasThreadName;
+import com.fap.thread.HasThreadSufixName;
 
 
-public final class ConnectionInfoVO implements HasThreadName {
+public final class ConnectionInfoVO implements HasThreadSufixName {
 
     private final String connectionUniqueId;
     private final String clientHostAddress;
@@ -22,7 +22,7 @@ public final class ConnectionInfoVO implements HasThreadName {
     }
 
     @Override
-    public String getThreadName() {
+    public String getThreadNameSufix() {
         return connectionUniqueId;
     }
 

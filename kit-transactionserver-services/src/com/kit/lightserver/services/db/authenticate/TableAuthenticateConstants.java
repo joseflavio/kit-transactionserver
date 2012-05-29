@@ -1,6 +1,6 @@
 package com.kit.lightserver.services.db.authenticate;
 
-public final class TableAuthenticateConstants {
+final class TableAuthenticateConstants {
 
     static public  final String TABLE_AUTHENTICATEPASSWORD = "[dbo].[AuthenticatePassword]";
 

@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.logconnection;
+package com.kit.lightserver.services.db.log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,13 +13,13 @@ import com.fap.framework.db.QueryStringParameter;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
 
-final class InsertLogConexoesQuery implements InsertQueryInterface {
+final class InsertLogConexoesIniciadasQuery implements InsertQueryInterface {
 
-    static private final Logger LOGGER = LoggerFactory.getLogger(InsertLogConexoesQuery.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(InsertLogConexoesIniciadasQuery.class);
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public InsertLogConexoesQuery(final InstallationIdAbVO installationIdSTY, final String userClientId, final int status,
+    public InsertLogConexoesIniciadasQuery(final InstallationIdAbVO installationIdSTY, final String clientUserId, final int status,
             final ConnectionInfoVO connectionInfo) {
 
         final String idABStr = installationIdSTY.getIdABStr();
@@ -38,7 +38,7 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
 
         final QueryStringParameter ktConexaoIdParam = new QueryStringParameter(connectionUniqueId);
         final QueryStringParameter idABParam = new QueryStringParameter(idABStr);
-        final QueryStringParameter ktClientIdParam = new QueryStringParameter(userClientId.toUpperCase());
+        final QueryStringParameter ktClientIdParam = new QueryStringParameter(clientUserId.toUpperCase());
         final QueryIntegerParameter statusParam = new QueryIntegerParameter( Integer.valueOf(status) );
         final QueryStringParameter networkAddressParam = new QueryStringParameter(properMobileNetworkAddress);
 
@@ -55,7 +55,7 @@ final class InsertLogConexoesQuery implements InsertQueryInterface {
     public String getPreparedInsertQueryString() {
 
         final String queryStr =
-                "INSERT INTO " + TableLogConexoesConstants.TABLE_LOG_CONEXOES
+                "INSERT INTO " + TableLogConexoesConstants.TABLE_LOG_CONEXOES_INICIADAS
                 + " ([KTInsertDBTime], [KTClientInstallIdAB], [KTClientUserId], [KTConnectionStatus], [KTConnectionId], [KTClientNetworkAddress]) VALUES (GETDATE(), ?, ?, ?, ?, ?)";
 
         return queryStr;
