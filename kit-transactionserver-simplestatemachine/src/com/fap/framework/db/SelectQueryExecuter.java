@@ -24,7 +24,7 @@ public final class SelectQueryExecuter<T> {
 
     public SelectQueryResult<T> executeSelectQuery2(final DatabaseConfig dbConfig, final SelectQueryInterface selectQuery) {
 
-        final Connection connection = DatabaseConnectionUtil.getInstance2().getConnection(dbConfig);
+        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection(dbConfig);
         if (connection == null) {
             final SelectQueryResult<T> failResult = new SelectQueryResult<T>();
             return failResult;
@@ -32,7 +32,7 @@ public final class SelectQueryExecuter<T> {
 
         final SelectQueryResult<T> result = executeSelectQuery(connection, selectQuery);
 
-        DatabaseConnectionUtil.getInstance2().closeConnection(connection);
+        DatabaseConnectionUtil.getInstance().closeConnection(connection);
 
         return result;
 

@@ -17,7 +17,7 @@ public final class UpdateQueryExecuter {
 
     static public UpdateQueryResult executeUpdateQuery2(final DatabaseConfig dbConfig, final UpdateQueryInterface updateQuery) {
 
-        final Connection connection = DatabaseConnectionUtil.getInstance2().getConnection(dbConfig);
+        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection(dbConfig);
         if (connection == null) {
             final UpdateQueryResult failResult = new UpdateQueryResult();
             return failResult;
@@ -32,7 +32,7 @@ public final class UpdateQueryExecuter {
 
         DatabaseLogger.logUpdateResult(chronometer, result);
 
-        DatabaseConnectionUtil.getInstance2().closeConnection(connection);
+        DatabaseConnectionUtil.getInstance().closeConnection(connection);
 
         return result;
 

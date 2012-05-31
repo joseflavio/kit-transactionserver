@@ -56,7 +56,7 @@ final class InsertLogConexoesIniciadasQuery implements InsertQueryInterface {
 
         final String queryStr =
                 "INSERT INTO " + TableLogConexoesConstants.TABLE_LOG_CONEXOES_INICIADAS
-                + " ([KTInsertDBTime], [KTClientInstallIdAB], [KTClientUserId], [KTConnectionStatus], [KTConnectionId], [KTClientNetworkAddress]) VALUES (GETDATE(), ?, ?, ?, ?, ?)";
+                + " ([KTInsertDBTime], [KTClientInstallIdAB], [KTClientUserId], [KTConnectionAuthStatus], [KTConnectionId], [KTClientNetworkAddress]) VALUES (GETDATE(), ?, ?, ?, ?, ?)";
 
         return queryStr;
 

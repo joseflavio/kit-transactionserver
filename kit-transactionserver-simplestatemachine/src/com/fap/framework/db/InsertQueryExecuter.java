@@ -15,9 +15,9 @@ public final class InsertQueryExecuter {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(InsertQueryExecuter.class);
 
-    static public InsertQueryResult executeInsertQuery2(final DatabaseConfig dbConfig, final InsertQueryInterface insertQuery) {
+    static public InsertQueryResult executeInsertQuery(final DatabaseConfig dbConfig, final InsertQueryInterface insertQuery) {
 
-        final Connection connection = DatabaseConnectionUtil.getInstance2().getConnection(dbConfig);
+        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection(dbConfig);
         if (connection == null) {
             final InsertQueryResult failResult = new InsertQueryResult();
             return failResult;
@@ -30,19 +30,19 @@ public final class InsertQueryExecuter {
 
         final Chronometer chronometer = new Chronometer("executeInsertQuery(..)");
         chronometer.start();
-        final InsertQueryResult result = InsertQueryExecuter.executeInsertQuery(connection, insertQuery);
+        final InsertQueryResult result = InsertQueryExecuter.executeInsertQueryPrivate(connection, insertQuery);
         chronometer.stop();
 
         DatabaseLogger.logInsertResult(chronometer, result);
         LOGGER.info("result=" + result);
 
-        DatabaseConnectionUtil.getInstance2().closeConnection(connection);
+        DatabaseConnectionUtil.getInstance().closeConnection(connection);
 
         return result;
 
     }
 
-    static private InsertQueryResult executeInsertQuery(final Connection databaseConnection, final InsertQueryInterface insertQuery) {
+    static private InsertQueryResult executeInsertQueryPrivate(final Connection databaseConnection, final InsertQueryInterface insertQuery) {
 
         try {
 

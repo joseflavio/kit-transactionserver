@@ -17,7 +17,7 @@ public final class DatabaseConnectionUtil {
 
     static private final DatabaseConnectionUtil INSTANCE = new DatabaseConnectionUtil();
 
-    static public DatabaseConnectionUtil getInstance2() {
+    static public DatabaseConnectionUtil getInstance() {
         return INSTANCE;
     }
 
@@ -46,6 +46,7 @@ public final class DatabaseConnectionUtil {
             connection.setAutoCommit(true);
             ++openConnectionsCount;
             DatabaseLogger.logConnectionOpen(openConnectionsCount);
+            LOGGER.info("Getting a new connection. openConnectionsCount=" + openConnectionsCount);
             return connection;
         } catch (final SQLException e) {
             LOGGER.error("Could not open a new connection. openConnectionsCount=" + openConnectionsCount, e);

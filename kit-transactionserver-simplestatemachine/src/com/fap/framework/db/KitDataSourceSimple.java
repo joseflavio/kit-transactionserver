@@ -10,7 +10,7 @@ public final class KitDataSourceSimple implements KitDataSource {
 
     @Override
     public InsertQueryResult executeInsertQuery(final InsertQueryInterface insertQuery) {
-        final InsertQueryResult result = InsertQueryExecuter.executeInsertQuery2(dbConfig, insertQuery);
+        final InsertQueryResult result = InsertQueryExecuter.executeInsertQuery(dbConfig, insertQuery);
         return result;
     }
 
