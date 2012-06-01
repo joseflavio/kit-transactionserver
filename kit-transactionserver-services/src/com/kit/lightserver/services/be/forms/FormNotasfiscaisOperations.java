@@ -3,7 +3,7 @@ package com.kit.lightserver.services.be.forms;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.KitDataSource;
+import com.fap.framework.db.QueryExecutor;
 import com.fap.framework.db.SelectQueryResult;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
@@ -13,9 +13,9 @@ import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQuer
 
 final class FormNotasfiscaisOperations {
 
-    private final KitDataSource dataSource;
+    private final QueryExecutor dataSource;
 
-    FormNotasfiscaisOperations(final KitDataSource dataSource) {
+    FormNotasfiscaisOperations(final QueryExecutor dataSource) {
         this.dataSource = dataSource;
     }
 

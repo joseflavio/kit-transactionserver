@@ -1,5 +1,6 @@
 package com.fap.framework.db;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -48,10 +49,14 @@ public class DbConnectionPool {
 
     }
 
-
     public <T> SelectQueryResult<T> executeSelectQuery(final SelectQueryInterface selectQuery, final SelectQueryResultAdapter<T> resultAdapter) {
-        SelectQueryExecuter<T> executer = new SelectQueryExecuter<T>(resultAdapter);
-        return executer.executeSelectQuery2(dbConfig, selectQuery);
+        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection(dbConfig);
+        if (connection == null) {
+            return new SelectQueryResult<T>();
+        }
+        final SelectQueryResult<T> result = SelectQueryExecuter.executeSelectQuery(connection, selectQuery, resultAdapter);
+        DatabaseConnectionUtil.getInstance().closeConnection(connection);
+        return result;
     }
 
 }// class

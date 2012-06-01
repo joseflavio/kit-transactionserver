@@ -5,18 +5,18 @@ import org.slf4j.LoggerFactory;
 
 import com.fap.framework.db.InsertQueryPrinter;
 import com.fap.framework.db.InsertQueryResult;
-import com.fap.framework.db.KitDataSource;
+import com.fap.framework.db.QueryExecutor;
 import com.fap.thread.NamedRunnable;
 
 public final class LogConexoesFinalizadasTask implements NamedRunnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(LogConexoesFinalizadasTask.class);
 
-    private final KitDataSource dataSource;
+    private final QueryExecutor dataSource;
 
     private final String clientUserId;
 
-    public LogConexoesFinalizadasTask(final KitDataSource dataSource, final String clientUserId) {
+    public LogConexoesFinalizadasTask(final QueryExecutor dataSource, final String clientUserId) {
 
         this.dataSource = dataSource;
         this.clientUserId = clientUserId;

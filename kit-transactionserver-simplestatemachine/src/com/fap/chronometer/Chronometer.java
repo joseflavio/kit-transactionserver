@@ -13,15 +13,15 @@ public final class Chronometer {
     }
 
     public void start() {
-        startTime = System.currentTimeMillis();
+        startTime = System.nanoTime();
     }
 
     public void stop() {
-        endTime = System.currentTimeMillis();
+        endTime = System.nanoTime();
     }
 
-    public long getElapsedTime() {
-        return endTime - startTime;
+    public double getElapsedTime() {
+        return (endTime - startTime) / 1000000.0;
     }
 
     @Override

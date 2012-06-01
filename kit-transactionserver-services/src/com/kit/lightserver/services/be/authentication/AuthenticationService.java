@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import com.fap.framework.db.DatabaseConfig;
 import com.fap.framework.db.InsertQueryResult;
-import com.fap.framework.db.KitDataSource;
-import com.fap.framework.db.KitDataSourceSimple;
+import com.fap.framework.db.QueryExecutor;
+import com.fap.framework.db.SimpleQueryExecutor;
 import com.fap.framework.db.SelectQueryResult;
 import com.fap.framework.db.SelectQuerySingleResult;
 import com.fap.framework.db.UpdateQueryResult;
@@ -26,15 +26,15 @@ public final class AuthenticationService {
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
         DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
-        KitDataSource dataSource = new KitDataSourceSimple(dbConfig);
+        QueryExecutor dataSource = new SimpleQueryExecutor(dbConfig);
         return new AuthenticationService(dataSource);
     }
 
-    private final KitDataSource dataSource;
+    private final QueryExecutor dataSource;
 
     private final TableAuthenticateOperations tableAuthenticateOperations;
 
-    private AuthenticationService(final KitDataSource dataSource) {
+    private AuthenticationService(final QueryExecutor dataSource) {
         this.dataSource = dataSource;
         this.tableAuthenticateOperations = new TableAuthenticateOperations(dataSource);
     }

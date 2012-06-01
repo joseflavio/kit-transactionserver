@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.fap.chronometer.Chronometer;
 import com.fap.framework.db.DatabaseConfig;
-import com.fap.framework.db.KitDataSource;
-import com.fap.framework.db.KitDataSourceSimple;
+import com.fap.framework.db.QueryExecutor;
+import com.fap.framework.db.SimpleQueryExecutor;
 import com.fap.framework.db.QueryParameter;
 import com.fap.framework.db.SelectQueryInterface;
 import com.fap.framework.db.SelectQueryResult;
@@ -27,7 +27,7 @@ public class TestDabaseConnectionPool {
         ConfigAccessor configAccessor = ConfigurationReader.getConfiguration("config/database.joseflavio-mira-srvkit-tinet.properties");
         DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
 
-        KitDataSource dataSource = new KitDataSourceSimple(dbConfig);
+        QueryExecutor dataSource = new SimpleQueryExecutor(dbConfig);
 
         List<Thread> threads = new LinkedList<Thread>();
         for (int i = 0; i < 3; ++i) { // 8 seems to be the magical number
@@ -62,9 +62,9 @@ public class TestDabaseConnectionPool {
 
         private final SelectUsersAdapter selectUsersAdapter = new SelectUsersAdapter();
 
-        private final KitDataSource dataSource;
+        private final QueryExecutor dataSource;
 
-        public TestPoolThread(final KitDataSource dataSource) {
+        public TestPoolThread(final QueryExecutor dataSource) {
             this.dataSource = dataSource;
         }
 

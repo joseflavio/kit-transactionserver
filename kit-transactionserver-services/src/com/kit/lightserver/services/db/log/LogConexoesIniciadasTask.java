@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fap.framework.db.InsertQueryPrinter;
 import com.fap.framework.db.InsertQueryResult;
-import com.fap.framework.db.KitDataSource;
+import com.fap.framework.db.QueryExecutor;
 import com.fap.thread.NamedRunnable;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
@@ -14,7 +14,7 @@ public final class LogConexoesIniciadasTask implements NamedRunnable {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(LogConexoesIniciadasTask.class);
 
-    private final KitDataSource dataSource;
+    private final QueryExecutor dataSource;
 
     private final ConnectionInfoVO connectionInfo;
     private final InstallationIdAbVO installationId;
@@ -22,7 +22,7 @@ public final class LogConexoesIniciadasTask implements NamedRunnable {
     private final int status;
 
     public LogConexoesIniciadasTask(
-            final KitDataSource dataSource, final ConnectionInfoVO connectionInfo, final InstallationIdAbVO installationId,
+            final QueryExecutor dataSource, final ConnectionInfoVO connectionInfo, final InstallationIdAbVO installationId,
             final String clientUserId, final int status) {
 
         this.dataSource = dataSource;

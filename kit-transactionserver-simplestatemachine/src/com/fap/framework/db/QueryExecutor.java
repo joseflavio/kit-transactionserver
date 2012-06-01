@@ -1,7 +1,7 @@
 package com.fap.framework.db;
 
 
-public interface KitDataSource {
+public interface QueryExecutor {
 
     InsertQueryResult executeInsertQuery(InsertQueryInterface insertQuery);
 

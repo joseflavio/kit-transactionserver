@@ -3,13 +3,14 @@ package com.fap.framework.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fap.loggers.db.DatabaseLogger;
 
-public final class DatabaseConnectionUtil {
+final class DatabaseConnectionUtil {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(DatabaseConnectionUtil.class);
 
@@ -21,7 +22,7 @@ public final class DatabaseConnectionUtil {
         return INSTANCE;
     }
 
-    private int openConnectionsCount = 0;
+    private final AtomicInteger openConnectionsCount = new AtomicInteger(0);
 
     private DatabaseConnectionUtil() {
 
@@ -39,14 +40,14 @@ public final class DatabaseConnectionUtil {
 
     }// constructor
 
-    public synchronized Connection getConnection(final DatabaseConfig dbConfig) {
+    synchronized Connection getConnection(final DatabaseConfig dbConfig) {
 
         try {
             final Connection connection = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getDbPassword());
             connection.setAutoCommit(true);
-            ++openConnectionsCount;
-            DatabaseLogger.logConnectionOpen(openConnectionsCount);
-            LOGGER.info("Getting a new connection. openConnectionsCount=" + openConnectionsCount);
+            openConnectionsCount.incrementAndGet();
+            DatabaseLogger.logConnectionOpen( openConnectionsCount.intValue() );
+            LOGGER.warn("Getting a new db connection. openConnectionsCount=" + openConnectionsCount);
             return connection;
         } catch (final SQLException e) {
             LOGGER.error("Could not open a new connection. openConnectionsCount=" + openConnectionsCount, e);
@@ -55,11 +56,12 @@ public final class DatabaseConnectionUtil {
 
     }
 
-    public synchronized void closeConnection(final Connection connection) {
+    synchronized void closeConnection(final Connection connection) {
         try {
             connection.close();
-            --openConnectionsCount;
-            DatabaseLogger.logConnectionClosed(openConnectionsCount);
+            openConnectionsCount.decrementAndGet();
+            DatabaseLogger.logConnectionClosed( openConnectionsCount.intValue() );
+            LOGGER.warn("Closing a db connection. openConnectionsCount=" + openConnectionsCount);
         }
         catch (final SQLException e) {
             DatabaseConnectionUtil.LOGGER.error("Could not close the jdbc connection. openConnectionsCount="+openConnectionsCount, e);

@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import com.fap.chronometer.Chronometer;
 import com.fap.collections.SmartCollections;
 import com.fap.framework.db.DatabaseConfig;
-import com.fap.framework.db.KitDataSource;
-import com.fap.framework.db.KitDataSourceSimple;
+import com.fap.framework.db.QueryExecutor;
 import com.fap.framework.db.SelectQueryResult;
+import com.fap.framework.db.SimpleQueryExecutor;
 import com.fap.framework.db.UpdateQueryPrinter;
 import com.fap.framework.db.UpdateQueryResult;
 import com.jfap.framework.configuration.ConfigAccessor;
@@ -34,17 +34,17 @@ public final class FormServices {
 
     static public FormServices getInstance(final ConfigAccessor configAccessor) {
         DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
-        KitDataSource dataSource = new KitDataSourceSimple(dbConfig);
+        QueryExecutor dataSource = new SimpleQueryExecutor(dbConfig);
         return new FormServices(dataSource);
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final KitDataSource dataSource;
+    private final QueryExecutor dataSource;
 
     private final FormNotasfiscaisOperations formNotasfiscaisOperations;
 
-    private FormServices(final KitDataSource dataSource) {
+    private FormServices(final QueryExecutor dataSource) {
         this.dataSource = dataSource;
         this.formNotasfiscaisOperations = new FormNotasfiscaisOperations(dataSource);
     }
@@ -63,12 +63,11 @@ public final class FormServices {
         FormServices.LOGGER.debug("conhecimentoList.size()=" + conhecimentosList.size());
 
         // TODO: Usar um método melhor de salvar estatisticas dos serviços
-        final Chronometer chronometer = new Chronometer("NotasfiscaisServices.retrieveNotasfiscais");
-        chronometer.start();
-        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = formNotasfiscaisOperations
-                .retrieveNotasfiscais(conhecimentosList, retrieveNaoRecebidos);
-        chronometer.stop();
-        FormServices.LOGGER.info("Time to execute the service. chronometer={}", chronometer);
+        final Chronometer c1 = new Chronometer("NotasfiscaisServices.retrieveNotasfiscais");
+        c1.start();
+        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = formNotasfiscaisOperations.retrieveNotasfiscais(conhecimentosList, retrieveNaoRecebidos);
+        c1.stop();
+        FormServices.LOGGER.info("Time to execute the service. chronometer={}", c1);
 
         if (notasfiscaisResult.isValid() == false) {
             final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();

@@ -1,7 +1,7 @@
 package com.kit.lightserver.services.db.authenticate;
 
 import com.fap.framework.db.InsertQueryResult;
-import com.fap.framework.db.KitDataSource;
+import com.fap.framework.db.QueryExecutor;
 import com.fap.framework.db.SelectQueryResult;
 import com.fap.framework.db.SelectQueryResultAdapterBoolean;
 import com.fap.framework.db.SelectQuerySingleResult;
@@ -13,9 +13,9 @@ import com.kit.lightserver.services.be.authentication.AuthenticateQueryResult;
 
 public final class TableAuthenticateOperations {
 
-    private final KitDataSource dataSource;
+    private final QueryExecutor dataSource;
 
-    public TableAuthenticateOperations(final KitDataSource dataSource) {
+    public TableAuthenticateOperations(final QueryExecutor dataSource) {
         this.dataSource = dataSource;
     }
 

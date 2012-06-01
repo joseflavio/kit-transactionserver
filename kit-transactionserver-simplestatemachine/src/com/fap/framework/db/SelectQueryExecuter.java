@@ -9,44 +9,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.chronometer.Chronometer;
-import com.fap.loggers.db.DatabaseLogger;
-
-public final class SelectQueryExecuter<T> {
+final class SelectQueryExecuter {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(SelectQueryExecuter.class);
 
-    private final SelectQueryResultAdapter<T> resultAdapter;
-
-    public SelectQueryExecuter(final SelectQueryResultAdapter<T> resultAdapter) {
-        this.resultAdapter = resultAdapter;
-    }// constructor
-
-    public SelectQueryResult<T> executeSelectQuery2(final DatabaseConfig dbConfig, final SelectQueryInterface selectQuery) {
-
-        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection(dbConfig);
-        if (connection == null) {
-            final SelectQueryResult<T> failResult = new SelectQueryResult<T>();
-            return failResult;
-        }
-
-        final SelectQueryResult<T> result = executeSelectQuery(connection, selectQuery);
-
-        DatabaseConnectionUtil.getInstance().closeConnection(connection);
-
-        return result;
-
-    }
-
-    private SelectQueryResult<T> executeSelectQuery(final Connection connection, final SelectQueryInterface selectQuery) {
-
-        /*
-         * Log the query
-         */
-        DatabaseLogger.logSelectQuery(selectQuery);
-
-        final Chronometer chronometer = new Chronometer("executeSelectQuery(..)");
-        chronometer.start();
+    static <T> SelectQueryResult<T> executeSelectQuery(
+            final Connection connection, final SelectQueryInterface selectQuery, final SelectQueryResultAdapter<T> resultAdapter) {
 
         SelectQueryResult<T> result;
         ResultSet rs = null;
@@ -76,9 +44,6 @@ public final class SelectQueryExecuter<T> {
                 }
             }
         }
-
-        chronometer.stop();
-        DatabaseLogger.logSelectResult(chronometer, result);
 
         return result;
 
