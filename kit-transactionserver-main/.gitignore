@@ -3,3 +3,4 @@
 /logs
 /bin
 build-deliverable.properties
+${build.dest.dir}

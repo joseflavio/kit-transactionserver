@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="kit-transactionserver-main" default="jars" basedir=".">
+<project name="kit-transactionserver-jar" default="jars" basedir=".">
 
 	<property name="jar.name" value="kit-transactionserver-main"/>
 	<property name="resources.jar.name" value="kit-transactionserver-resources"/>
