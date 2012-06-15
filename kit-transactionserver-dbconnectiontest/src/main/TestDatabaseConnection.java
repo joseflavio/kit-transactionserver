@@ -16,7 +16,7 @@ public final class TestDatabaseConnection {
         Class.forName(driverClassName);
         System.out.println("JDBC Driver loaded: " + driverClassName);
 
-		ConfigAccessor configAccessor = ConfigurationReader.getConfiguration("config/database.joseflavio-mira-srvkit-tinet.properties");
+		ConfigAccessor configAccessor = ConfigurationReader.getConfiguration("config/database.keepin_v01_demo01.at.kitdev01_win.properties");
 		DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
 		System.out.println(dbConfig);
 
