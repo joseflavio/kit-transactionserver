@@ -31,12 +31,11 @@ final class DatabaseConnectionUtil {
          */
         try {
             Class.forName(driverClassName);
-            DatabaseConnectionUtil.LOGGER.trace("Success loading jdbc driver class. driverClassName="+driverClassName);
-        } catch (final ClassNotFoundException e) {
-            throw new RuntimeException("Could not load jdbc driver class. driverClassName="+driverClassName, e);
+            DatabaseConnectionUtil.LOGGER.trace("Success loading jdbc driver class. driverClassName=" + driverClassName);
         }
-
-
+        catch (final ClassNotFoundException e) {
+            throw new RuntimeException("Could not load jdbc driver class. driverClassName=" + driverClassName, e);
+        }
 
     }// constructor
 
@@ -46,26 +45,43 @@ final class DatabaseConnectionUtil {
             final Connection connection = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getDbUser(), dbConfig.getDbPassword());
             connection.setAutoCommit(true);
             openConnectionsCount.incrementAndGet();
-            DatabaseLogger.logConnectionOpen( openConnectionsCount.intValue() );
+            DatabaseLogger.logConnectionOpen(openConnectionsCount.intValue());
             LOGGER.warn("Getting a new db connection. openConnectionsCount=" + openConnectionsCount);
             return connection;
-        } catch (final SQLException e) {
+        }
+        catch (final SQLException e) {
             LOGGER.error("Could not open a new connection. openConnectionsCount=" + openConnectionsCount, e);
+            return null;
+        }
+        catch (Throwable t) {
+            LOGGER.error("Unexpected. Could not open a new connection. openConnectionsCount=" + openConnectionsCount, t);
             return null;
         }
 
     }
 
     synchronized void closeConnection(final Connection connection) {
+
         try {
+
+            if (connection == null) {
+                DatabaseConnectionUtil.LOGGER.error("Null connection. Could not close it. openConnectionsCount=" + openConnectionsCount);
+                return;
+            }
+
             connection.close();
             openConnectionsCount.decrementAndGet();
-            DatabaseLogger.logConnectionClosed( openConnectionsCount.intValue() );
+            DatabaseLogger.logConnectionClosed(openConnectionsCount.intValue());
             LOGGER.warn("Closing a db connection. openConnectionsCount=" + openConnectionsCount);
+
         }
         catch (final SQLException e) {
-            DatabaseConnectionUtil.LOGGER.error("Could not close the jdbc connection. openConnectionsCount="+openConnectionsCount, e);
+            DatabaseConnectionUtil.LOGGER.error("Could not close the jdbc connection. openConnectionsCount=" + openConnectionsCount, e);
         }
+        catch (Throwable t) {
+            LOGGER.error("Unexpected. Could not open a new connection. openConnectionsCount=" + openConnectionsCount, t);
+        }
+
     }
 
 }// class

@@ -59,18 +59,14 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
         String clientUserId = authenticationRequestSME.getClientUserId();
         String password = authenticationRequestSME.getPassword();
-        InstallationIdAbVO installationId = authenticationRequestSME.getInstallationIdSTY();
-
-        AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
-
-        ConnectionInfoVO connectionInfo = context.getConnectionInfo();
-
+        InstallationIdAbVO installId = authenticationRequestSME.getInstallationIdSTY();
+        ConnectionInfoVO connInfo = context.getConnectionInfo();
         AuthenticationRequestTypeEnumSTY authRequestType =  authenticationRequestSME.getAuthenticationRequestType();
 
         Chronometer c = new Chronometer("authenticationService.authenticate");
         c.start();
-        final AuthenticationServiceResponse authServResponse =
-                authenticationService.authenticate(connectionInfo, clientUserId, password, installationId, authRequestType);
+        AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
+        final AuthenticationServiceResponse authServResponse = authenticationService.authenticate(connInfo, clientUserId, password, installId, authRequestType);
         c.stop();
         LOGGER.info(c.toString());
 

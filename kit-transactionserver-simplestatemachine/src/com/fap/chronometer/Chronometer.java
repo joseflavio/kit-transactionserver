@@ -12,6 +12,10 @@ public final class Chronometer {
         this.taskName = taskName;
     }
 
+    public Chronometer(final Class<?> taskClassName) {
+        this.taskName = taskClassName.getName();
+    }
+
     public void start() {
         startTime = System.nanoTime();
     }

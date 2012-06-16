@@ -3,9 +3,11 @@ package com.kit.lightserver.services.db.log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.framework.db.DatabaseConfig;
 import com.fap.framework.db.InsertQueryPrinter;
 import com.fap.framework.db.InsertQueryResult;
 import com.fap.framework.db.QueryExecutor;
+import com.fap.framework.db.SimpleQueryExecutor;
 import com.fap.thread.NamedRunnable;
 
 public final class LogConexoesFinalizadasTask implements NamedRunnable {
@@ -16,11 +18,9 @@ public final class LogConexoesFinalizadasTask implements NamedRunnable {
 
     private final String clientUserId;
 
-    public LogConexoesFinalizadasTask(final QueryExecutor dataSource, final String clientUserId) {
-
-        this.dataSource = dataSource;
+    public LogConexoesFinalizadasTask(final DatabaseConfig dbConfig, final String clientUserId) {
+        this.dataSource = new SimpleQueryExecutor(dbConfig);
         this.clientUserId = clientUserId;
-
     }
 
     @Override
