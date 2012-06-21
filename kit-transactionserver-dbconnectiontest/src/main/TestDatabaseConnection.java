@@ -4,9 +4,9 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.DatabaseConfig;
-import com.jfap.framework.configuration.ConfigAccessor;
-import com.jfap.framework.configuration.ConfigurationReader;
+import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.framework.configuration.ConfigurationReader;
+import org.dajo.framework.db.DatabaseConfig;
 
 public final class TestDatabaseConnection {
 

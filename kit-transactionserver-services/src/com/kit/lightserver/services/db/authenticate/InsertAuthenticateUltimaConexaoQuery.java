@@ -3,9 +3,10 @@ package com.kit.lightserver.services.db.authenticate;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.InsertQueryInterface;
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.QueryStringParameter;
+import org.dajo.framework.db.InsertQueryInterface;
+import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.QueryStringParameter;
+
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
 

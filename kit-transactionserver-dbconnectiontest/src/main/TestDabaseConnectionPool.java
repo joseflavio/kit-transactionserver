@@ -5,16 +5,16 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.chronometer.Chronometer;
-import com.fap.framework.db.DatabaseConfig;
-import com.fap.framework.db.QueryExecutor;
-import com.fap.framework.db.SimpleQueryExecutor;
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.SelectQueryInterface;
-import com.fap.framework.db.SelectQueryResult;
-import com.fap.framework.db.SelectQueryResultAdapter;
-import com.jfap.framework.configuration.ConfigAccessor;
-import com.jfap.framework.configuration.ConfigurationReader;
+import org.dajo.chronometer.Chronometer;
+import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.framework.configuration.ConfigurationReader;
+import org.dajo.framework.db.DatabaseConfig;
+import org.dajo.framework.db.QueryExecutor;
+import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.SelectQueryInterface;
+import org.dajo.framework.db.SelectQueryResult;
+import org.dajo.framework.db.SelectQueryResultAdapter;
+import org.dajo.framework.db.SimpleQueryExecutor;
 
 public class TestDabaseConnectionPool {
 

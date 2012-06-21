@@ -4,18 +4,18 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.dajo.chronometer.Chronometer;
+import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.framework.db.DatabaseConfig;
+import org.dajo.framework.db.QueryExecutor;
+import org.dajo.framework.db.SelectQueryResult;
+import org.dajo.framework.db.SimpleQueryExecutor;
+import org.dajo.framework.db.UpdateQueryPrinter;
+import org.dajo.framework.db.UpdateQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.chronometer.Chronometer;
 import com.fap.collections.SmartCollections;
-import com.fap.framework.db.DatabaseConfig;
-import com.fap.framework.db.QueryExecutor;
-import com.fap.framework.db.SelectQueryResult;
-import com.fap.framework.db.SimpleQueryExecutor;
-import com.fap.framework.db.UpdateQueryPrinter;
-import com.fap.framework.db.UpdateQueryResult;
-import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;

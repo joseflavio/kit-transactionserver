@@ -1,17 +1,17 @@
 package com.kit.lightserver.services.be.authentication;
 
+import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.framework.db.DatabaseConfig;
+import org.dajo.framework.db.InsertQueryResult;
+import org.dajo.framework.db.SelectQueryResult;
+import org.dajo.framework.db.SelectQuerySingleResult;
+import org.dajo.framework.db.SimpleQueryExecutor;
+import org.dajo.framework.db.SingleConnectionQueryExecutor;
+import org.dajo.framework.db.UpdateQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.framework.db.DatabaseConfig;
-import com.fap.framework.db.InsertQueryResult;
-import com.fap.framework.db.SelectQueryResult;
-import com.fap.framework.db.SelectQuerySingleResult;
-import com.fap.framework.db.SimpleQueryExecutor;
-import com.fap.framework.db.SingleConnectionQueryExecutor;
-import com.fap.framework.db.UpdateQueryResult;
 import com.fap.thread.RichThreadFactory;
-import com.jfap.framework.configuration.ConfigAccessor;
 import com.kit.lightserver.domain.types.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;

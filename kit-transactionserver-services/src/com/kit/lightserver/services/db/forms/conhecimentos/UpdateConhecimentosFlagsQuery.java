@@ -3,11 +3,12 @@ package com.kit.lightserver.services.db.forms.conhecimentos;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.QueryIntegerParameter;
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.QueryStringParameter;
-import com.fap.framework.db.UpdateQueryInterface;
-import com.fap.framework.db.util.QueryUtil;
+import org.dajo.framework.db.QueryIntegerParameter;
+import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.QueryStringParameter;
+import org.dajo.framework.db.UpdateQueryInterface;
+import org.dajo.framework.db.util.QueryUtil;
+
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 
 public final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {

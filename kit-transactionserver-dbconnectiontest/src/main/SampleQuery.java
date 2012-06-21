@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.chronometer.Chronometer;
-import com.fap.framework.db.DatabaseConfig;
+import org.dajo.chronometer.Chronometer;
+import org.dajo.framework.db.DatabaseConfig;
 
 public class SampleQuery {
 

@@ -1,13 +1,13 @@
 package com.kit.lightserver.services.db.log;
 
+import org.dajo.framework.db.DatabaseConfig;
+import org.dajo.framework.db.InsertQueryPrinter;
+import org.dajo.framework.db.InsertQueryResult;
+import org.dajo.framework.db.QueryExecutor;
+import org.dajo.framework.db.SimpleQueryExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.framework.db.DatabaseConfig;
-import com.fap.framework.db.InsertQueryPrinter;
-import com.fap.framework.db.InsertQueryResult;
-import com.fap.framework.db.QueryExecutor;
-import com.fap.framework.db.SimpleQueryExecutor;
 import com.fap.thread.NamedRunnable;
 
 public final class LogConexoesFinalizadasTask implements NamedRunnable {

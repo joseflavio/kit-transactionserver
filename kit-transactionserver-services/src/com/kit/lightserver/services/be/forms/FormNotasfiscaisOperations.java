@@ -3,8 +3,9 @@ package com.kit.lightserver.services.be.forms;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.QueryExecutor;
-import com.fap.framework.db.SelectQueryResult;
+import org.dajo.framework.db.QueryExecutor;
+import org.dajo.framework.db.SelectQueryResult;
+
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;

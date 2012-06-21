@@ -3,10 +3,10 @@ package com.kit.lightserver.services.db.authenticate;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.QueryBooleanParameter;
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.QueryStringParameter;
-import com.fap.framework.db.UpdateQueryInterface;
+import org.dajo.framework.db.QueryBooleanParameter;
+import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.QueryStringParameter;
+import org.dajo.framework.db.UpdateQueryInterface;
 
 final class UpdateAuthenticateDeveResetarQuery implements UpdateQueryInterface {
 

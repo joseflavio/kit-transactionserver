@@ -1,10 +1,15 @@
 package com.fap.framework.db;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import org.dajo.framework.db.DatabaseConfig;
+import org.dajo.framework.db.SelectQueryInterface;
+import org.dajo.framework.db.SelectQueryResult;
+import org.dajo.framework.db.SelectQueryResultAdapter;
+import org.dajo.framework.db.SingleConnectionQueryExecutor;
 
 public class DbConnectionPool {
 
@@ -50,12 +55,9 @@ public class DbConnectionPool {
     }
 
     public <T> SelectQueryResult<T> executeSelectQuery(final SelectQueryInterface selectQuery, final SelectQueryResultAdapter<T> resultAdapter) {
-        final Connection connection = DatabaseConnectionUtil.getInstance().getConnection(dbConfig);
-        if (connection == null) {
-            return new SelectQueryResult<T>();
-        }
-        final SelectQueryResult<T> result = SelectQueryExecuter.executeSelectQuery(connection, selectQuery, resultAdapter);
-        DatabaseConnectionUtil.getInstance().closeConnection(connection);
+        SingleConnectionQueryExecutor simpleQueryExecutor = new SingleConnectionQueryExecutor(dbConfig);
+        final SelectQueryResult<T> result = simpleQueryExecutor.executeSelectQuery(selectQuery, resultAdapter);
+        simpleQueryExecutor.finish();
         return result;
     }
 

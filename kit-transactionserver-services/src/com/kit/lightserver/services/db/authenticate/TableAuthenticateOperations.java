@@ -1,11 +1,12 @@
 package com.kit.lightserver.services.db.authenticate;
 
-import com.fap.framework.db.InsertQueryResult;
-import com.fap.framework.db.QueryExecutor;
-import com.fap.framework.db.SelectQueryResult;
-import com.fap.framework.db.SelectQueryResultAdapterBoolean;
-import com.fap.framework.db.SelectQuerySingleResult;
-import com.fap.framework.db.UpdateQueryResult;
+import org.dajo.framework.db.InsertQueryResult;
+import org.dajo.framework.db.QueryExecutor;
+import org.dajo.framework.db.SelectQueryResult;
+import org.dajo.framework.db.SelectQueryResultAdapterBoolean;
+import org.dajo.framework.db.SelectQuerySingleResult;
+import org.dajo.framework.db.UpdateQueryResult;
+
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
 import com.kit.lightserver.services.be.authentication.AuthenticateLastSuccessfulServiceResponse;

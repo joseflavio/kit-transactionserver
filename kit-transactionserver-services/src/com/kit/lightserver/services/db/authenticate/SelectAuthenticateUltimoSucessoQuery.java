@@ -3,9 +3,9 @@ package com.kit.lightserver.services.db.authenticate;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.QueryStringParameter;
-import com.fap.framework.db.SelectQueryInterface;
+import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.QueryStringParameter;
+import org.dajo.framework.db.SelectQueryInterface;
 
 final class SelectAuthenticateUltimoSucessoQuery implements SelectQueryInterface {
 

@@ -3,7 +3,7 @@ package com.kit.lightserver.services.db.authenticate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.fap.framework.db.SelectQueryResultAdapter;
+import org.dajo.framework.db.SelectQueryResultAdapter;
 
 public final class SelectAuthenticateUltimoSucessoResultAdapter implements SelectQueryResultAdapter<SelectAuthenticateUltimoSucessoResult> {
 
