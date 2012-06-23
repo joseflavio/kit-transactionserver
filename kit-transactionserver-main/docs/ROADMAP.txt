@@ -1,0 +1,11 @@
+ROADMAP 
+-----------------------
+
+    * Criar os multiplos bancos de dados:
+        - DBA Tabelas de Autenticacao
+        - DBB Tabelas de Entrada de Forms
+        - DBC Tabelas de Saidas de Forms
+        - DBD Tabelas internas do servidor (Devem ser autos uficientes e capazes de ficar sempre num estado valido)
+        - DBL Tabelas de Log, o servidor so devera fazer Insert, nunca updates nem selects
+
+    * Criar duas tabelas de MUST_RESET, uma interna do servidor no DBD, outra para o usuario poder resetar no DBA. 
