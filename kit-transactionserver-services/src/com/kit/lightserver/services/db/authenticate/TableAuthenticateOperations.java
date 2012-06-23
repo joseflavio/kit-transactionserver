@@ -14,10 +14,12 @@ import com.kit.lightserver.services.be.authentication.AuthenticateQueryResult;
 
 public final class TableAuthenticateOperations {
 
-    private final QueryExecutor dataSource;
+    private final QueryExecutor dbaQueryExecutor;
+    private final QueryExecutor dbdQueryExecutor;
 
-    public TableAuthenticateOperations(final QueryExecutor dataSource) {
-        this.dataSource = dataSource;
+    public TableAuthenticateOperations(final QueryExecutor dbaQueryExecutor, final QueryExecutor dbdQueryExecutor) {
+        this.dbaQueryExecutor = dbaQueryExecutor;
+        this.dbdQueryExecutor = dbdQueryExecutor;
     }
 
     private final SelectAuthenticatePasswordQueryResultAdapter queryResultAdapter = new SelectAuthenticatePasswordQueryResultAdapter();
@@ -28,37 +30,31 @@ public final class TableAuthenticateOperations {
 
     public SelectQueryResult<AuthenticateQueryResult> selectClientIdExists(final String clientUserId) {
         SelectAuthenticatePasswordQuery selectQuery = new SelectAuthenticatePasswordQuery(clientUserId);
-        SelectQueryResult<AuthenticateQueryResult> result = dataSource.executeSelectQuery(selectQuery, queryResultAdapter);
+        SelectQueryResult<AuthenticateQueryResult> result = dbaQueryExecutor.executeSelectQuery(selectQuery, queryResultAdapter);
         return result;
     }
 
     public SelectQueryResult<SelectQuerySingleResult<Boolean>> selectMustReset(final String clientUserId) {
         SelectAuthenticateDeveResetarQuery selectQuery = new SelectAuthenticateDeveResetarQuery(clientUserId);
-        SelectQueryResult<SelectQuerySingleResult<Boolean>> result = dataSource.executeSelectQuery(selectQuery, selectMustResetResultAdapter);
+        SelectQueryResult<SelectQuerySingleResult<Boolean>> result = dbdQueryExecutor.executeSelectQuery(selectQuery, selectMustResetResultAdapter);
         return result;
     }
 
     public InsertQueryResult firstInsertMustReset(final String clientUserId) {
         InsertAuthenticateDeveResetarQuery insertQuery = new InsertAuthenticateDeveResetarQuery(clientUserId);
-        InsertQueryResult result = dataSource.executeInsertQuery(insertQuery);
-        return result;
-    }
-
-    public UpdateQueryResult updateMustReset(final String clientUserId, final boolean mustResetInNextConnection) {
-        UpdateAuthenticateDeveResetarQuery updateQuery = new UpdateAuthenticateDeveResetarQuery(clientUserId, mustResetInNextConnection);
-        UpdateQueryResult result = dataSource.executeUpdateQuery(updateQuery);
+        InsertQueryResult result = dbdQueryExecutor.executeInsertQuery(insertQuery);
         return result;
     }
 
     public SelectQueryResult<SelectAuthenticateUltimoSucessoResult> selectLastSuccessAuthentication(final String clientUserId) {
         SelectAuthenticateUltimoSucessoQuery selectQuery = new SelectAuthenticateUltimoSucessoQuery(clientUserId);
-        SelectQueryResult<SelectAuthenticateUltimoSucessoResult> result = dataSource.executeSelectQuery(selectQuery, selectLastSuccessAuthenticationAdapter);
+        SelectQueryResult<SelectAuthenticateUltimoSucessoResult> result = dbdQueryExecutor.executeSelectQuery(selectQuery, selectLastSuccessAuthenticationAdapter);
         return result;
     }
 
     public InsertQueryResult firstInsertLastConnection(final String clientUserId, final InstallationIdAbVO installationIdSTY, final ConnectionInfoVO connectionInfo) {
         InsertAuthenticateUltimaConexaoQuery insertQuery = new InsertAuthenticateUltimaConexaoQuery(clientUserId, installationIdSTY, connectionInfo);
-        InsertQueryResult result = dataSource.executeInsertQuery(insertQuery);
+        InsertQueryResult result = dbdQueryExecutor.executeInsertQuery(insertQuery);
         return result;
     }
 
@@ -75,7 +71,7 @@ public final class TableAuthenticateOperations {
         UpdateAuthenticateUltimoSucessoQuery updateQuery = new UpdateAuthenticateUltimoSucessoQuery(
                 newInstallationIdAb, newConnectionUniqueId, clientUserId, lastInstallationIdAb, lastConnectionUniqueId, lastVersion);
 
-        UpdateQueryResult result = dataSource.executeUpdateQuery(updateQuery);
+        UpdateQueryResult result = dbdQueryExecutor.executeUpdateQuery(updateQuery);
 
         return result;
 

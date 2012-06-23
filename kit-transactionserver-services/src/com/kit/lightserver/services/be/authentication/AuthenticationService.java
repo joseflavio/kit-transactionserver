@@ -17,6 +17,8 @@ import com.fap.thread.RichThreadFactory;
 import com.kit.lightserver.domain.types.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
+import com.kit.lightserver.services.be.common.DatabaseAliases;
+import com.kit.lightserver.services.db.authenticate.OperationAuthenticateDeveResetar;
 import com.kit.lightserver.services.db.authenticate.SelectAuthenticateUltimoSucessoResult;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
 import com.kit.lightserver.services.db.log.LogConexoesFinalizadasTask;
@@ -27,29 +29,38 @@ public final class AuthenticationService {
     static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
-        DatabaseConfig dbaConfig = DatabaseConfig.getInstance(configAccessor, "dba");
-        return new AuthenticationService(dbaConfig);
+        DatabaseConfig dbaConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBA);
+        DatabaseConfig dbdConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBD);
+        DatabaseConfig dblConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBL);
+        return new AuthenticationService(dbaConfig, dbdConfig, dblConfig);
     }
 
-    private final DatabaseConfig dbConfig;
+    private final DatabaseConfig dbaConfig;
+    private final DatabaseConfig dbdConfig;
+    private final DatabaseConfig dblConfig;
 
-    private AuthenticationService(final DatabaseConfig dbConfig) {
-        this.dbConfig = dbConfig;
+    private AuthenticationService(final DatabaseConfig dbaConfig, final DatabaseConfig dbdConfig, final DatabaseConfig dblConfig) {
+        this.dbaConfig = dbaConfig;
+        this.dbdConfig = dbdConfig;
+        this.dblConfig = dblConfig;
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionInfo, final String clientUserId, final String password,
             final InstallationIdAbVO installIdAb, final AuthenticationRequestTypeEnumSTY authRequestType) {
 
-        SingleConnectionQueryExecutor simpleQueryExecutor = new SingleConnectionQueryExecutor(dbConfig);
-        TableAuthenticateOperations tableAuthenticateOperations = new TableAuthenticateOperations(simpleQueryExecutor);
+        SingleConnectionQueryExecutor dbaQueryExecutor = new SingleConnectionQueryExecutor(dbaConfig);
+        SingleConnectionQueryExecutor dbdQueryExecutor = new SingleConnectionQueryExecutor(dbdConfig);
+
+        TableAuthenticateOperations tableAuthenticateOperations = new TableAuthenticateOperations(dbaQueryExecutor, dbdQueryExecutor);
 
         AuthenticationServiceResponse authenticationResponse = AuthenticationService.authenticate2(tableAuthenticateOperations, connectionInfo, clientUserId, password,
                 installIdAb, authRequestType);
 
-        simpleQueryExecutor.finish();
+        dbaQueryExecutor.finish();
+        dbdQueryExecutor.finish();
 
         int responseStatusForLog = AuthenticationServiceStatusConverter.convertToStatus(authenticationResponse);
-        LogConexoesIniciadasTask logConectionTask = new LogConexoesIniciadasTask(dbConfig, connectionInfo, installIdAb, clientUserId, responseStatusForLog);
+        LogConexoesIniciadasTask logConectionTask = new LogConexoesIniciadasTask(dbaConfig, connectionInfo, installIdAb, clientUserId, responseStatusForLog);
         Thread logConectionThread = RichThreadFactory.newThread(logConectionTask, connectionInfo);
         logConectionThread.start();
 
@@ -204,10 +215,8 @@ public final class AuthenticationService {
 
     public boolean logOff(final String clientUserId, final boolean mustResetInNextConnection, final ConnectionInfoVO connectionInfo) {
 
-        SimpleQueryExecutor simpleQueryExecutor = new SimpleQueryExecutor(dbConfig);
-        TableAuthenticateOperations tableAuthenticateOperations = new TableAuthenticateOperations(simpleQueryExecutor);
-
-        UpdateQueryResult updateMustResetResult = tableAuthenticateOperations.updateMustReset(clientUserId, mustResetInNextConnection);
+        SimpleQueryExecutor dbdQueryExecutor = new SimpleQueryExecutor(dbdConfig);
+        UpdateQueryResult updateMustResetResult = OperationAuthenticateDeveResetar.updateMustReset(dbdQueryExecutor, clientUserId, mustResetInNextConnection);
 
         final boolean successLogOff;
         if (updateMustResetResult.isUpdateQuerySuccessful() == false) {
@@ -220,7 +229,7 @@ public final class AuthenticationService {
             successLogOff = true;
         }
 
-        LogConexoesFinalizadasTask logConectionTask = new LogConexoesFinalizadasTask(dbConfig, clientUserId);
+        LogConexoesFinalizadasTask logConectionTask = new LogConexoesFinalizadasTask(dblConfig, clientUserId);
         Thread logConectionThread = RichThreadFactory.newThread(logConectionTask, connectionInfo);
         logConectionThread.start();
 

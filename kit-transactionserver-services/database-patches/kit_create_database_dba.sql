@@ -20,3 +20,6 @@ CREATE TABLE [dbo].[AuthenticatePassword_TMP] (
 GO
 
 INSERT INTO AuthenticatePassword_TMP (KTClientUserId, KTPassword, KTActive, KTDeleted, KTLastUpdateDBTime) SELECT KTClientId, KTPassword, 1, 0, GETDATE() FROM Authenticate
+
+USE [KEEPIN_V02_DEVTEST_DBA]
+INSERT INTO AuthenticatePassword (KTClientUserId, KTPassword, KTActive, KTDeleted, KTLastUpdateDBTime) SELECT KTClientId, KTPassword, 1, 0, GETDATE() FROM [KEEPIN_V01_DEMO01].[dbo].[Authenticate]
