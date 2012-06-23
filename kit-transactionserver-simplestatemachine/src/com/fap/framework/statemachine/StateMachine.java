@@ -15,10 +15,18 @@ public final class StateMachine<T> {
     }// constructor
 
     public boolean processExternalEvent(final T event) {
+
         final String currentStateClassName = currentState.getClass().getCanonicalName();
         LOGGER.info("Processing Event. state=" + currentStateClassName + ", event=" + event);
-        final ProcessingResult<T> processEventResult = currentState.processEvent(event);
-        final boolean isMachineStillAlive = processResults(processEventResult);
+
+        boolean isMachineStillAlive = false;
+        try {
+            final ProcessingResult<T> processEventResult = currentState.processEvent(event);
+            isMachineStillAlive = processResults(processEventResult);
+        }
+        catch (Throwable t) {
+            LOGGER.error("Unexpected error. state={}", currentStateClassName, t);
+        }
         return isMachineStillAlive;
     }
 

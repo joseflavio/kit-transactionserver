@@ -2,9 +2,10 @@ package com.kit.lightserver.statemachine.states;
 
 import kit.primitives.channel.ChannelProgress;
 
-import org.dajo.chronometer.Chronometer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.dajo.chronometer.Chronometer;
 
 import com.fap.framework.statemachine.ProcessingResult;
 import com.fap.framework.statemachine.ResultStateTransition;
@@ -49,7 +50,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
          * Sanity
          */
         if ( (event instanceof AuthenticationRequestSME) == false ) {
-            LOGGER.error("Unexpected Event. event="+event);
+            LOGGER.error("Unexpected Event. event={}", event);
             return UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_ERROR_UNEXPECTED_EVENT);
         }
 
@@ -64,14 +65,25 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         ConnectionInfoVO connInfo = context.getConnectionInfo();
         AuthenticationRequestTypeEnumSTY authRequestType =  authenticationRequestSME.getAuthenticationRequestType();
 
+        /*
+         * Invoking the service
+         */
         Chronometer c = new Chronometer("authenticationService.authenticate");
         c.start();
-        AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
-        final AuthenticationServiceResponse authServResponse = authenticationService.authenticate(connInfo, clientUserId, password, installId, authRequestType);
+        AuthenticationServiceResponse authServResponse;
+        try {
+            AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
+            authServResponse = authenticationService.authenticate(connInfo, clientUserId, password, installId, authRequestType);
+        } catch (Throwable t) {
+            LOGGER.error("Unexpected error.", t);
+            authServResponse = AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR;
+        }
         c.stop();
         LOGGER.info(c.toString());
 
-
+        /*
+         * Handling the service response
+         */
         final StateSME<KitEventSME> newState;
         final ClientInfoCTX clientInfo;
         if ( authServResponse == AuthenticationServiceResponse.SUCCESS_MUST_RESET ||

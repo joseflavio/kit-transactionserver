@@ -1,5 +1,8 @@
 package com.kit.lightserver.services.be.authentication;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dajo.framework.configuration.ConfigAccessor;
 import org.dajo.framework.db.DatabaseConfig;
 import org.dajo.framework.db.InsertQueryResult;
@@ -8,10 +11,9 @@ import org.dajo.framework.db.SelectQuerySingleResult;
 import org.dajo.framework.db.SimpleQueryExecutor;
 import org.dajo.framework.db.SingleConnectionQueryExecutor;
 import org.dajo.framework.db.UpdateQueryResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fap.thread.RichThreadFactory;
+
 import com.kit.lightserver.domain.types.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
@@ -25,7 +27,8 @@ public final class AuthenticationService {
     static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
-        return new AuthenticationService(DatabaseConfig.getInstance(configAccessor));
+        DatabaseConfig dbaConfig = DatabaseConfig.getInstance(configAccessor, "dba");
+        return new AuthenticationService(dbaConfig);
     }
 
     private final DatabaseConfig dbConfig;
