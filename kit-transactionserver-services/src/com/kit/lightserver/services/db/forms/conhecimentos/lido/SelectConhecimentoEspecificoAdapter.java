@@ -3,7 +3,8 @@ package com.kit.lightserver.services.db.forms.conhecimentos.lido;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.fap.framework.db.SelectQueryResultAdapter;
+import org.dajo.framework.db.SelectQueryResultAdapter;
+
 import com.kit.lightserver.domain.types.KTFlagVO;
 
 public final class SelectConhecimentoEspecificoAdapter implements SelectQueryResultAdapter<KTFlagVO> {

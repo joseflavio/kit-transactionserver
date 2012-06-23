@@ -3,9 +3,10 @@ package com.kit.lightserver.statemachine.states;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jfap.framework.statemachine.ProcessingResult;
-import com.jfap.framework.statemachine.ResultMachineStopped;
-import com.jfap.framework.statemachine.StateSME;
+import com.fap.framework.statemachine.ProcessingResult;
+import com.fap.framework.statemachine.ResultMachineStopped;
+import com.fap.framework.statemachine.StateSME;
+
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.types.ClientInfoCTX;

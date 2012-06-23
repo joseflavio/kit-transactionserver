@@ -6,10 +6,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jfap.framework.statemachine.ProcessingResult;
-import com.jfap.framework.statemachine.ResultStateTransition;
-import com.jfap.framework.statemachine.ResultWaitEvent;
-import com.jfap.framework.statemachine.StateSME;
+import com.fap.framework.statemachine.ProcessingResult;
+import com.fap.framework.statemachine.ResultStateTransition;
+import com.fap.framework.statemachine.ResultWaitEvent;
+import com.fap.framework.statemachine.StateSME;
+
 import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;

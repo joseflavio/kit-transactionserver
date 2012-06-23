@@ -4,11 +4,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.QueryDateParameter;
-import com.fap.framework.db.QueryIntParameter;
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.QueryStringParameter;
-import com.fap.framework.db.UpdateQueryInterface;
+import org.dajo.framework.db.QueryDateParameter;
+import org.dajo.framework.db.QueryIntParameter;
+import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.QueryStringParameter;
+import org.dajo.framework.db.UpdateQueryInterface;
+
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
 import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 

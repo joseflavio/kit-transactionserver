@@ -5,7 +5,8 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import com.fap.framework.adapters.FilepathVO;
+import org.dajo.framework.adapters.FilepathVO;
+
 import com.kit.lightserver.KITLightServerGui;
 
 public final class ImageIconLoader {

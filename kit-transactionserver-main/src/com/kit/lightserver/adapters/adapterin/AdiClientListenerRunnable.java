@@ -8,8 +8,10 @@ import kit.primitives.factory.PrimitiveStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.dajo.framework.configuration.ConfigAccessor;
+
 import com.fap.thread.NamedRunnable;
-import com.jfap.framework.configuration.ConfigAccessor;
+
 import com.kit.lightserver.adapters.logger.AdaptersLogger;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.loggers.connectionlogger.ConnectionsLogger;

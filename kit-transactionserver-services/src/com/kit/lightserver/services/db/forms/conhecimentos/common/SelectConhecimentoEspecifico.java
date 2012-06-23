@@ -3,10 +3,11 @@ package com.kit.lightserver.services.db.forms.conhecimentos.common;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.QueryIntParameter;
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.QueryStringParameter;
-import com.fap.framework.db.SelectQueryInterface;
+import org.dajo.framework.db.QueryIntParameter;
+import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.QueryStringParameter;
+import org.dajo.framework.db.SelectQueryInterface;
+
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
 import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 

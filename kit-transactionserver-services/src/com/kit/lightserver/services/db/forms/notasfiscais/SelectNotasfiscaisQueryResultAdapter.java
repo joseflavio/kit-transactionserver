@@ -6,7 +6,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fap.framework.db.SelectQueryResultAdapter;
+import org.dajo.framework.db.SelectQueryResultAdapter;
+
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.services.db.forms.conhecimentos.StatusEntregaSTYParser;

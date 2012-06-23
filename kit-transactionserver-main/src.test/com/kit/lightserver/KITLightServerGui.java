@@ -7,9 +7,9 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.framework.db.DatabaseConfig;
-import com.jfap.framework.configuration.ConfigAccessor;
-import com.jfap.framework.configuration.ConfigurationReader;
+import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.framework.configuration.ConfigurationReader;
+
 import com.kit.lightserver.config.ServerConfig;
 import com.kit.lightserver.gui.traymenu.KitTrayMenu;
 
@@ -18,11 +18,8 @@ public final class KITLightServerGui {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(KITLightServerGui.class);
 
-
-
     private final ConfigAccessor configAccessor;
     private final ServerConfig serverConfig;
-    private final DatabaseConfig dbConfig;
     private final KITLightServer kitLightServer;
     private final KitTrayMenu trayMenu;
 
@@ -30,11 +27,15 @@ public final class KITLightServerGui {
 
         configAccessor = ConfigurationReader.getConfiguration(KitPropertiesFiles.SERVER_PROPERTIES, KitPropertiesFiles.DATABASE_PROPERTIES);
         serverConfig = ServerConfig.getInstance(configAccessor);
-        dbConfig = DatabaseConfig.getInstance(configAccessor);
+
+        String dbaHost = configAccessor.getMandatoryProperty("database.dba.host");
+        String dbaPort = configAccessor.getMandatoryProperty("database.dba.port");
+
+        String dbaDesc = "DBA: " + dbaHost + ":" + dbaPort;
 
         kitLightServer = new KITLightServer(serverConfig.getServerPort(), 1000, configAccessor, new BootstrapUncaughtExceptionHandler() );
 
-        trayMenu = new KitTrayMenu(serverConfig, dbConfig, new KitTrayIconListeners());
+        trayMenu = new KitTrayMenu(serverConfig, dbaDesc, new KitTrayIconListeners());
         trayMenu.install();
 
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());

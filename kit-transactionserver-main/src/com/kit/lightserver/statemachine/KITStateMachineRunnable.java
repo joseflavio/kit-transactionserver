@@ -7,10 +7,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.framework.statemachine.StateMachine;
+import com.fap.framework.statemachine.StateSME;
 import com.fap.thread.NamedRunnable;
-import com.jfap.framework.configuration.ConfigAccessor;
-import com.jfap.framework.statemachine.StateMachine;
-import com.jfap.framework.statemachine.StateSME;
+
+import org.dajo.framework.configuration.ConfigAccessor;
+
 import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.network.SocketWrapper;

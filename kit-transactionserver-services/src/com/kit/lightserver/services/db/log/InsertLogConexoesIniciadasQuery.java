@@ -3,13 +3,13 @@ package com.kit.lightserver.services.db.log;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.dajo.framework.db.InsertQueryInterface;
+import org.dajo.framework.db.QueryIntegerParameter;
+import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.QueryStringParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.framework.db.InsertQueryInterface;
-import com.fap.framework.db.QueryIntegerParameter;
-import com.fap.framework.db.QueryParameter;
-import com.fap.framework.db.QueryStringParameter;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
 

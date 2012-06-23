@@ -1,4 +1,4 @@
-package com.jfap.framework.statemachine;
+package com.fap.framework.statemachine;
 
 import java.util.concurrent.locks.ReentrantLock;
 

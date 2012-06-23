@@ -16,7 +16,6 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.framework.db.DatabaseConfig;
 import com.kit.lightserver.KITLightServerGui.KitTrayIconListeners;
 import com.kit.lightserver.config.ServerConfig;
 import com.kit.lightserver.gui.resources.ImageIconLoader;
@@ -33,7 +32,7 @@ public final class KitTrayMenu {
 
     private final long startTime;
 
-    public KitTrayMenu(final ServerConfig serverConfig, final DatabaseConfig dbConfig, final KitTrayIconListeners kitTrayIconListeners) {
+    public KitTrayMenu(final ServerConfig serverConfig, final String dbDescription, final KitTrayIconListeners kitTrayIconListeners) {
 
         startTime = System.currentTimeMillis();
 
@@ -45,7 +44,7 @@ public final class KitTrayMenu {
 
         PopupMenu popup = new PopupMenu();
         MenuItem serverNameItem = new MenuItem(serverConfig.getServerName() + ", porta " + serverConfig.getServerPort());
-        MenuItem databaseNameItem = new MenuItem("Database: " + dbConfig.getDbName());
+        MenuItem databaseNameItem = new MenuItem("Database: " + dbDescription);
         MenuItem goToLogsItem = new MenuItem("Ir para pasta de Logs");
         MenuItem shutDownItem = new MenuItem("Desligar o servidor");
 
@@ -84,7 +83,7 @@ public final class KitTrayMenu {
 
     }
 
-    private void displayMessage() {
+    protected void displayMessage() {
         long runningTime = System.currentTimeMillis() - startTime;
         long runningTimeInMinutes = runningTime / 60000;
         JOptionPane.showMessageDialog(null, "Servidor KeepInTouch esta executando por "+runningTimeInMinutes+" minutos.");

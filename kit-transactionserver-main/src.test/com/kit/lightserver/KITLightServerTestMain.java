@@ -3,9 +3,10 @@ package com.kit.lightserver;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import com.jfap.framework.configuration.ConfigAccessor;
-import com.jfap.framework.configuration.ConfigurationReader;
-import com.jfap.framework.exception.LogUncaughtExceptionHandler;
+import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.framework.configuration.ConfigurationReader;
+
+import com.fap.framework.exception.LogUncaughtExceptionHandler;
 
 final class KITLightServerTestMain {
 

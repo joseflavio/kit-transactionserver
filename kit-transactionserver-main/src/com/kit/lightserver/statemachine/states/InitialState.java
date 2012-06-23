@@ -2,14 +2,15 @@ package com.kit.lightserver.statemachine.states;
 
 import kit.primitives.channel.ChannelProgress;
 
+import org.dajo.chronometer.Chronometer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.chronometer.Chronometer;
-import com.jfap.framework.statemachine.ProcessingResult;
-import com.jfap.framework.statemachine.ResultStateTransition;
-import com.jfap.framework.statemachine.ResultWaitEvent;
-import com.jfap.framework.statemachine.StateSME;
+import com.fap.framework.statemachine.ProcessingResult;
+import com.fap.framework.statemachine.ResultStateTransition;
+import com.fap.framework.statemachine.ResultWaitEvent;
+import com.fap.framework.statemachine.StateSME;
+
 import com.kit.lightserver.domain.types.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;

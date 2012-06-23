@@ -1,4 +1,4 @@
-package com.jfap.framework.exception;
+package com.fap.framework.exception;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 

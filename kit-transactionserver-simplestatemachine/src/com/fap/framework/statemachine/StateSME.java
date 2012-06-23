@@ -1,4 +1,4 @@
-package com.jfap.framework.statemachine;
+package com.fap.framework.statemachine;
 
 
 public interface StateSME<T> {
