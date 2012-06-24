@@ -29,20 +29,17 @@ public final class AuthenticationService {
     static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
-        DatabaseConfig dbaConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBA);
-        DatabaseConfig dbdConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBD);
-        DatabaseConfig dblConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBL);
-        return new AuthenticationService(dbaConfig, dbdConfig, dblConfig);
+        return new AuthenticationService(configAccessor);
     }
 
     private final DatabaseConfig dbaConfig;
     private final DatabaseConfig dbdConfig;
-    private final DatabaseConfig dblConfig;
+    private final ConfigAccessor configAccessor;
 
-    private AuthenticationService(final DatabaseConfig dbaConfig, final DatabaseConfig dbdConfig, final DatabaseConfig dblConfig) {
-        this.dbaConfig = dbaConfig;
-        this.dbdConfig = dbdConfig;
-        this.dblConfig = dblConfig;
+    private AuthenticationService(final ConfigAccessor configAccessor) {
+        this.configAccessor = configAccessor;
+        this.dbaConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBA);
+        this.dbdConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBD);
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionInfo, final String clientUserId, final String password,
@@ -60,7 +57,7 @@ public final class AuthenticationService {
         dbdQueryExecutor.finish();
 
         int responseStatusForLog = AuthenticationServiceStatusConverter.convertToStatus(authenticationResponse);
-        LogConexoesIniciadasTask logConectionTask = new LogConexoesIniciadasTask(dbaConfig, connectionInfo, installIdAb, clientUserId, responseStatusForLog);
+        LogConexoesIniciadasTask logConectionTask = new LogConexoesIniciadasTask(configAccessor, connectionInfo, installIdAb, clientUserId, responseStatusForLog);
         Thread logConectionThread = RichThreadFactory.newThread(logConectionTask, connectionInfo);
         logConectionThread.start();
 
@@ -229,7 +226,7 @@ public final class AuthenticationService {
             successLogOff = true;
         }
 
-        LogConexoesFinalizadasTask logConectionTask = new LogConexoesFinalizadasTask(dblConfig, clientUserId);
+        LogConexoesFinalizadasTask logConectionTask = new LogConexoesFinalizadasTask(configAccessor, clientUserId, connectionInfo);
         Thread logConectionThread = RichThreadFactory.newThread(logConectionTask, connectionInfo);
         logConectionThread.start();
 

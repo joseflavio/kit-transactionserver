@@ -8,8 +8,8 @@ GO
 USE [{dbname}]
 GO
 
-CREATE TABLE [dbo].[AuthenticatePassword_TMP] (
-    [KTClientUserId] [nvarchar](32) NOT NULL PRIMARY KEY,
+CREATE TABLE [dbo].[AuthenticatePassword] (
+    [KTClientUserId] [nvarchar](32) NOT NULL PRIMARY KEY NONCLUSTERED,
     [KTPassword] [nvarchar](50) NOT NULL,
     [KTActive] [bit] NOT NULL,
     [KTDeleted] [bit] NOT NULL,
@@ -17,9 +17,15 @@ CREATE TABLE [dbo].[AuthenticatePassword_TMP] (
     [KTRowVersion] rowversion NOT NULL,
     
 )
+CREATE CLUSTERED INDEX CIDX_AUTHENTICATEPASSWORD_LASTUPDATEDBTIME ON [AuthenticatePassword](KTLastUpdateDBTime);
+CREATE NONCLUSTERED INDEX NIDX_AUTHENTICATEPASSWORD_ACTIVEDELETED ON [AuthenticatePassword](KTActive, KTDeleted);
+CREATE NONCLUSTERED INDEX NIDX_AUTHENTICATEPASSWORDS_PASSWORD ON [AuthenticatePassword](KTPassword);
+CREATE NONCLUSTERED INDEX NIDX_AUTHENTICATEPASSWORDS_ROWVERSION ON [AuthenticatePassword](KTRowVersion);
 GO
 
-INSERT INTO AuthenticatePassword_TMP (KTClientUserId, KTPassword, KTActive, KTDeleted, KTLastUpdateDBTime) SELECT KTClientId, KTPassword, 1, 0, GETDATE() FROM Authenticate
 
-USE [KEEPIN_V02_DEVTEST_DBA]
-INSERT INTO AuthenticatePassword (KTClientUserId, KTPassword, KTActive, KTDeleted, KTLastUpdateDBTime) SELECT KTClientId, KTPassword, 1, 0, GETDATE() FROM [KEEPIN_V01_DEMO01].[dbo].[Authenticate]
+--------------------------------------------------------------
+
+INSERT INTO [dbo].[AuthenticatePassword] (KTClientUserId, KTPassword, KTActive, KTDeleted, KTLastUpdateDBTime) SELECT KTClientId, KTPassword, 1, 0, GETDATE() FROM [{origin_dbname}].[dbo].[Authenticate]
+
+

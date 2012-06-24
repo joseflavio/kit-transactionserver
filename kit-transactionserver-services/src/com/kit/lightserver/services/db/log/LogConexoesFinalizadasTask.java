@@ -1,14 +1,19 @@
 package com.kit.lightserver.services.db.log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dajo.framework.configuration.ConfigAccessor;
 import org.dajo.framework.db.DatabaseConfig;
 import org.dajo.framework.db.InsertQueryPrinter;
 import org.dajo.framework.db.InsertQueryResult;
 import org.dajo.framework.db.QueryExecutor;
 import org.dajo.framework.db.SimpleQueryExecutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fap.thread.NamedRunnable;
+
+import com.kit.lightserver.domain.types.ConnectionInfoVO;
+import com.kit.lightserver.services.be.common.DatabaseAliases;
 
 public final class LogConexoesFinalizadasTask implements NamedRunnable {
 
@@ -18,9 +23,16 @@ public final class LogConexoesFinalizadasTask implements NamedRunnable {
 
     private final String clientUserId;
 
-    public LogConexoesFinalizadasTask(final DatabaseConfig dbConfig, final String clientUserId) {
-        this.dataSource = new SimpleQueryExecutor(dbConfig);
+    private final ConnectionInfoVO connectionInfo;
+
+    public LogConexoesFinalizadasTask(final ConfigAccessor configAccessor, final String clientUserId, final ConnectionInfoVO connectionInfo) {
+
+        final DatabaseConfig dblConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBL);
+
+        this.dataSource = new SimpleQueryExecutor(dblConfig);
         this.clientUserId = clientUserId;
+        this.connectionInfo = connectionInfo;
+
     }
 
     @Override
@@ -31,7 +43,7 @@ public final class LogConexoesFinalizadasTask implements NamedRunnable {
     @Override
     public void run() {
 
-        final InsertLogConexoesFinalizadasQuery query = new InsertLogConexoesFinalizadasQuery(clientUserId);
+        final InsertLogConexoesFinalizadasQuery query = new InsertLogConexoesFinalizadasQuery(clientUserId, connectionInfo);
         final InsertQueryResult result = dataSource.executeInsertQuery(query);
 
         if (result.isInsertQuerySuccessfull() == false) {

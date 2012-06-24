@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.dajo.chronometer.Chronometer;
 import org.dajo.framework.configuration.ConfigAccessor;
 import org.dajo.framework.db.DatabaseConfig;
@@ -12,16 +15,16 @@ import org.dajo.framework.db.SelectQueryResult;
 import org.dajo.framework.db.SimpleQueryExecutor;
 import org.dajo.framework.db.UpdateQueryPrinter;
 import org.dajo.framework.db.UpdateQueryResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fap.collections.SmartCollections;
+
 import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
+import com.kit.lightserver.services.be.common.DatabaseAliases;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQueryResultAdapter;
 import com.kit.lightserver.services.db.forms.conhecimentos.UpdateConhecimentosFlagsQuery;
@@ -33,27 +36,27 @@ public final class FormServices {
     static private final Logger LOGGER = LoggerFactory.getLogger(FormServices.class);
 
     static public FormServices getInstance(final ConfigAccessor configAccessor) {
-        DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
-        QueryExecutor dataSource = new SimpleQueryExecutor(dbConfig);
-        return new FormServices(dataSource);
+        DatabaseConfig dbdConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBD);
+        QueryExecutor dbdQueryExecutor = new SimpleQueryExecutor(dbdConfig);
+        return new FormServices(dbdQueryExecutor);
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final QueryExecutor dataSource;
+    private final QueryExecutor dbdQueryExecutor;
 
     private final FormNotasfiscaisOperations formNotasfiscaisOperations;
 
-    private FormServices(final QueryExecutor dataSource) {
-        this.dataSource = dataSource;
-        this.formNotasfiscaisOperations = new FormNotasfiscaisOperations(dataSource);
+    private FormServices(final QueryExecutor dbdQueryExecutor) {
+        this.dbdQueryExecutor = dbdQueryExecutor;
+        this.formNotasfiscaisOperations = new FormNotasfiscaisOperations(dbdQueryExecutor);
     }
 
     public SimpleServiceResponse<FormsParaEnviarCTX> retrieveCurrentForms(final String ktClientUserId, final boolean retrieveNaoRecebidos) {
 
         SelectConhecimentosQueryResultAdapter queryAdapter = new SelectConhecimentosQueryResultAdapter();
         SelectConhecimentosQuery query = new SelectConhecimentosQuery(ktClientUserId, retrieveNaoRecebidos);
-        SelectQueryResult<List<ConhecimentoSTY>> conhecimentosQueryResult = dataSource.executeSelectQuery(query, queryAdapter);
+        SelectQueryResult<List<ConhecimentoSTY>> conhecimentosQueryResult = dbdQueryExecutor.executeSelectQuery(query, queryAdapter);
         if (conhecimentosQueryResult.isSelectQuerySuccessful() == false) {
             final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();
             return errorServiceResponse;
@@ -100,7 +103,7 @@ public final class FormServices {
         }
         else {
             final UpdateConhecimentosFlagsQuery updateConhecimentoRecebidoFlagQuery = new UpdateConhecimentosFlagsQuery("Recebido", ktClientId, conhecimentos);
-            final UpdateQueryResult conhecimentosFlagResult = dataSource.executeUpdateQuery(updateConhecimentoRecebidoFlagQuery);
+            final UpdateQueryResult conhecimentosFlagResult = dbdQueryExecutor.executeUpdateQuery(updateConhecimentoRecebidoFlagQuery);
             if (conhecimentosFlagResult.isUpdateQuerySuccessful() == false) {
                 LOGGER.error("Error updating the flag");
             }
@@ -111,7 +114,7 @@ public final class FormServices {
         }
         else {
             final UpdateNotafiscaisFlagsQuery updateNotasfiscaisRecebidasFlagQuery = new UpdateNotafiscaisFlagsQuery("Recebido", notasfiscais);
-            final UpdateQueryResult notasfiscaisFlagResult = dataSource.executeUpdateQuery(updateNotasfiscaisRecebidasFlagQuery);
+            final UpdateQueryResult notasfiscaisFlagResult = dbdQueryExecutor.executeUpdateQuery(updateNotasfiscaisRecebidasFlagQuery);
             if (notasfiscaisFlagResult.isUpdateQuerySuccessful() == false) {
                 LOGGER.error("Error updating the flag");
             }
@@ -126,7 +129,7 @@ public final class FormServices {
         LOGGER.info("flagFormsAsRead(..) - enter");
 
         UpdateConhecimentosFirstReadQuery updateQuery = new UpdateConhecimentosFirstReadQuery(ktClientId, conhecimentoIdSTY, dataDaLeitura);
-        UpdateQueryResult queryResult = dataSource.executeUpdateQuery(updateQuery);
+        UpdateQueryResult queryResult = dbdQueryExecutor.executeUpdateQuery(updateQuery);
         if (queryResult.isUpdateQuerySuccessful() == false) {
             LOGGER.error("Error updating. query={}", new UpdateQueryPrinter(updateQuery));
             return false;

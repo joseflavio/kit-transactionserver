@@ -14,10 +14,10 @@ import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQuer
 
 final class FormNotasfiscaisOperations {
 
-    private final QueryExecutor dataSource;
+    private final QueryExecutor dbdQueryExecutor;
 
-    FormNotasfiscaisOperations(final QueryExecutor dataSource) {
-        this.dataSource = dataSource;
+    FormNotasfiscaisOperations(final QueryExecutor dbdQueryExecutor) {
+        this.dbdQueryExecutor = dbdQueryExecutor;
     }
 
     SimpleServiceResponse<List<NotafiscalSTY>> retrieveNotasfiscais(final List<ConhecimentoSTY> conhecimentoList,
@@ -39,7 +39,7 @@ final class FormNotasfiscaisOperations {
         if (parentKnowledgeRowIdList.size() > 0) {
             SelectNotasfiscaisQueryResultAdapter notasfiscaisAdapter = new SelectNotasfiscaisQueryResultAdapter();
             SelectNotasfiscaisQuery notasfiscaisQuery = new SelectNotasfiscaisQuery(parentKnowledgeRowIdList, retrieveSomenteNaoRecebidos);
-            SelectQueryResult<List<NotafiscalSTY>> notasfiscaisQueryResult = dataSource.executeSelectQuery(notasfiscaisQuery, notasfiscaisAdapter);
+            SelectQueryResult<List<NotafiscalSTY>> notasfiscaisQueryResult = dbdQueryExecutor.executeSelectQuery(notasfiscaisQuery, notasfiscaisAdapter);
             if (notasfiscaisQueryResult.isSelectQuerySuccessful() == false) {
                 final SimpleServiceResponse<List<NotafiscalSTY>> errorServiceResponse = new SimpleServiceResponse<List<NotafiscalSTY>>();
                 return errorServiceResponse;

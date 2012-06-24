@@ -1,16 +1,20 @@
 package com.kit.lightserver.services.db.log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dajo.framework.configuration.ConfigAccessor;
 import org.dajo.framework.db.DatabaseConfig;
 import org.dajo.framework.db.InsertQueryPrinter;
 import org.dajo.framework.db.InsertQueryResult;
 import org.dajo.framework.db.QueryExecutor;
 import org.dajo.framework.db.SimpleQueryExecutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fap.thread.NamedRunnable;
+
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
+import com.kit.lightserver.services.be.common.DatabaseAliases;
 
 public final class LogConexoesIniciadasTask implements NamedRunnable {
 
@@ -24,10 +28,12 @@ public final class LogConexoesIniciadasTask implements NamedRunnable {
     private final int status;
 
     public LogConexoesIniciadasTask(
-            final DatabaseConfig dbConfig, final ConnectionInfoVO connectionInfo, final InstallationIdAbVO installationId,
+            final ConfigAccessor configAccessor, final ConnectionInfoVO connectionInfo, final InstallationIdAbVO installationId,
             final String clientUserId, final int status) {
 
-        this.queryExecutor = new SimpleQueryExecutor(dbConfig);
+        final DatabaseConfig dblConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBL);
+
+        this.queryExecutor = new SimpleQueryExecutor(dblConfig);
         this.connectionInfo = connectionInfo;
         this.installationId = installationId;
         this.clientUserId = clientUserId;

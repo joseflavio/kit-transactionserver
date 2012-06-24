@@ -8,4 +8,6 @@ ROADMAP
         - DBD Tabelas internas do servidor (Devem ser autos uficientes e capazes de ficar sempre num estado valido)
         - DBL Tabelas de Log, o servidor so devera fazer Insert, nunca updates nem selects
 
-    * Criar duas tabelas de MUST_RESET, uma interna do servidor no DBD, outra para o usuario poder resetar no DBA. 
+    * Criar duas tabelas de MUST_RESET, uma interna do servidor no DBD, outra para o usuario poder resetar no DBA.
+    
+    * Remover limite de 8 caracteres para nome do usuario 

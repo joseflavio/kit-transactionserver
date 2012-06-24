@@ -28,9 +28,10 @@ final public class SelectConhecimentosQuery implements SelectQueryInterface {
 
         String selectQueryStr =
                 "SELECT TOP " + MAX_RETRIEVE_CONHECIMENTOS + " " +
-                "KTRowId, KTClientId, KTFlagRecebido, KTFlagLido, KTFlagEditado, KTFieldNumeroDoConhecimento, KTFieldSerialDoConhecimento, " +
-                "KTFieldCodigoDaSubsidiaria, KTFieldRemetenteId, KTFieldNomeDoDestinatario, KTCelularEntregaStatus " +
-                "FROM " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS + " WHERE KTClientId=? AND KTFlagHistorico=0 AND KTControleProntoParaEnviar=1";
+                "KTRowId, KTClientUserId, KTFlagRecebido, KTFlagLido, KTFlagEditado, KTFieldNumeroDoConhecimento, KTFieldSerialDoConhecimento, " +
+                "KTFieldCodigoDaSubsidiaria, KTFieldRemetenteId, KTFieldNomeDoDestinatario, KTCelularEntregaStatus, KTLastUpdateDBTime, KTRowVersion" +
+                " FROM " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS +
+                " WHERE KTClientUserId=? AND KTFlagHistorico=0 AND KTControleProntoParaEnviar=1";
 
         if( selecionarSomenteNaoRecebidos == true ) {
             selectQueryStr += " AND KTFlagRecebido=0";
