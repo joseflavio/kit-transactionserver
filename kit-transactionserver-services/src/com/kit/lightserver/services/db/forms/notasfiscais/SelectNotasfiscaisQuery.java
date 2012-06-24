@@ -3,8 +3,9 @@ package com.kit.lightserver.services.db.forms.notasfiscais;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.dajo.framework.db.QueryIntegerParameter;
+import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.QueryStringParameter;
 import org.dajo.framework.db.SelectQueryInterface;
 import org.dajo.framework.db.util.QueryUtil;
 
@@ -16,18 +17,23 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 
     private final boolean selecionarSomenteNaoRecebidos;
 
-    public SelectNotasfiscaisQuery(final List<Integer> parentKnowledgeRowIdList, final boolean selecionarSomenteNaoRecebidos) {
+    public SelectNotasfiscaisQuery(final String ktClientUserId, final List<Integer> parentKnowledgeRowIdList, final boolean selecionarSomenteNaoRecebidos) {
 
-        this.selecionarSomenteNaoRecebidos = selecionarSomenteNaoRecebidos;
-
+        /*
+         * Sanity
+         */
         if (parentKnowledgeRowIdList.size() < 1) {
             throw new RuntimeException("The list can not be empty.");
         }
 
-        final String orClause = QueryUtil.buildLongOrClause("KTParentRowId", parentKnowledgeRowIdList.size());
+        this.selecionarSomenteNaoRecebidos = selecionarSomenteNaoRecebidos;
+
+        queryParameters.add( new QueryStringParameter(ktClientUserId) );
+
+        final String orClause = QueryUtil.buildLongOrClause("[KTParentConhecimentoRowId]", parentKnowledgeRowIdList.size());
 
         for (final Integer currentParentKnowledgeRowId : parentKnowledgeRowIdList) {
-            final QueryIntegerParameter ktClientIdParam = new QueryIntegerParameter(currentParentKnowledgeRowId);
+            final QueryIntParameter ktClientIdParam = new QueryIntParameter( currentParentKnowledgeRowId.intValue() );
             queryParameters.add(ktClientIdParam);
         }
 
@@ -38,8 +44,8 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        String selectQueryStr = "SELECT KTRowId, KTStatus, KTParentRowId, receiptNumber, receiptSerial, deliveryStatus, deliveryDate FROM "
-                + TableNotasfiscaisConstants.TABLE_NAME_NOTASFISCAIS + " WHERE KTFlagHistorico=0 AND ( " + parentKnowledgeRowIdOrClause + " )";
+        String selectQueryStr = "SELECT KTRowId, KTParentConhecimentoRowId, KTFieldReceiptNumber, KTFieldReceiptSerial, KTCelularEntregaStatus, KTCelularEntregaData FROM "
+                + TableNotasfiscaisConstants.TABLE_NAME_NOTASFISCAIS + " WHERE KTClientUserId=? AND KTFlagHistorico=0 AND ( " + parentKnowledgeRowIdOrClause + " )";
 
         if( selecionarSomenteNaoRecebidos == true ) {
             selectQueryStr += " AND KTFlagRecebido=0";

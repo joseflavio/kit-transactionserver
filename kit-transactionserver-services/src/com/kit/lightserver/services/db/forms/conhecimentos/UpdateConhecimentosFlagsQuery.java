@@ -3,7 +3,7 @@ package com.kit.lightserver.services.db.forms.conhecimentos;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.dajo.framework.db.QueryIntegerParameter;
+import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
 import org.dajo.framework.db.UpdateQueryInterface;
@@ -34,7 +34,7 @@ public final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface
 
         for (final ConhecimentoSTY conhecimentoSTY : conhecimentosList) {
             final int currentKtRowId = conhecimentoSTY.getKtRowId();
-            final QueryIntegerParameter ktRowIdParam = new QueryIntegerParameter(currentKtRowId);
+            final QueryIntParameter ktRowIdParam = new QueryIntParameter(currentKtRowId);
             queryParameters.add(ktRowIdParam);
         }
 
@@ -48,7 +48,7 @@ public final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface
         final String flagColumnDbUpdateTime = "KTFlag" + flagName + "UpdateDBTime";
 
         final String queryStr =
-                "UPDATE " + tableName + " SET "+ flagColumn + "=1, "+ flagColumnDbUpdateTime + "=GETDATE(), KTFormVersion=KTFormVersion+1 WHERE KTClientId=? AND " + rowIdsOrClause;
+                "UPDATE " + tableName + " SET "+ flagColumn + "=1, "+ flagColumnDbUpdateTime + "=GETDATE() WHERE KTClientUserId=? AND " + rowIdsOrClause;
 
         return queryStr;
     }

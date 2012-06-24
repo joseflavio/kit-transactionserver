@@ -21,20 +21,27 @@ public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryRe
         while (rs.next()) {
 
             final int notafiscalKtRowId = rs.getInt("KTRowId");
-            final int parentConhecimentoRowId = rs.getInt("KTParentRowId");
+            final int parentConhecimentoRowId = rs.getInt("KTParentConhecimentoRowId");
 
             final boolean isReceived = true;
             final boolean isRead = true;
             final boolean isEdited = false;
 
             // final String tempKtStatus = rs.getString("KTStatus");
-            final String numeroConhecimento = rs.getString("receiptNumber");
-            final String serialConhecimento = rs.getString("receiptSerial");
+            final String numeroConhecimento = rs.getString("KTFieldReceiptNumber");
+            final String serialConhecimento = rs.getString("KTFieldReceiptSerial");
 
-            final String statusDaEntregaStr = rs.getString("deliveryStatus");
-            final StatusEntregaEnumSTY statusDaEntrega = StatusEntregaSTYParser.parse(statusDaEntregaStr);// StatusEntregaEnumSTY.AN_AINDA_NAO_ENTREGUE;
+            final String statusDaEntregaStr = rs.getString("KTCelularEntregaStatus");
+            final StatusEntregaEnumSTY statusDaEntrega = StatusEntregaSTYParser.parse(statusDaEntregaStr);
 
-            final Date dataDaEntrega = rs.getDate("deliveryDate");
+            final java.sql.Timestamp  sqlDataDaEntrega = rs.getTimestamp("KTCelularEntregaData"); // DEVERIA REMOVER
+            final Date dataDaEntrega;
+            if( sqlDataDaEntrega != null ) {
+                dataDaEntrega = new Date(sqlDataDaEntrega.getTime());
+            } else {
+                dataDaEntrega = null;
+            }
+
 
             final String title = "NF " + numeroConhecimento + " " + serialConhecimento;
 

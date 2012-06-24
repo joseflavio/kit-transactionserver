@@ -68,7 +68,8 @@ public final class FormServices {
         // TODO: Usar um método melhor de salvar estatisticas dos serviços
         final Chronometer c1 = new Chronometer("NotasfiscaisServices.retrieveNotasfiscais");
         c1.start();
-        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult = formNotasfiscaisOperations.retrieveNotasfiscais(conhecimentosList, retrieveNaoRecebidos);
+        SimpleServiceResponse<List<NotafiscalSTY>> notasfiscaisResult =
+                formNotasfiscaisOperations.retrieveNotasfiscais(ktClientUserId, conhecimentosList, retrieveNaoRecebidos);
         c1.stop();
         FormServices.LOGGER.info("Time to execute the service. chronometer={}", c1);
 

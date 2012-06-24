@@ -21,7 +21,7 @@ public final class SelectConhecimentosQueryResultAdapter implements SelectQueryR
         while (rs.next()) {
 
             final int conhecimentoKtRowId = rs.getInt("KTRowId");
-            final String ktClientId = rs.getString("KTClientId");
+            final String ktClientId = rs.getString("KTClientUserId");
 
             final boolean isReceived = MsSqlBitConverter.convert(rs.getInt("KTFlagRecebido"));
             final boolean isRead = MsSqlBitConverter.convert(rs.getInt("KTFlagLido"));
