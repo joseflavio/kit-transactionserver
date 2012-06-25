@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 
@@ -15,6 +18,8 @@ public final class FormsParaEnviarCTX {
 
     private final Map<Integer, List<NotafiscalSTY>> notasfiscaisPorConhecimentoMap = new HashMap<Integer, List<NotafiscalSTY>>();
 
+    private final Logger LOGGER = LoggerFactory.getLogger(FormsParaEnviarCTX.class);
+
     public FormsParaEnviarCTX(final List<ConhecimentoSTY> conhecimentoList, final List<NotafiscalSTY> notasfiscaisList) {
 
         this.conhecimentoList = conhecimentoList;
@@ -24,7 +29,7 @@ public final class FormsParaEnviarCTX {
 
             final int parentConhecimentoRowId = notafiscalSTY.getParentKnowledgeRowId();
 
-            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get(parentConhecimentoRowId);
+            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get( Integer.valueOf(parentConhecimentoRowId) );
             if (notasFiscaisDoConhecimentoList != null) {
                 notasFiscaisDoConhecimentoList.add(notafiscalSTY);
             }
@@ -41,12 +46,9 @@ public final class FormsParaEnviarCTX {
          */
         for (ConhecimentoSTY conhecimentoSTY : conhecimentoList) {
             final int parentConhecimentoRowId = conhecimentoSTY.getKtRowId();
-            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get(parentConhecimentoRowId);
-            if (notasFiscaisDoConhecimentoList == null) {
-                throw new RuntimeException("Invalid state. notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList+", parentConhecimentoRowId="+parentConhecimentoRowId);
-            }
-            else if (notasFiscaisDoConhecimentoList.size() == 0) {
-                throw new RuntimeException("Invalid state. notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList+", parentConhecimentoRowId="+parentConhecimentoRowId);
+            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get( Integer.valueOf(parentConhecimentoRowId) );
+            if (notasFiscaisDoConhecimentoList == null || notasFiscaisDoConhecimentoList.size() == 0) {
+                LOGGER.error("FormConhecimento without notasFiscais. parentConhecimentoRowId="+parentConhecimentoRowId+", notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList);
             }
         }// for
 

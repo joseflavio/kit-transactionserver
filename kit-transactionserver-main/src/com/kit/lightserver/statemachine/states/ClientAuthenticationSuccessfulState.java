@@ -59,8 +59,10 @@ final class ClientAuthenticationSuccessfulState extends BaseState implements Sta
         for (final ConhecimentoSTY conhecimentoSTY : formsContext.getConhecimentoList()) {
             communicationCTX.addToFormsToSendOrderedList(conhecimentoSTY);
             final List<NotafiscalSTY> notasFiscaisDoConhecimento = formsContext.getNotasfiscaisPorConhecimento(conhecimentoSTY);
-            for (final NotafiscalSTY notafiscalSTY : notasFiscaisDoConhecimento) {
-                communicationCTX.addToFormsToSendOrderedList(notafiscalSTY);
+            if( notasFiscaisDoConhecimento != null ) {
+                for (final NotafiscalSTY notafiscalSTY : notasFiscaisDoConhecimento) {
+                    communicationCTX.addToFormsToSendOrderedList(notafiscalSTY);
+                }
             }
         }
 

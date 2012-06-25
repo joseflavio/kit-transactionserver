@@ -1,6 +1,9 @@
 package com.kit.lightserver.adapters.adapterin;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import kit.primitives.forms.FieldAndContentBean;
 import kit.primitives.forms.FormContent;
@@ -9,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fap.collections.TransformFilter;
+
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
+import com.kit.lightserver.domain.types.DataEntregaSTY;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
@@ -44,21 +49,41 @@ final class AdiFormContent {
             }
 		    else {
 
-		        Date lastEditDate = primitive.lastEditDate;
-
 		        AdiFieldResult<String> statusEntregaField = AdiFormContent.getFieldByName(primitive, "statusEntrega", new StringFieldConverter());
-		        AdiFieldResult<String> dataEntregaField = AdiFormContent.getFieldByName(primitive, "dataEntrega", new StringFieldConverter());
-
-		        LOGGER.error("lastEditDate={}", lastEditDate);
 		        LOGGER.error("statusEntrega={}", statusEntregaField); // value=SU
-		        LOGGER.error("dataEntrega={}", dataEntregaField); // value=14/3/2012 8:50:0
 
+		        Date lastEditDate = primitive.lastEditDate;
+		        LOGGER.error("lastEditDate={}", lastEditDate);
+
+		        AdiFieldResult<String> dataEntregaField = AdiFormContent.getFieldByName(primitive, "dataEntrega", new StringFieldConverter());
+		        LOGGER.error("dataEntrega={}", dataEntregaField);
+
+		        DataEntregaSTY dataEntrega = null;
+		        String dataEntregaStr = dataEntregaField.getValue();
+		        if( dataEntregaField.exists == true && dataEntregaStr != null ) {
+                    try {
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); // dataEntregaStr=25/5/2012 6:6:0, value=14/3/2012 8:50:00
+                        formatter.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+                        Date dataEntregaDate = formatter.parse(dataEntregaStr);
+                        dataEntrega = new DataEntregaSTY(DataEntregaSTY.Origin.FORM_FIELD, dataEntregaStr, dataEntregaDate);
+                    }
+                    catch (ParseException e) {
+                        LOGGER.error("Invalid format for date. dataEntregaStr={}", dataEntregaStr, e);
+                    }
+		        }
+
+		        if( dataEntrega == null ) {
+		            dataEntrega = new DataEntregaSTY(DataEntregaSTY.Origin.LAST_EDIT, dataEntregaStr, lastEditDate);
+		        }
+
+		        LOGGER.error("dataEntrega={}", dataEntrega);
+
+	            //result = new ReceivedPrimitiveConverterResult<KitEventSME>();
 	            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
-
 		    }
 		}
 		else {
-			LOGGER.error("Unknow type. primitive="+primitive);
+			LOGGER.error("Unknow type. primitive={}", primitive);
 			result = new ReceivedPrimitiveConverterResult<KitEventSME>();
 		}
 
