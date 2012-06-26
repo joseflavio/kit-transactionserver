@@ -15,6 +15,8 @@ import com.fap.collections.TransformFilter;
 
 import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
 import com.kit.lightserver.domain.types.DataEntregaSTY;
+import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
+import com.kit.lightserver.statemachine.events.FormContentConhecimentoEditedSME;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
@@ -43,27 +45,21 @@ final class AdiFormContent {
 		}
 		else if(primitive.formStatus == FormContent.FORM_EDITED) {
 
-		    ConhecimentoIdSTY conhecimentoId = AdiFormContent.convertFormId( primitive.formId );
+		    final ConhecimentoIdSTY conhecimentoId = AdiFormContent.convertFormId( primitive.formId );
 		    if( conhecimentoId == null ) {
                 result = new ReceivedPrimitiveConverterResult<KitEventSME>();
             }
 		    else {
 
-		        AdiFieldResult<String> statusEntregaField = AdiFormContent.getFieldByName(primitive, "statusEntrega", new StringFieldConverter());
-		        LOGGER.error("statusEntrega={}", statusEntregaField); // value=SU
-
 		        Date lastEditDate = primitive.lastEditDate;
-		        LOGGER.error("lastEditDate={}", lastEditDate);
-
 		        AdiFieldResult<String> dataEntregaField = AdiFormContent.getFieldByName(primitive, "dataEntrega", new StringFieldConverter());
-		        LOGGER.error("dataEntrega={}", dataEntregaField);
 
 		        DataEntregaSTY dataEntrega = null;
 		        String dataEntregaStr = dataEntregaField.getValue();
-		        if( dataEntregaField.exists == true && dataEntregaStr != null ) {
+		        if( dataEntregaField.isExists() == true && dataEntregaStr != null ) {
                     try {
                         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); // dataEntregaStr=25/5/2012 6:6:0, value=14/3/2012 8:50:00
-                        formatter.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+                        formatter.setTimeZone( TimeZone.getTimeZone("America/Sao_Paulo") );
                         Date dataEntregaDate = formatter.parse(dataEntregaStr);
                         dataEntrega = new DataEntregaSTY(DataEntregaSTY.Origin.FORM_FIELD, dataEntregaStr, dataEntregaDate);
                     }
@@ -72,14 +68,26 @@ final class AdiFormContent {
                     }
 		        }
 
-		        if( dataEntrega == null ) {
+		        if( dataEntrega == null && lastEditDate != null ) {
 		            dataEntrega = new DataEntregaSTY(DataEntregaSTY.Origin.LAST_EDIT, dataEntregaStr, lastEditDate);
 		        }
 
-		        LOGGER.error("dataEntrega={}", dataEntrega);
+		        AdiFieldResult<StatusEntregaEnumSTY> statusEntregaField =
+		                AdiFormContent.getFieldByName(primitive, "statusEntrega", new StatusEntregaEnumFieldConverter());
 
-	            //result = new ReceivedPrimitiveConverterResult<KitEventSME>();
-	            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
+		        if( dataEntrega == null ) {
+		            LOGGER.error("Invalid dataEntrega. dataEntrega=null, dataEntregaStr={}, lastEditDate={}", dataEntregaStr, lastEditDate);
+		            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
+		        }
+		        else if( statusEntregaField.isExists() == false || statusEntregaField.getValue() == null ) {
+		            LOGGER.error("Invalid statusEntregaField. statusEntregaField={}", statusEntregaField);
+		            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
+		        }
+		        else {
+		            FormContentConhecimentoEditedSME editedSME = new FormContentConhecimentoEditedSME(conhecimentoId, lastEditDate, statusEntregaField.getValue(), dataEntrega);
+		            result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, editedSME);
+		        }
+
 		    }
 		}
 		else {
@@ -125,34 +133,26 @@ final class AdiFormContent {
 	final static class StringFieldConverter implements TransformFilter<String, String> {
         @Override
         public String transform(final String input) {
+            if( input == null ) {
+                return null;
+            }
             if( input.equals("null")) {
                 return null;
             }
             return input;
         }
-	}
+	}// class
 
+	final static class StatusEntregaEnumFieldConverter implements TransformFilter<StatusEntregaEnumSTY, String> {
 
-	final static class AdiFieldResult<T> {
-	    private final boolean exists;
-	    private final T value;
-	    public AdiFieldResult() {
-	        this.exists = false;
-	        this.value = null;
-	    }
-	    public AdiFieldResult(final T value) {
-	        this.exists = true;
-	        this.value = value;
-	    }
-	    public boolean isExists() {
-	        return exists;
-	    }
-	    public T getValue() {
-	        return value;
-	    }
         @Override
-        public String toString() {
-            return "AdiFieldResult [exists=" + exists + ", value=" + value + "]";
+        public StatusEntregaEnumSTY transform(final String input) {
+            try {
+            return StatusEntregaEnumSTY.valueOf(input);
+            } catch(Exception e) {
+                LOGGER.error("Unexpected vule for StatusEntregaEnum. input={}", input);
+                return null;
+            }
         }
 	}// class
 

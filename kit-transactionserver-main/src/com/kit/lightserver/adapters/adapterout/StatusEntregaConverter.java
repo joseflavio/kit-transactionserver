@@ -6,7 +6,7 @@ final class StatusEntregaConverter {
 
     public static String toKeyString(final StatusEntregaEnumSTY value) {
 
-        if( StatusEntregaEnumSTY.AN_AINDA_NAO_ENTREGUE.equals(value) ) {
+        if( StatusEntregaEnumSTY.AN.equals(value) ) {
             return "AN";
         }
 
