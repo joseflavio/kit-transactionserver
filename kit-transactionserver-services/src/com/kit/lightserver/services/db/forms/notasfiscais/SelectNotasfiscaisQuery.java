@@ -9,6 +9,8 @@ import org.dajo.framework.db.QueryStringParameter;
 import org.dajo.framework.db.SelectQueryInterface;
 import org.dajo.framework.db.util.QueryUtil;
 
+import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
+
 final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 
     private final String parentKnowledgeRowIdOrClause;
@@ -17,12 +19,12 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 
     private final boolean selecionarSomenteNaoRecebidos;
 
-    public SelectNotasfiscaisQuery(final String ktClientUserId, final List<Integer> parentKnowledgeRowIdList, final boolean selecionarSomenteNaoRecebidos) {
+    public SelectNotasfiscaisQuery(final String ktClientUserId, final List<FormConhecimentoRowIdSTY> parentRowIds, final boolean selecionarSomenteNaoRecebidos) {
 
         /*
          * Sanity
          */
-        if (parentKnowledgeRowIdList.size() < 1) {
+        if (parentRowIds.size() < 1) {
             throw new RuntimeException("The list can not be empty.");
         }
 
@@ -30,10 +32,10 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 
         queryParameters.add( new QueryStringParameter(ktClientUserId) );
 
-        final String orClause = QueryUtil.buildLongOrClause("[KTParentConhecimentoRowId]", parentKnowledgeRowIdList.size());
+        final String orClause = QueryUtil.buildLongOrClause("[KTParentConhecimentoRowId]", parentRowIds.size());
 
-        for (final Integer currentParentKnowledgeRowId : parentKnowledgeRowIdList) {
-            final QueryIntParameter ktClientIdParam = new QueryIntParameter( currentParentKnowledgeRowId.intValue() );
+        for (final FormConhecimentoRowIdSTY currentParentKnowledgeRowId : parentRowIds) {
+            final QueryIntParameter ktClientIdParam = new QueryIntParameter( currentParentKnowledgeRowId.getKtFormRowId() );
             queryParameters.add(ktClientIdParam);
         }
 

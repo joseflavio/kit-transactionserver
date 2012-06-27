@@ -12,6 +12,7 @@ import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.services.be.forms.FormServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
+import com.kit.lightserver.statemachine.events.FormContentEditedSME;
 import com.kit.lightserver.statemachine.events.FormOperationUpdateFormsCompleteEventSME;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
@@ -42,17 +43,12 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
 
         LOGGER.info("event=" + event);
 
+        final String ktClientId = context.getClientInfo().getKtClientId();
+
         final ProcessingResult<KitEventSME> result;
-
         if (event instanceof FormContentConhecimentoReadSME) {
-
-            // FormContentConhecimentoReadSME [conhecimentoId=ConhecimentoIdSTY [ktRowId=1094966], firstReadDate=Tue Mar 06 22:29:56 CET 2012]
             FormContentConhecimentoReadSME formReadEvent = (FormContentConhecimentoReadSME)event;
-
-
-            final String ktClientId = context.getClientInfo().getKtClientId();
-            final boolean serviceSuccess = formServices.flagFormsAsRead(ktClientId, formReadEvent.getConhecimentoId(), formReadEvent.getFirstReadDate());
-
+            boolean serviceSuccess = formServices.saveFormFirstRead(ktClientId, formReadEvent.getConhecimentoId(), formReadEvent.getFirstReadDate());
             if (serviceSuccess == false) {
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
                 result = new ResultStateTransition<KitEventSME>(errorState);
@@ -60,9 +56,20 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
             else {
                 result = new ResultWaitEvent<KitEventSME>();
             }
-
         }
-        else if (event instanceof FormOperationUpdateFormsCompleteEventSME) {
+        else if( event instanceof FormContentEditedSME ) {
+            FormContentEditedSME formEditedEvent = (FormContentEditedSME)event;
+            boolean serviceSuccess = formServices.saveFormEntregaFields(
+                    ktClientId, formEditedEvent.getConhecimentoId(), formEditedEvent.getStatusEntregaEnumSTY(), formEditedEvent.getDataEntrega() );
+            if (serviceSuccess == false) {
+                final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
+                result = new ResultStateTransition<KitEventSME>(errorState);
+            }
+            else {
+                result = new ResultWaitEvent<KitEventSME>();
+            }
+        }
+        else if ( event instanceof FormOperationUpdateFormsCompleteEventSME ) {
             FormOperationUpdatedFormsClearFlagsRSTY formOperationClearFlags = new FormOperationUpdatedFormsClearFlagsRSTY();
             ChannelNotificationEndConversationRSTY channelNotificationEndConversationRSTY = new ChannelNotificationEndConversationRSTY();
             AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(formOperationClearFlags, channelNotificationEndConversationRSTY);

@@ -3,12 +3,12 @@ package com.kit.lightserver.services.db.forms.notasfiscais;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.dajo.framework.db.QueryIntegerParameter;
+import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.UpdateQueryInterface;
 import org.dajo.framework.db.util.QueryUtil;
 
-import com.kit.lightserver.domain.types.NotafiscalSTY;
+import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
 
 public final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
 
@@ -18,7 +18,7 @@ public final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public UpdateNotafiscaisFlagsQuery(final String flagName, final List<NotafiscalSTY> notasfiscaisList) {
+    public UpdateNotafiscaisFlagsQuery(final String flagName, final List<FormNotafiscalRowIdSTY> notasfiscaisList) {
 
         if( notasfiscaisList == null || notasfiscaisList.size() == 0 ) {
             throw new RuntimeException("conhecimentosList can not be empty.");
@@ -28,9 +28,9 @@ public final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
 
         this.rowIdsOrClause = QueryUtil.buildLongOrClause("KTRowId", notasfiscaisList.size());
 
-        for (final NotafiscalSTY notafiscalSTY : notasfiscaisList) {
-            final int currentKtRowId = notafiscalSTY.getKtRowId();
-            final QueryIntegerParameter ktRowIdParam = new QueryIntegerParameter(currentKtRowId);
+        for (final FormNotafiscalRowIdSTY notafiscalSTY : notasfiscaisList) {
+            final int currentKtRowId = notafiscalSTY.getKtFormRowId();
+            final QueryIntParameter ktRowIdParam = new QueryIntParameter(currentKtRowId);
             queryParameters.add(ktRowIdParam);
         }
 

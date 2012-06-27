@@ -13,11 +13,12 @@ import org.slf4j.LoggerFactory;
 
 import com.fap.collections.TransformFilter;
 
-import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
+import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.domain.types.DataEntregaSTY;
+import com.kit.lightserver.domain.types.FormFirstReadDateSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
-import com.kit.lightserver.statemachine.events.FormContentConhecimentoEditedSME;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
+import com.kit.lightserver.statemachine.events.FormContentEditedSME;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
 
@@ -32,20 +33,20 @@ final class AdiFormContent {
 	    final ReceivedPrimitiveConverterResult<KitEventSME> result;
 		if(primitive.formStatus == FormContent.FORM_READ) {
 
-		    ConhecimentoIdSTY conhecimentoId = AdiFormContent.convertFormId( primitive.formId ); // formId=conhecimentos%1094966
+		    FormConhecimentoRowIdSTY conhecimentoId = AdiFormContent.convertFormId( primitive.formId ); // formId=conhecimentos%1094966
 		    if( conhecimentoId == null ) {
 		        result = new ReceivedPrimitiveConverterResult<KitEventSME>();
 		    }
 		    else {
-		        Date firstReadDate = primitive.firstReadDate;
-	            FormContentConhecimentoReadSME event = new FormContentConhecimentoReadSME(conhecimentoId, firstReadDate);
+		        FormFirstReadDateSTY formFirstReadDate = new FormFirstReadDateSTY( primitive.firstReadDate );
+	            FormContentConhecimentoReadSME event = new FormContentConhecimentoReadSME(conhecimentoId, formFirstReadDate);
 	            result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, event);
 		    }
 
 		}
 		else if(primitive.formStatus == FormContent.FORM_EDITED) {
 
-		    final ConhecimentoIdSTY conhecimentoId = AdiFormContent.convertFormId( primitive.formId );
+		    final FormConhecimentoRowIdSTY conhecimentoId = AdiFormContent.convertFormId( primitive.formId );
 		    if( conhecimentoId == null ) {
                 result = new ReceivedPrimitiveConverterResult<KitEventSME>();
             }
@@ -61,7 +62,7 @@ final class AdiFormContent {
                         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); // dataEntregaStr=25/5/2012 6:6:0, value=14/3/2012 8:50:00
                         formatter.setTimeZone( TimeZone.getTimeZone("America/Sao_Paulo") );
                         Date dataEntregaDate = formatter.parse(dataEntregaStr);
-                        dataEntrega = new DataEntregaSTY(DataEntregaSTY.Origin.FORM_FIELD, dataEntregaStr, dataEntregaDate);
+                        dataEntrega = new DataEntregaSTY(DataEntregaSTY.Origin.FORM_FIELD, dataEntregaStr, dataEntregaDate, lastEditDate);
                     }
                     catch (ParseException e) {
                         LOGGER.error("Invalid format for date. dataEntregaStr={}", dataEntregaStr, e);
@@ -69,7 +70,7 @@ final class AdiFormContent {
 		        }
 
 		        if( dataEntrega == null && lastEditDate != null ) {
-		            dataEntrega = new DataEntregaSTY(DataEntregaSTY.Origin.LAST_EDIT, dataEntregaStr, lastEditDate);
+		            dataEntrega = new DataEntregaSTY(DataEntregaSTY.Origin.LAST_EDIT, dataEntregaStr, lastEditDate, lastEditDate);
 		        }
 
 		        AdiFieldResult<StatusEntregaEnumSTY> statusEntregaField =
@@ -84,7 +85,7 @@ final class AdiFormContent {
 		            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
 		        }
 		        else {
-		            FormContentConhecimentoEditedSME editedSME = new FormContentConhecimentoEditedSME(conhecimentoId, lastEditDate, statusEntregaField.getValue(), dataEntrega);
+		            FormContentEditedSME editedSME = new FormContentEditedSME(conhecimentoId, lastEditDate, statusEntregaField.getValue(), dataEntrega);
 		            result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, editedSME);
 		        }
 
@@ -99,14 +100,14 @@ final class AdiFormContent {
 
 	}
 
-	static private ConhecimentoIdSTY convertFormId(final String rawFormId) {
+	static private FormConhecimentoRowIdSTY convertFormId(final String rawFormId) {
 
 	    String[] formIdArray = rawFormId.split("%");
         int ktRowId = Integer.parseInt( formIdArray[1] );
         String formType = formIdArray[0];
 
 	    if( CONHECIMENTOS_TYPE.equals(formType) ) {
-            final ConhecimentoIdSTY conhecimentoId = new ConhecimentoIdSTY(ktRowId);
+            final FormConhecimentoRowIdSTY conhecimentoId = new FormConhecimentoRowIdSTY(ktRowId);
             return conhecimentoId;
         }
         else {

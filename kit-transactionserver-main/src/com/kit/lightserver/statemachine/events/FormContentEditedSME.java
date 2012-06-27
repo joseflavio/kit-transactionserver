@@ -2,37 +2,30 @@ package com.kit.lightserver.statemachine.events;
 
 import java.util.Date;
 
-import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
+import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.domain.types.DataEntregaSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
-public final class FormContentConhecimentoEditedSME implements KitEventSME {
+public final class FormContentEditedSME implements KitEventSME {
 
-    private final ConhecimentoIdSTY conhecimentoId;
-
-    private final Date lastEditDate;
+    private final FormConhecimentoRowIdSTY conhecimentoId;
 
     private final StatusEntregaEnumSTY statusEntregaEnumSTY;
 
     private final DataEntregaSTY dataEntrega;
 
-    public FormContentConhecimentoEditedSME(final ConhecimentoIdSTY conhecimentoId, final Date lastEditDate, final StatusEntregaEnumSTY statusEntregaEnumSTY,
+    public FormContentEditedSME(final FormConhecimentoRowIdSTY conhecimentoId, final Date lastEditDate, final StatusEntregaEnumSTY statusEntregaEnumSTY,
             final DataEntregaSTY dataEntrega) {
 
         this.conhecimentoId = conhecimentoId;
-        this.lastEditDate = new Date(lastEditDate.getTime());
         this.statusEntregaEnumSTY = statusEntregaEnumSTY;
         this.dataEntrega = dataEntrega;
 
     }
 
-    public ConhecimentoIdSTY getConhecimentoId() {
+    public FormConhecimentoRowIdSTY getConhecimentoId() {
         return conhecimentoId;
-    }
-
-    public Date getLastEditDate() {
-        return new Date( lastEditDate.getTime() );
     }
 
     public StatusEntregaEnumSTY getStatusEntregaEnumSTY() {
@@ -45,8 +38,8 @@ public final class FormContentConhecimentoEditedSME implements KitEventSME {
 
     @Override
     public String toString() {
-        return "FormContentConhecimentoEditedSME [conhecimentoId=" + conhecimentoId + ", lastEditDate=" + lastEditDate + ", statusEntregaEnumSTY="
-                + statusEntregaEnumSTY + ", dataEntrega=" + dataEntrega + "]";
+        return "FormContentEditedSME [conhecimentoId=" + conhecimentoId + ", statusEntregaEnumSTY=" + statusEntregaEnumSTY + ", dataEntrega=" + dataEntrega
+                + "]";
     }
 
 }// class

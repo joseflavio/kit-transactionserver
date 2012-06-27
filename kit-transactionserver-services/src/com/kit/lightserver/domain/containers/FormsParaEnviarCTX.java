@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 
 public final class FormsParaEnviarCTX {
@@ -45,10 +46,10 @@ public final class FormsParaEnviarCTX {
          * Sanity Test
          */
         for (ConhecimentoSTY conhecimentoSTY : conhecimentoList) {
-            final int parentConhecimentoRowId = conhecimentoSTY.getKtRowId();
-            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get( Integer.valueOf(parentConhecimentoRowId) );
+            final FormConhecimentoRowIdSTY parentRowId = conhecimentoSTY.getKtFormRowId();
+            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get( Integer.valueOf(parentRowId.getKtFormRowId()) );
             if (notasFiscaisDoConhecimentoList == null || notasFiscaisDoConhecimentoList.size() == 0) {
-                LOGGER.error("FormConhecimento without notasFiscais. parentConhecimentoRowId="+parentConhecimentoRowId+", notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList);
+                LOGGER.error("FormConhecimento without notasFiscais. parentConhecimentoRowId="+parentRowId+", notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList);
             }
         }// for
 
@@ -59,8 +60,8 @@ public final class FormsParaEnviarCTX {
     }
 
     public List<NotafiscalSTY> getNotasfiscaisPorConhecimento(final ConhecimentoSTY conhecimentoSTY) {
-        final int parentRowId = conhecimentoSTY.getKtRowId();
-        final List<NotafiscalSTY> notasfiscaisDoConhecimento = notasfiscaisPorConhecimentoMap.get(parentRowId);
+        final FormConhecimentoRowIdSTY parentRowId = conhecimentoSTY.getKtFormRowId();
+        final List<NotafiscalSTY> notasfiscaisDoConhecimento = notasfiscaisPorConhecimentoMap.get( Integer.valueOf(parentRowId.getKtFormRowId()) );
         return notasfiscaisDoConhecimento;
     }
 

@@ -1,27 +1,26 @@
 package com.kit.lightserver.statemachine.events;
 
-import java.util.Date;
-
-import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
+import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
+import com.kit.lightserver.domain.types.FormFirstReadDateSTY;
 import com.kit.lightserver.statemachine.states.KitEventSME;
 
 public final class FormContentConhecimentoReadSME implements KitEventSME {
 
-    private final ConhecimentoIdSTY conhecimentoId;
+    private final FormConhecimentoRowIdSTY conhecimentoId;
 
-    private final Date firstReadDate;
+    private final FormFirstReadDateSTY firstReadDate;
 
-    public FormContentConhecimentoReadSME(final ConhecimentoIdSTY conhecimentoId, final Date firstReadDate) {
+    public FormContentConhecimentoReadSME(final FormConhecimentoRowIdSTY conhecimentoId, final FormFirstReadDateSTY firstReadDate) {
         this.conhecimentoId = conhecimentoId;
-        this.firstReadDate = new Date(firstReadDate.getTime());
+        this.firstReadDate = firstReadDate;
     }
 
-    public ConhecimentoIdSTY getConhecimentoId() {
+    public FormConhecimentoRowIdSTY getConhecimentoId() {
         return conhecimentoId;
     }
 
-    public Date getFirstReadDate() {
-        return new Date(firstReadDate.getTime());
+    public FormFirstReadDateSTY getFirstReadDate() {
+        return firstReadDate;
     }
 
     @Override

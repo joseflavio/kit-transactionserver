@@ -8,6 +8,7 @@ import org.dajo.framework.db.SelectQueryResult;
 
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQuery;
 import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQueryResultAdapter;
@@ -26,9 +27,9 @@ final class FormNotasfiscaisOperations {
         /*
          * Conhecimentos
          */
-        final List<Integer> parentKnowledgeRowIdList = new LinkedList<Integer>();
+        final List<FormConhecimentoRowIdSTY> parentKnowledgeRowIdList = new LinkedList<FormConhecimentoRowIdSTY>();
         for (ConhecimentoSTY conhecimentoSTY : conhecimentoList) {
-            parentKnowledgeRowIdList.add(conhecimentoSTY.getKtRowId());
+            parentKnowledgeRowIdList.add(conhecimentoSTY.getKtFormRowId());
         }
 
         /*

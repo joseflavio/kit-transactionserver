@@ -48,7 +48,7 @@ public final class FormContentFullConverter {
 
         final ConhecimentoSTY form = formContentFullConhecimentoRSTY.getConhecimentoSTY();
 
-        final int ktRowId = form.getKtRowId();
+        final int ktRowId = form.getKtFormRowId().getKtFormRowId();
         final String anchorCategoryId = ktRowId + "P";
 
         final TemplateEnumSTY template = form.getTemplate();
@@ -99,8 +99,8 @@ public final class FormContentFullConverter {
         final FormContentFull response = new FormContentFull();
 
         final String templateStr = TemplateEnumSTYConverter.convert(template);
-        final int ktRowId = form.getKtRowId();
-        response.formId = templateStr + "%" + ktRowId;
+        final int ktFormRowId = form.getKtRowId().getKtFormRowId();
+        response.formId = templateStr + "%" + ktFormRowId;
         response.formStatus = FormContentFullConverter.calculateFormStatus(form);
         response.templateId = templateStr;
 

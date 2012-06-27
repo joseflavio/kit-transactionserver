@@ -5,7 +5,7 @@ import java.util.Date;
 public final class NotafiscalSTY extends FormSTY {
 
     private final TemplateEnumSTY template;
-    private final int ktRowId;
+    private final FormNotafiscalRowIdSTY ktRowId;
 
     private final boolean isReceived;
     private final boolean isRead;
@@ -21,7 +21,7 @@ public final class NotafiscalSTY extends FormSTY {
             final String title, final Date dataEntrega, final StatusEntregaEnumSTY statusEntrega) {
 
         this.template = TemplateEnumSTY.RECEIPT_NOTASFISCAIS;
-        this.ktRowId = ktRowId;
+        this.ktRowId = new FormNotafiscalRowIdSTY(ktRowId);
 
         this.isReceived = isReceived;
         this.isRead = isRead;
@@ -39,7 +39,7 @@ public final class NotafiscalSTY extends FormSTY {
         return template;
     }
 
-    public int getKtRowId() {
+    public FormNotafiscalRowIdSTY getKtRowId() {
         return ktRowId;
     }
 

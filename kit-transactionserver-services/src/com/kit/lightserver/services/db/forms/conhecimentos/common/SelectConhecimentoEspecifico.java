@@ -8,19 +8,19 @@ import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
 import org.dajo.framework.db.SelectQueryInterface;
 
-import com.kit.lightserver.domain.types.ConhecimentoIdSTY;
+import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 
 final class SelectConhecimentoEspecifico implements SelectQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public SelectConhecimentoEspecifico(final String ktClientId, final ConhecimentoIdSTY conhecimentoId) {
+    public SelectConhecimentoEspecifico(final String ktClientId, final FormConhecimentoRowIdSTY conhecimentoId) {
 
         final QueryStringParameter ktClientIdParam = new QueryStringParameter(ktClientId);
         queryParameters.add(ktClientIdParam);
 
-        final int currentKtRowId = conhecimentoId.getKtRowId();
+        final int currentKtRowId = conhecimentoId.getKtFormRowId();
         final QueryIntParameter ktRowIdParam = new QueryIntParameter(currentKtRowId);
         queryParameters.add(ktRowIdParam);
 
