@@ -15,7 +15,7 @@ import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.be.forms.FormServices;
+import com.kit.lightserver.services.db.forms.flags.FormFlagsServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormOperationClientSuccessEventSME;
 import com.kit.lightserver.statemachine.types.CommunicationCTX;
@@ -103,12 +103,12 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
             /*
              * Flags the the forms were successful received
              */
-            final FormServices formServices = FormServices.getInstance(context.getConfigAccessor());
+            final FormFlagsServices formFlagsServices = FormFlagsServices.getInstance(context.getConfigAccessor());
 
             final String ktClientId = context.getClientInfo().getKtClientId();
 
             final boolean serviceSuccess =
-                    formServices.flagFormsAsReceived(ktClientId, communicationCTX.getFormsSentWaitingForConfirmationList());
+                    formFlagsServices.flagFormsAsReceived(ktClientId, communicationCTX.getFormsSentWaitingForConfirmationList());
 
             if (serviceSuccess == false) {
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);

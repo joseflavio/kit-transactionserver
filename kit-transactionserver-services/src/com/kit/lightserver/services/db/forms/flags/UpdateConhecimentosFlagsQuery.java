@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.conhecimentos;
+package com.kit.lightserver.services.db.forms.flags;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,9 +10,9 @@ import org.dajo.framework.db.UpdateQueryInterface;
 import org.dajo.framework.db.util.QueryUtil;
 
 import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
-import com.kit.lightserver.services.be.forms.FormFlagEnum;
+import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 
-public final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {
+final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {
 
     private final String flagColumn;
 

@@ -1,8 +1,10 @@
-package com.kit.lightserver.services.be.forms;
+package com.kit.lightserver.services.db.forms.flags;
 
-public enum FormFlagEnum {
+enum FormFlagEnum {
 
-    RECEBIDO("Recebido");
+    RECEBIDO("Recebido"),
+    LIDO("Lido"),
+    EDITADO("Editado");
 
     private String databaseColumnName;
 
@@ -14,4 +16,4 @@ public enum FormFlagEnum {
         return databaseColumnName;
     }
 
-}
+}// enum

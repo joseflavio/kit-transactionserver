@@ -1,6 +1,5 @@
 package com.kit.lightserver.services.be.forms;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,9 +13,6 @@ import org.dajo.framework.db.InsertQueryResult;
 import org.dajo.framework.db.QueryExecutor;
 import org.dajo.framework.db.SelectQueryResult;
 import org.dajo.framework.db.SimpleQueryExecutor;
-import org.dajo.framework.db.UpdateQueryResult;
-
-import com.fap.collections.SmartCollections;
 
 import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
@@ -24,43 +20,42 @@ import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.DataEntregaSTY;
 import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.domain.types.FormFirstReadDateSTY;
-import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
-import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.FormTypeEnumSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.services.be.common.DatabaseAliases;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQueryResultAdapter;
-import com.kit.lightserver.services.db.forms.conhecimentos.UpdateConhecimentosFlagsQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.lido.InsertFormFieldDateQuery;
 import com.kit.lightserver.services.db.forms.conhecimentos.lido.InsertFormFieldString32Query;
-import com.kit.lightserver.services.db.forms.notasfiscais.UpdateNotafiscaisFlagsQuery;
+import com.kit.lightserver.services.db.forms.flags.FormFlagsServices;
 
 public final class FormServices {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(FormServices.class);
 
     static public FormServices getInstance(final ConfigAccessor configAccessor) {
-
-
         return new FormServices(configAccessor);
     }
 
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final QueryExecutor dbdQueryExecutor;
-    private final QueryExecutor dbfQueryExecutor;
+    private final QueryExecutor dblQueryExecutor;
 
     private final FormNotasfiscaisOperations formNotasfiscaisOperations;
 
+    private final FormFlagsServices formFlagsServices;
+
     private FormServices(final ConfigAccessor configAccessor) {
+
+        this.formFlagsServices = FormFlagsServices.getInstance(configAccessor);
 
         DatabaseConfig dbdConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBD);
         this.dbdQueryExecutor = new SimpleQueryExecutor(dbdConfig);
 
-        DatabaseConfig dbfConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBF);
-        this.dbfQueryExecutor = new SimpleQueryExecutor(dbfConfig);
+        DatabaseConfig dblConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBL);
+        this.dblQueryExecutor = new SimpleQueryExecutor(dblConfig);
 
         this.formNotasfiscaisOperations = new FormNotasfiscaisOperations(dbdQueryExecutor);
 
@@ -103,66 +98,17 @@ public final class FormServices {
 
     }
 
-    public boolean flagFormsAsReceived(final String ktClientId, final List<FormSTY> forms) {
-        return flagForms(ktClientId, FormFlagEnum.RECEBIDO, forms);
-    }
+    public boolean saveFormFirstRead(final String ktClientUserId, final FormConhecimentoRowIdSTY formRowId, final FormFirstReadDateSTY formFirstReadDateSTY) {
 
-    private boolean flagFormsAsLido(final String ktClientId, final FormConhecimentoRowIdSTY formRowId) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    private boolean flagForms(final String ktClientId, final FormFlagEnum formFlag, final List<FormSTY> forms) {
-
-        final List<FormConhecimentoRowIdSTY> conhecimentos = new LinkedList<FormConhecimentoRowIdSTY>();
-        SmartCollections.specialFilter(conhecimentos, forms, new ConhecimentoRowIdFilter());
-
-        final List<FormNotafiscalRowIdSTY> notasfiscais = new LinkedList<FormNotafiscalRowIdSTY>();
-        SmartCollections.specialFilter(notasfiscais, forms, new NotafiscalFilter());
-
-
-        LOGGER.info("Updating forms flags. forms=" + forms.size() + ", conhecimentos=" + conhecimentos.size() + ", notasfiscais=" + notasfiscais.size());
-
-        /*
-         * Conhecimentos
-         */
-        if (conhecimentos.size() == 0) {
-            LOGGER.info("No 'conhecimentos' to update.");
+        boolean flagSuccess = formFlagsServices.flagFormsAsLido(ktClientUserId, formRowId);
+        if( flagSuccess == false ) {
+            return false;
         }
-        else {
-            final UpdateConhecimentosFlagsQuery updateConhecimentoRecebidoFlagQuery = new UpdateConhecimentosFlagsQuery(formFlag, ktClientId, conhecimentos);
-            final UpdateQueryResult conhecimentosFlagResult = dbdQueryExecutor.executeUpdateQuery(updateConhecimentoRecebidoFlagQuery);
-            if (conhecimentosFlagResult.isUpdateQuerySuccessful() == false) {
-                LOGGER.error("Error updating the flag");
-            }
-        }
-
-        /*
-         * Notasfiscais
-         */
-        if (notasfiscais.size() == 0) {
-            LOGGER.info("No 'notasfiscais' to update.");
-        }
-        else {
-            final UpdateNotafiscaisFlagsQuery updateNotasfiscaisRecebidasFlagQuery = new UpdateNotafiscaisFlagsQuery("Recebido", notasfiscais);
-            final UpdateQueryResult notasfiscaisFlagResult = dbdQueryExecutor.executeUpdateQuery(updateNotasfiscaisRecebidasFlagQuery);
-            if (notasfiscaisFlagResult.isUpdateQuerySuccessful() == false) {
-                LOGGER.error("Error updating the flag");
-            }
-        }
-
-        return true;
-
-    }
-
-    public boolean saveFormFirstRead(final String ktClientId, final FormConhecimentoRowIdSTY formRowId, final FormFirstReadDateSTY formFirstReadDateSTY) {
-
-        boolean flagSuccess = flagFormsAsLido(ktClientId, formRowId);
 
         InsertFormFieldDateQuery insertQuery = new InsertFormFieldDateQuery(FormTypeEnumSTY.CO, formRowId, "PRIMEIRA_LEITURA",
                 formFirstReadDateSTY.getDate(), formFirstReadDateSTY.toString());
 
-        InsertQueryResult queryResult = dbfQueryExecutor.executeInsertQuery(insertQuery);
+        InsertQueryResult queryResult = dblQueryExecutor.executeInsertQuery(insertQuery);
 
         if (queryResult.isInsertQuerySuccessfull() == false) {
             LOGGER.error("Error updating. query={}", new InsertQueryPrinter(insertQuery));
@@ -177,13 +123,18 @@ public final class FormServices {
 
     }
 
-    public boolean saveFormEntregaFields(final String ktClientId, final FormConhecimentoRowIdSTY formRowId, final StatusEntregaEnumSTY statusEntregaEnumSTY,
+    public boolean saveFormEdited(final String ktClientUserId, final FormConhecimentoRowIdSTY formRowId, final StatusEntregaEnumSTY statusEntregaEnumSTY,
             final DataEntregaSTY dataEntrega) {
+
+        boolean flagSuccess = formFlagsServices.flagFormsAsEditado(ktClientUserId, formRowId);
+        if( flagSuccess == false ) {
+            return false;
+        }
 
         InsertFormFieldDateQuery insertDataEntregaQuery = new InsertFormFieldDateQuery(FormTypeEnumSTY.CO, formRowId, "DATA_DA_ENTREGA",
                 dataEntrega.getDataEntregaDate(), dataEntrega.toString());
 
-        InsertQueryResult dataEntregaResult = dbfQueryExecutor.executeInsertQuery(insertDataEntregaQuery);
+        InsertQueryResult dataEntregaResult = dblQueryExecutor.executeInsertQuery(insertDataEntregaQuery);
 
         if (dataEntregaResult.isInsertQuerySuccessfull() == false) {
             LOGGER.error("Error updating. query={}", new InsertQueryPrinter(insertDataEntregaQuery));
@@ -197,7 +148,7 @@ public final class FormServices {
         InsertFormFieldString32Query insertStatusEntregaQuery = new InsertFormFieldString32Query(FormTypeEnumSTY.CO, formRowId, "STATUS_DA_ENTREGA",
                 statusEntregaEnumSTY.getDatabaseCode(), statusEntregaEnumSTY.toString());
 
-        InsertQueryResult statusEntregaResult = dbfQueryExecutor.executeInsertQuery(insertStatusEntregaQuery);
+        InsertQueryResult statusEntregaResult = dblQueryExecutor.executeInsertQuery(insertStatusEntregaQuery);
 
         if (statusEntregaResult.isInsertQuerySuccessfull() == false) {
             LOGGER.error("Error updating. query={}", new InsertQueryPrinter(insertDataEntregaQuery));

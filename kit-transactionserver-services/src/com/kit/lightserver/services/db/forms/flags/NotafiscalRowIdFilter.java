@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.be.forms;
+package com.kit.lightserver.services.db.forms.flags;
 
 import com.fap.collections.SmartCollectionTransformFilter;
 
@@ -6,7 +6,7 @@ import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 
-final class NotafiscalFilter implements SmartCollectionTransformFilter<FormNotafiscalRowIdSTY, FormSTY> {
+final class NotafiscalRowIdFilter implements SmartCollectionTransformFilter<FormNotafiscalRowIdSTY, FormSTY> {
 
     @Override
     public FormNotafiscalRowIdSTY transform(final FormSTY formSTY) {

@@ -59,7 +59,7 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
         }
         else if( event instanceof FormContentEditedSME ) {
             FormContentEditedSME formEditedEvent = (FormContentEditedSME)event;
-            boolean serviceSuccess = formServices.saveFormEntregaFields(
+            boolean serviceSuccess = formServices.saveFormEdited(
                     ktClientId, formEditedEvent.getConhecimentoId(), formEditedEvent.getStatusEntregaEnumSTY(), formEditedEvent.getDataEntrega() );
             if (serviceSuccess == false) {
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);

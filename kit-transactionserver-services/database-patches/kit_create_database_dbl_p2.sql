@@ -1,20 +1,20 @@
 USE MASTER
 GO
 
-CREATE DATABASE [{dbname}_DBF]
-ALTER DATABASE [{dbname}_DBF] SET READ_COMMITTED_SNAPSHOT ON
+CREATE DATABASE [{dbname}_DBL]
+ALTER DATABASE [{dbname}_DBL] SET READ_COMMITTED_SNAPSHOT ON
 GO
 
 
-USE [{dbname}_DBF]
+USE [{dbname}_DBL]
 CREATE TABLE [dbo].[FormFieldDate](
     [KTFormFieldDateRowId] [UNIQUEIDENTIFIER] NOT NULL DEFAULT NEWID() PRIMARY KEY NONCLUSTERED,
     [KTInsertDBTime] [datetime2] NOT NULL DEFAULT GETDATE(),
     [KTFormType] [nchar](2) NOT NULL,
     [KTFormRowId] [bigint] NOT NULL,
-    [KTFormFieldName] [nchar](16) NOT NULL,
+    [KTFormFieldName] [nchar](32) NOT NULL,
     [KTFormFieldValue] [datetime2] NOT NULL,
-    [KTFormFieldDebug] [nvarchar](1024) NOT NULL    
+    [KTFormFieldDebug] [nvarchar](2048) NOT NULL    
 )
 CREATE CLUSTERED INDEX CIDX_FORMFIELDDATE_INSERTDBTIME ON [FormFieldDate](KTInsertDBTime);
 CREATE NONCLUSTERED INDEX NIDX_FORMFIELDDATE_UNIQUEFORM ON [FormFieldDate](KTFormRowId, KTFormType);
@@ -26,9 +26,9 @@ CREATE TABLE [dbo].[FormFieldString32](
     [KTInsertDBTime] [datetime2] NOT NULL DEFAULT GETDATE(),
     [KTFormType] [nchar](2) NOT NULL,
     [KTFormRowId] [bigint] NOT NULL,
-    [KTFormFieldName] [nchar](16) NOT NULL,
-    [KTFormFieldValue] [nchar](32) NOT NULL,
-    [KTFormFieldDebug] [nvarchar](1024) NOT NULL    
+    [KTFormFieldName] [nchar](32) NOT NULL,
+    [KTFormFieldValue] [nchar](64) NOT NULL,
+    [KTFormFieldDebug] [nvarchar](2048) NOT NULL    
 )
 CREATE CLUSTERED INDEX CIDX_FORMFIELDSTRING32_INSERTDBTIME ON [FormFieldString32](KTInsertDBTime);
 CREATE NONCLUSTERED INDEX NIDX_FORMFIELDSTRING32_UNIQUEFORM ON [FormFieldString32](KTFormRowId, KTFormType);
@@ -38,7 +38,7 @@ CREATE NONCLUSTERED INDEX NIDX_FORMFIELDSTRING32_UNIQUEFORM ON [FormFieldString3
 
 
 
-USE [{dbname}_DBF]
+USE [{dbname}_DBL]
 CREATE TABLE [dbo].[FormConhecimentos](
 
     [KTRowId] [bigint] NOT NULL PRIMARY KEY NONCLUSTERED IDENTITY,
