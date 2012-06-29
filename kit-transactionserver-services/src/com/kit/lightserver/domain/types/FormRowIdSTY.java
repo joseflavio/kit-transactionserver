@@ -1,10 +1,10 @@
 package com.kit.lightserver.domain.types;
 
-public abstract class AbstractFormRowIdSTY {
+public abstract class FormRowIdSTY {
 
     protected final int ktFormRowId;
 
-    public AbstractFormRowIdSTY(final int ktRowId) {
+    public FormRowIdSTY(final int ktRowId) {
         this.ktFormRowId = ktRowId;
     }
 

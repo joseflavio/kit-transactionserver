@@ -1,6 +1,6 @@
 package com.kit.lightserver.domain.types;
 
-public final class FormNotafiscalRowIdSTY extends AbstractFormRowIdSTY {
+public final class FormNotafiscalRowIdSTY extends FormRowIdSTY {
 
     public FormNotafiscalRowIdSTY(final int ktFormRowId) {
         super(ktFormRowId);
@@ -8,7 +8,7 @@ public final class FormNotafiscalRowIdSTY extends AbstractFormRowIdSTY {
 
     @Override
     public String toString() {
-        return "ConhecimentoIdSTY [ktRowId=" + ktFormRowId + "]";
+        return "FormNotafiscalRowIdSTY []";
     }
 
 }// class

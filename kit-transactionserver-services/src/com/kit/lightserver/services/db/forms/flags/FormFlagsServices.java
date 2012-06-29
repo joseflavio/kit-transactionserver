@@ -65,6 +65,12 @@ public final class FormFlagsServices {
         return flagFormsConhecimentos(ktClientUserId, FormFlagEnum.EDITADO, list);
     }
 
+    public boolean flagEditadoNotafiscal(final String ktClientUserId, final FormNotafiscalRowIdSTY formRowId) {
+        List<FormNotafiscalRowIdSTY> list = new LinkedList<FormNotafiscalRowIdSTY>();
+        list.add(formRowId);
+        return flagFormsNotasfiscais(ktClientUserId, FormFlagEnum.EDITADO, list);
+    }
+
     private boolean flagFormsConhecimentos(final String ktClientUserId, final FormFlagEnum formFlag, final List<FormConhecimentoRowIdSTY> conhecimentos) {
         LOGGER.info("Updating forms flags. conhecimentos="+conhecimentos.size());
         if (conhecimentos.size() == 0) {

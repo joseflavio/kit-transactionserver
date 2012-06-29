@@ -13,9 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import com.fap.collections.TransformFilter;
 
-import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.domain.types.DataEntregaSTY;
+import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.domain.types.FormFirstReadDateSTY;
+import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
+import com.kit.lightserver.domain.types.FormRowIdSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
 import com.kit.lightserver.statemachine.events.FormContentEditedSME;
@@ -25,6 +27,7 @@ import com.kit.lightserver.statemachine.states.KitEventSME;
 final class AdiFormContent {
 
     static private final String CONHECIMENTOS_TYPE = "conhecimentos";
+    static private final String NOTAFISCAIS_TYPE = "notasFiscais";
 
 	static private final Logger LOGGER = LoggerFactory.getLogger(AdiFormContent.class);
 
@@ -33,21 +36,25 @@ final class AdiFormContent {
 	    final ReceivedPrimitiveConverterResult<KitEventSME> result;
 		if(primitive.formStatus == FormContent.FORM_READ) {
 
-		    FormConhecimentoRowIdSTY conhecimentoId = AdiFormContent.convertFormId( primitive.formId ); // formId=conhecimentos%1094966
-		    if( conhecimentoId == null ) {
-		        result = new ReceivedPrimitiveConverterResult<KitEventSME>();
-		    }
-		    else {
+		    FormRowIdSTY formId = AdiFormContent.convertFormId( primitive.formId ); // formId=conhecimentos%1094966
+	        if( formId == null ) {
+	                result = new ReceivedPrimitiveConverterResult<KitEventSME>();
+	        }
+	        else if( formId instanceof FormConhecimentoRowIdSTY ) {
+	            FormConhecimentoRowIdSTY conhecimentoId = (FormConhecimentoRowIdSTY ) formId;
 		        FormFirstReadDateSTY formFirstReadDate = new FormFirstReadDateSTY( primitive.firstReadDate );
 	            FormContentConhecimentoReadSME event = new FormContentConhecimentoReadSME(conhecimentoId, formFirstReadDate);
 	            result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, event);
 		    }
-
+	        else {
+	            LOGGER.error("Unexpected. formId={}", formId);
+	            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
+	        }
 		}
 		else if(primitive.formStatus == FormContent.FORM_EDITED) {
 
-		    final FormConhecimentoRowIdSTY conhecimentoId = AdiFormContent.convertFormId( primitive.formId );
-		    if( conhecimentoId == null ) {
+		    final FormRowIdSTY formId = AdiFormContent.convertFormId( primitive.formId );
+		    if( formId == null ) {
                 result = new ReceivedPrimitiveConverterResult<KitEventSME>();
             }
 		    else {
@@ -85,14 +92,28 @@ final class AdiFormContent {
 		            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
 		        }
 		        else {
-		            FormContentEditedSME editedSME = new FormContentEditedSME(conhecimentoId, lastEditDate, statusEntregaField.getValue(), dataEntrega);
-		            result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, editedSME);
+
+		            if ( formId instanceof FormConhecimentoRowIdSTY )  {
+		                final FormConhecimentoRowIdSTY conhecimentoId = (FormConhecimentoRowIdSTY) formId;
+		                FormContentEditedSME editedSME = new FormContentEditedSME(conhecimentoId, lastEditDate, statusEntregaField.getValue(), dataEntrega);
+		                result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, editedSME);
+		            }
+		            else if ( formId instanceof FormNotafiscalRowIdSTY ) {
+		                final FormNotafiscalRowIdSTY nfId = (FormNotafiscalRowIdSTY) formId;
+                        FormContentEditedSME editedSME = new FormContentEditedSME(nfId, lastEditDate, statusEntregaField.getValue(), dataEntrega);
+                        result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, editedSME);
+		            }
+		            else {
+		                LOGGER.error("Unexpected. formId={}", formId);
+		                result = new ReceivedPrimitiveConverterResult<KitEventSME>();
+		            }
 		        }
 
-		    }
+            }
+
 		}
 		else {
-			LOGGER.error("Unknow type. primitive={}", primitive);
+			LOGGER.error("Unexpected. primitive={}", primitive);
 			result = new ReceivedPrimitiveConverterResult<KitEventSME>();
 		}
 
@@ -100,7 +121,7 @@ final class AdiFormContent {
 
 	}
 
-	static private FormConhecimentoRowIdSTY convertFormId(final String rawFormId) {
+	static private FormRowIdSTY convertFormId(final String rawFormId) {
 
 	    String[] formIdArray = rawFormId.split("%");
         int ktRowId = Integer.parseInt( formIdArray[1] );
@@ -110,6 +131,10 @@ final class AdiFormContent {
             final FormConhecimentoRowIdSTY conhecimentoId = new FormConhecimentoRowIdSTY(ktRowId);
             return conhecimentoId;
         }
+	    else if( NOTAFISCAIS_TYPE.equals(formType) ) {
+	        final FormNotafiscalRowIdSTY nfId = new FormNotafiscalRowIdSTY(ktRowId);
+	        return nfId;
+	    }
         else {
             LOGGER.error("Invalid form type. formType={}", formType);
             LOGGER.error("splitedFormIdArray[0]="+formIdArray[0]); //splitedFormIdArray[0]=conhecimentos

@@ -19,7 +19,7 @@ public final class ClientInfoCTX {
 
     }// constructor
 
-    public String getKtClientId() {
+    public String getKtClientUserId() {
         return ktClientId;
     }
 

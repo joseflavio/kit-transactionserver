@@ -32,7 +32,7 @@ final class ClientAuthenticationSuccessfulState extends BaseState implements Sta
         /*
          * GETTING ALL THE FORMS HERE, SHOULD IT BE HERE???
          */
-        final String ktClientUserId = context.getClientInfo().getKtClientId();
+        final String ktClientUserId = context.getClientInfo().getKtClientUserId();
         final SimpleServiceResponse<FormsParaEnviarCTX> serviceResponse;
 
         FormServices formServices = FormServices.getInstance(context.getConfigAccessor());

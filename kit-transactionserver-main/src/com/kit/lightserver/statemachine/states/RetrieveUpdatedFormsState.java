@@ -43,12 +43,12 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
 
         LOGGER.info("event=" + event);
 
-        final String ktClientId = context.getClientInfo().getKtClientId();
+        final String clientUserId = context.getClientInfo().getKtClientUserId();
 
         final ProcessingResult<KitEventSME> result;
         if (event instanceof FormContentConhecimentoReadSME) {
             FormContentConhecimentoReadSME formReadEvent = (FormContentConhecimentoReadSME)event;
-            boolean serviceSuccess = formServices.saveFormFirstRead(ktClientId, formReadEvent.getConhecimentoId(), formReadEvent.getFirstReadDate());
+            boolean serviceSuccess = formServices.saveFormFirstRead(clientUserId, formReadEvent.getConhecimentoId(), formReadEvent.getFirstReadDate());
             if (serviceSuccess == false) {
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
                 result = new ResultStateTransition<KitEventSME>(errorState);
@@ -58,9 +58,9 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
             }
         }
         else if( event instanceof FormContentEditedSME ) {
-            FormContentEditedSME formEditedEvent = (FormContentEditedSME)event;
+            FormContentEditedSME formEditedEvent = (FormContentEditedSME) event;
             boolean serviceSuccess = formServices.saveFormEdited(
-                    ktClientId, formEditedEvent.getConhecimentoId(), formEditedEvent.getStatusEntregaEnumSTY(), formEditedEvent.getDataEntrega() );
+                    clientUserId, formEditedEvent.getConhecimentoId(), formEditedEvent.getStatusEntregaEnumSTY(), formEditedEvent.getDataEntrega() );
             if (serviceSuccess == false) {
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
                 result = new ResultStateTransition<KitEventSME>(errorState);

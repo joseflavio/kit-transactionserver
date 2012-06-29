@@ -8,7 +8,7 @@ import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
 
-import com.kit.lightserver.domain.types.AbstractFormRowIdSTY;
+import com.kit.lightserver.domain.types.FormRowIdSTY;
 import com.kit.lightserver.domain.types.FormTypeEnumSTY;
 import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 
@@ -16,7 +16,7 @@ public final class InsertFormFieldString32Query implements InsertQueryInterface 
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public InsertFormFieldString32Query(final FormTypeEnumSTY formType, final AbstractFormRowIdSTY formRowId, final String formFieldName,
+    public InsertFormFieldString32Query(final FormTypeEnumSTY formType, final FormRowIdSTY formRowId, final String formFieldName,
             final String formFieldValue, final String formFieldDebug) {
 
         final QueryStringParameter formTypeParam = new QueryStringParameter(formType.getFormTypeCodeForDatabase());

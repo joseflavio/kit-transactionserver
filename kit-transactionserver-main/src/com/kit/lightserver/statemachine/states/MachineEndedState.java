@@ -48,7 +48,7 @@ public final class MachineEndedState implements StateSME<KitEventSME> {
                 final AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
 
                 final boolean logOffSuccessfull = authenticationService.logOff(
-                        clientInfo.getKtClientId(), clientMustResetInNextConnection, context.getConnectionInfo());
+                        clientInfo.getKtClientUserId(), clientMustResetInNextConnection, context.getConnectionInfo());
 
                 if (logOffSuccessfull == true) {
                     LOGGER.info("Success logging off. clientInfo={}", clientInfo);
