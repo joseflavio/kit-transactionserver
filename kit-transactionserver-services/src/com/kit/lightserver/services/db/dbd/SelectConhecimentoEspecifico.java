@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.conhecimentos.common;
+package com.kit.lightserver.services.db.dbd;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +9,6 @@ import org.dajo.framework.db.QueryStringParameter;
 import org.dajo.framework.db.SelectQueryInterface;
 
 import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
-import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 
 final class SelectConhecimentoEspecifico implements SelectQueryInterface {
 
@@ -36,7 +35,7 @@ final class SelectConhecimentoEspecifico implements SelectQueryInterface {
 
         String selectQueryStr =
                 "SELECT KTFlagLido, KTCelularDataPrimeiraLeitura" +
-                " FROM " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS + "" +
+                " FROM " + DBDTables.TABLE_NAME_CONHECIMENTOS + "" +
                 " WHERE KTClientId=? AND KTRowId=? AND KTFlagHistorico=0 AND KTControleProntoParaEnviar=1";
 
         return selectQueryStr;

@@ -1,10 +1,10 @@
-package com.kit.lightserver.services.db.forms.flags;
+package com.kit.lightserver.services.db.dbd;
 
 enum FormFlagEnum {
 
-    RECEBIDO("Recebido"),
-    LIDO("Lido"),
-    EDITADO("Editado");
+    RECEBIDO("KTFlagRecebido"),
+    LIDO("KTFlagLido"),
+    EDITADO("KTFlagEditado");
 
     private String databaseColumnName;
 
@@ -12,7 +12,7 @@ enum FormFlagEnum {
         this.databaseColumnName = databaseColumnName;
     }
 
-    public String getDatabaseColumnName() {
+    public String getDbFlagColumnName() {
         return databaseColumnName;
     }
 

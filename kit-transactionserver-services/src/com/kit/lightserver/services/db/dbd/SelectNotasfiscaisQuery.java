@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.notasfiscais;
+package com.kit.lightserver.services.db.dbd;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +47,7 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
     public String getPreparedSelectQueryString() {
 
         String selectQueryStr = "SELECT KTRowId, KTParentConhecimentoRowId, KTFieldReceiptNumber, KTFieldReceiptSerial, KTCelularEntregaStatus, KTCelularEntregaData FROM "
-                + TableNotasfiscaisConstants.TABLE_NAME_NOTASFISCAIS + " WHERE KTClientUserId=? AND KTFlagHistorico=0 AND ( " + parentKnowledgeRowIdOrClause + " )";
+                + DBDTables.TABLE_NAME_NOTASFISCAIS + " WHERE KTClientUserId=? AND KTFlagHistorico=0 AND ( " + parentKnowledgeRowIdOrClause + " )";
 
         if( selecionarSomenteNaoRecebidos == true ) {
             selectQueryStr += " AND KTFlagRecebido=0";

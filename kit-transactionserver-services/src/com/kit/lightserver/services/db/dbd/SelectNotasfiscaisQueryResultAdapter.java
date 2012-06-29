@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.notasfiscais;
+package com.kit.lightserver.services.db.dbd;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +10,6 @@ import org.dajo.framework.db.SelectQueryResultAdapter;
 
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
-import com.kit.lightserver.services.db.forms.conhecimentos.StatusEntregaSTYParser;
 
 public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryResultAdapter<List<NotafiscalSTY>> {
 

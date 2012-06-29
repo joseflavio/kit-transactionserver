@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.conhecimentos;
+package com.kit.lightserver.services.db.dbd;
 
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 

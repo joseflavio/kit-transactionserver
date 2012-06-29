@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.flags;
+package com.kit.lightserver.services.db.dbd;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +18,6 @@ import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.services.be.common.DatabaseAliases;
-import com.kit.lightserver.services.db.forms.notasfiscais.UpdateNotafiscaisFlagsQuery;
 
 public final class FormFlagsServices {
 
@@ -95,7 +94,7 @@ public final class FormFlagsServices {
             return false;
         }
         else {
-            final UpdateNotafiscaisFlagsQuery updateNotasfiscaisRecebidasFlagQuery = new UpdateNotafiscaisFlagsQuery("Recebido", notasfiscais);
+            final UpdateNotafiscaisFlagsQuery updateNotasfiscaisRecebidasFlagQuery = new UpdateNotafiscaisFlagsQuery(formFlag, notasfiscais);
             final UpdateQueryResult notasfiscaisFlagResult = dbdQueryExecutor.executeUpdateQuery(updateNotasfiscaisRecebidasFlagQuery);
             if (notasfiscaisFlagResult.isUpdateQuerySuccessful() == false) {
                 LOGGER.error("Error updating the flag");

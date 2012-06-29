@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.conhecimentos;
+package com.kit.lightserver.services.db.dbd;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
 import org.dajo.framework.db.SelectQueryInterface;
+
 
 final public class SelectConhecimentosQuery implements SelectQueryInterface {
 
@@ -30,7 +31,7 @@ final public class SelectConhecimentosQuery implements SelectQueryInterface {
                 "SELECT TOP " + MAX_RETRIEVE_CONHECIMENTOS + " " +
                 "KTRowId, KTClientUserId, KTFlagRecebido, KTFlagLido, KTFlagEditado, KTFieldNumeroDoConhecimento, KTFieldSerialDoConhecimento, " +
                 "KTFieldCodigoDaSubsidiaria, KTFieldRemetenteId, KTFieldNomeDoDestinatario, KTCelularEntregaStatus, KTLastUpdateDBTime, KTRowVersion" +
-                " FROM " + TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS +
+                " FROM " + DBDTables.TABLE_NAME_CONHECIMENTOS +
                 " WHERE KTClientUserId=? AND KTFlagHistorico=0 AND KTControleProntoParaEnviar=1";
 
         if( selecionarSomenteNaoRecebidos == true ) {

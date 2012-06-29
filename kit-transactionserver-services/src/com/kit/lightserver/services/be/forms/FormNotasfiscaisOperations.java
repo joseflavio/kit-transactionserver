@@ -10,8 +10,8 @@ import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQuery;
-import com.kit.lightserver.services.db.forms.notasfiscais.SelectNotasfiscaisQueryResultAdapter;
+import com.kit.lightserver.services.db.dbd.SelectNotasfiscaisQuery;
+import com.kit.lightserver.services.db.dbd.SelectNotasfiscaisQueryResultAdapter;
 
 final class FormNotasfiscaisOperations {
 

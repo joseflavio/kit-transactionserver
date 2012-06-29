@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.notasfiscais;
+package com.kit.lightserver.services.db.dbd;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.dajo.framework.db.util.QueryUtil;
 
 import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
 
-public final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
+final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
 
     private final String flagName;
 
@@ -18,13 +18,16 @@ public final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public UpdateNotafiscaisFlagsQuery(final String flagName, final List<FormNotafiscalRowIdSTY> notasfiscaisList) {
+    private final String flagColumnDbUpdateTime;
+
+    public UpdateNotafiscaisFlagsQuery(final FormFlagEnum flagName, final List<FormNotafiscalRowIdSTY> notasfiscaisList) {
 
         if( notasfiscaisList == null || notasfiscaisList.size() == 0 ) {
             throw new RuntimeException("conhecimentosList can not be empty.");
         }
 
-        this.flagName = flagName;
+        this.flagName = flagName.getDbFlagColumnName();
+        this.flagColumnDbUpdateTime = flagName.getDbFlagColumnName()+"UpdateDBTime";
 
         this.rowIdsOrClause = QueryUtil.buildLongOrClause("KTRowId", notasfiscaisList.size());
 
@@ -40,12 +43,10 @@ public final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
     @Override
     public String getPreparedUpdateQueryString() {
 
-        final String tableName = TableNotasfiscaisConstants.TABLE_NAME_NOTASFISCAIS;
-        final String flagColumn = "KTFlag" + flagName;
-        final String flagColumnDbUpdateTime = "KTFlag" + flagName + "UpdateDBTime";
+        final String tableName = DBDTables.TABLE_NAME_NOTASFISCAIS;
 
         final String queryStr =
-                "UPDATE " + tableName + " SET "+ flagColumn + "=1, "+ flagColumnDbUpdateTime + "=GETDATE() WHERE " + rowIdsOrClause;
+                "UPDATE " + tableName + " SET "+ flagName + "=1, "+ flagColumnDbUpdateTime + "=SYSUTCDATETIME() WHERE " + rowIdsOrClause;
 
         return queryStr;
     }

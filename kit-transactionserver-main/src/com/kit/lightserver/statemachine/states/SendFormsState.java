@@ -15,7 +15,7 @@ import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.services.db.forms.flags.FormFlagsServices;
+import com.kit.lightserver.services.db.dbd.FormFlagsServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormOperationClientSuccessEventSME;
 import com.kit.lightserver.statemachine.types.CommunicationCTX;

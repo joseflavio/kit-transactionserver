@@ -26,11 +26,11 @@ import com.kit.lightserver.domain.types.FormTypeEnumSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.services.be.common.DatabaseAliases;
+import com.kit.lightserver.services.db.dbd.FormFlagsServices;
+import com.kit.lightserver.services.db.dbd.SelectConhecimentosQuery;
+import com.kit.lightserver.services.db.dbd.SelectConhecimentosQueryResultAdapter;
 import com.kit.lightserver.services.db.dbl.InsertFormFieldDateQuery;
 import com.kit.lightserver.services.db.dbl.InsertFormFieldString32Query;
-import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQuery;
-import com.kit.lightserver.services.db.forms.conhecimentos.SelectConhecimentosQueryResultAdapter;
-import com.kit.lightserver.services.db.forms.flags.FormFlagsServices;
 
 public final class FormServices {
 

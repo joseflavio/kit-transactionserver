@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.flags;
+package com.kit.lightserver.services.db.dbd;
 
 import com.fap.collections.SmartCollectionTransformFilter;
 

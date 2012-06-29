@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.forms.flags;
+package com.kit.lightserver.services.db.dbd;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +10,6 @@ import org.dajo.framework.db.UpdateQueryInterface;
 import org.dajo.framework.db.util.QueryUtil;
 
 import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
-import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 
 final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {
 
@@ -28,8 +27,8 @@ final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {
             throw new RuntimeException("conhecimentosList can not be empty.");
         }
 
-        this.flagColumn = "KTFlag" + flag.getDatabaseColumnName();
-        this.flagColumnDbUpdateTime = "KTFlag" + flag.getDatabaseColumnName() + "UpdateDBTime";
+        this.flagColumn = flag.getDbFlagColumnName();
+        this.flagColumnDbUpdateTime = flag.getDbFlagColumnName() + "UpdateDBTime";
 
         this.rowIdsOrClause = QueryUtil.buildLongOrClause("KTRowId", conhecimentosList.size());
 
@@ -47,10 +46,10 @@ final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {
     @Override
     public String getPreparedUpdateQueryString() {
 
-        final String tableName = TableConhecimentosConstants.TABLE_NAME_CONHECIMENTOS;
+        final String tableName = DBDTables.TABLE_NAME_CONHECIMENTOS;
 
         final String queryStr =
-                "UPDATE " + tableName + " SET "+ flagColumn + "=1, "+ flagColumnDbUpdateTime + "=GETDATE() WHERE KTClientUserId=? AND " + rowIdsOrClause;
+                "UPDATE " + tableName + " SET "+ flagColumn + "=1, "+ flagColumnDbUpdateTime + "=SYSUTCDATETIME() WHERE KTClientUserId=? AND " + rowIdsOrClause;
 
         return queryStr;
     }
