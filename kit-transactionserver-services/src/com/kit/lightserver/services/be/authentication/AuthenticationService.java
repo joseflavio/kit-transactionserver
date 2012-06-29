@@ -21,8 +21,8 @@ import com.kit.lightserver.services.be.common.DatabaseAliases;
 import com.kit.lightserver.services.db.authenticate.OperationAuthenticateDeveResetar;
 import com.kit.lightserver.services.db.authenticate.SelectAuthenticateUltimoSucessoResult;
 import com.kit.lightserver.services.db.authenticate.TableAuthenticateOperations;
-import com.kit.lightserver.services.db.log.LogConexoesFinalizadasTask;
-import com.kit.lightserver.services.db.log.LogConexoesIniciadasTask;
+import com.kit.lightserver.services.db.dbl.LogConexoesFinalizadasTask;
+import com.kit.lightserver.services.db.dbl.LogConexoesIniciadasTask;
 
 public final class AuthenticationService {
 

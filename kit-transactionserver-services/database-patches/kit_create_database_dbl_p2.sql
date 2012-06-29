@@ -7,35 +7,38 @@ GO
 
 
 USE [{dbname}_DBL]
-CREATE TABLE [dbo].[FormFieldDate](
+CREATE TABLE [dbo].[LogFormFieldDate](
     [KTFormFieldDateRowId] [UNIQUEIDENTIFIER] NOT NULL DEFAULT NEWID() PRIMARY KEY NONCLUSTERED,
-    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT GETDATE(),
+    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
     [KTFormType] [nchar](2) NOT NULL,
     [KTFormRowId] [bigint] NOT NULL,
     [KTFormFieldName] [nchar](32) NOT NULL,
     [KTFormFieldValue] [datetime2] NOT NULL,
     [KTFormFieldDebug] [nvarchar](2048) NOT NULL    
 )
-CREATE CLUSTERED INDEX CIDX_FORMFIELDDATE_INSERTDBTIME ON [FormFieldDate](KTInsertDBTime);
-CREATE NONCLUSTERED INDEX NIDX_FORMFIELDDATE_UNIQUEFORM ON [FormFieldDate](KTFormRowId, KTFormType);
+CREATE CLUSTERED INDEX CIDX_FORMFIELDDATE_INSERTDBTIME ON [LogFormFieldDate](KTInsertDBTime);
+CREATE NONCLUSTERED INDEX NIDX_FORMFIELDDATE_UNIQUEFORM ON [LogFormFieldDate](KTFormRowId, KTFormType);
 
 
 
-CREATE TABLE [dbo].[FormFieldString32](
+CREATE TABLE [dbo].[LogFormFieldString32](
     [KTFormFieldDateRowId] [UNIQUEIDENTIFIER] NOT NULL DEFAULT NEWID() PRIMARY KEY NONCLUSTERED,
-    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT GETDATE(),
+    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
     [KTFormType] [nchar](2) NOT NULL,
     [KTFormRowId] [bigint] NOT NULL,
     [KTFormFieldName] [nchar](32) NOT NULL,
     [KTFormFieldValue] [nchar](64) NOT NULL,
     [KTFormFieldDebug] [nvarchar](2048) NOT NULL    
 )
-CREATE CLUSTERED INDEX CIDX_FORMFIELDSTRING32_INSERTDBTIME ON [FormFieldString32](KTInsertDBTime);
-CREATE NONCLUSTERED INDEX NIDX_FORMFIELDSTRING32_UNIQUEFORM ON [FormFieldString32](KTFormRowId, KTFormType);
+CREATE CLUSTERED INDEX CIDX_FORMFIELDSTRING32_INSERTDBTIME ON [LogFormFieldString32](KTInsertDBTime);
+CREATE NONCLUSTERED INDEX NIDX_FORMFIELDSTRING32_UNIQUEFORM ON [LogFormFieldString32](KTFormRowId, KTFormType);
 
 
 
 
+????????????
+
+OQUE FAZER?
 
 
 USE [{dbname}_DBL]
@@ -67,8 +70,8 @@ CREATE TABLE [dbo].[FormConhecimentos](
     [KTCelularEntregaStatus] [nvarchar](8) NULL DEFAULT 'AN',
     [KTCelularEntregaUpdateDBTime] [datetime2] NULL,
     
-    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT GETDATE(),
-    [KTLastUpdateDBTime] [datetime2] NOT NULL DEFAULT GETDATE(),
+    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
+    [KTLastUpdateDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
     [KTRowVersion] rowversion NOT NULL
     
 ) ON [PRIMARY]
@@ -109,8 +112,8 @@ CREATE TABLE [dbo].[FormNotasfiscais](
     [KTCelularEntregaStatus] [nvarchar](8) NOT NULL DEFAULT 'AN',
     [KTCelularEntregaUpdateDBTime] [datetime2] NULL,
     
-    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT GETDATE(),
-    [KTLastUpdateDBTime] [datetime2] NOT NULL DEFAULT GETDATE(),
+    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
+    [KTLastUpdateDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
     [KTRowVersion] rowversion NOT NULL
     
 ) ON [PRIMARY]

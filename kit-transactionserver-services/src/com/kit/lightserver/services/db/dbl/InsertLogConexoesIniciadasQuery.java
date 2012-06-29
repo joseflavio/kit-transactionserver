@@ -1,14 +1,15 @@
-package com.kit.lightserver.services.db.log;
+package com.kit.lightserver.services.db.dbl;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.dajo.framework.db.InsertQueryInterface;
 import org.dajo.framework.db.QueryIntegerParameter;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
@@ -55,8 +56,8 @@ final class InsertLogConexoesIniciadasQuery implements InsertQueryInterface {
     public String getPreparedInsertQueryString() {
 
         final String queryStr =
-                "INSERT INTO " + TableLogConexoesConstants.TABLE_LOG_CONEXOES_INICIADAS
-                + " ([KTInsertDBTime], [KTClientInstallIdAB], [KTClientUserId], [KTConnectionAuthStatus], [KTConnectionId], [KTClientNetworkAddress]) VALUES (GETDATE(), ?, ?, ?, ?, ?)";
+                "INSERT INTO " + DBLTables.TABLE_LOG_CONEXOES_INICIADAS
+                + " ([KTClientInstallIdAB], [KTClientUserId], [KTConnectionAuthStatus], [KTConnectionId], [KTClientNetworkAddress]) VALUES (?, ?, ?, ?, ?)";
 
         return queryStr;
 

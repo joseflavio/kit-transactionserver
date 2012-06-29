@@ -1,23 +1,24 @@
-package com.kit.lightserver.services.db.forms.conhecimentos.lido;
+package com.kit.lightserver.services.db.dbl;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.dajo.framework.db.InsertQueryInterface;
+import org.dajo.framework.db.QueryDateParameter;
 import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
 
 import com.kit.lightserver.domain.types.FormRowIdSTY;
 import com.kit.lightserver.domain.types.FormTypeEnumSTY;
-import com.kit.lightserver.services.db.forms.conhecimentos.TableConhecimentosConstants;
 
-public final class InsertFormFieldString32Query implements InsertQueryInterface {
+public final class InsertFormFieldDateQuery implements InsertQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public InsertFormFieldString32Query(final FormTypeEnumSTY formType, final FormRowIdSTY formRowId, final String formFieldName,
-            final String formFieldValue, final String formFieldDebug) {
+    public InsertFormFieldDateQuery(final FormTypeEnumSTY formType, final FormRowIdSTY formRowId, final String formFieldName,
+            final Date formFieldValue, final String formFieldDebug) {
 
         final QueryStringParameter formTypeParam = new QueryStringParameter(formType.getFormTypeCodeForDatabase());
         queryParameters.add(formTypeParam);
@@ -29,7 +30,7 @@ public final class InsertFormFieldString32Query implements InsertQueryInterface 
         final QueryStringParameter formFieldNameParam = new QueryStringParameter(formFieldName);
         queryParameters.add(formFieldNameParam);
 
-        final QueryStringParameter formFieldValueParam = new QueryStringParameter(formFieldValue);
+        final QueryDateParameter formFieldValueParam = new QueryDateParameter(formFieldValue);
         queryParameters.add(formFieldValueParam);
 
         final QueryStringParameter formFieldDebugParam = new QueryStringParameter(formFieldDebug);
@@ -40,7 +41,7 @@ public final class InsertFormFieldString32Query implements InsertQueryInterface 
     @Override
     public String getPreparedInsertQueryString() {
 
-        final String queryStr = "INSERT INTO " + TableConhecimentosConstants.TABLE_FORM_FIELD_STRING32
+        final String queryStr = "INSERT INTO " + DBLTables.TABLE_FORM_FIELD_DATE
                 + " ( [KTFormType], [KTFormRowId], [KTFormFieldName], [KTFormFieldValue], [KTFormFieldDebug] ) VALUES ( ?, ?, ?, ?, ? )";
 
         return queryStr;

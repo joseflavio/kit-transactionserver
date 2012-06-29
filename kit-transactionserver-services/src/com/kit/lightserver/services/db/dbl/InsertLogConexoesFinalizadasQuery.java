@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.log;
+package com.kit.lightserver.services.db.dbl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,10 +46,10 @@ final class InsertLogConexoesFinalizadasQuery implements InsertQueryInterface {
     public String getPreparedInsertQueryString() {
 
         final String queryStr =
-                "INSERT INTO " + TableLogConexoesConstants.TABLE_LOG_CONEXOES_FINALIZADAS +
-                "( [KTInsertDBTime], [KTClientUserId], [KTConnectionId], [KTConnectionEndStatus], [KTConnectionTotalTime]," +
+                "INSERT INTO " + DBLTables.TABLE_LOG_CONEXOES_FINALIZADAS +
+                "( [KTClientUserId], [KTConnectionId], [KTConnectionEndStatus], [KTConnectionTotalTime]," +
                 "  [KTFormsSent], [KTFormsReceived], [KTBytesSent], [KTBytesReceived], [KTPrimitivesSent], [KTPrimitivesReceived] ) VALUES " +
-                "( GETDATE(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
+                "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
 
         return queryStr;
 

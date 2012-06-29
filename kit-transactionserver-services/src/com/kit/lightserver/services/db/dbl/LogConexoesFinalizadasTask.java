@@ -1,4 +1,4 @@
-package com.kit.lightserver.services.db.log;
+package com.kit.lightserver.services.db.dbl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

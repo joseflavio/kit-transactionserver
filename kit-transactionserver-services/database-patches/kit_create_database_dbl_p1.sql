@@ -7,7 +7,7 @@ GO
 
 USE [{dbname}_DBL]
 CREATE TABLE [dbo].[LogConexoesIniciadas](
-    [KTInsertDBTime] [datetime2] NOT NULL,
+    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
     [KTConnectionId] [nchar](19) NOT NULL PRIMARY KEY NONCLUSTERED,
     [KTClientUserId] [nvarchar](32) NOT NULL,
     [KTClientInstallIdAB] [nchar](33) NOT NULL,
@@ -22,7 +22,7 @@ GO
 
 USE [{dbname}_DBL]
 CREATE TABLE [dbo].[LogConexoesFinalizadas](
-    [KTInsertDBTime] [datetime2] NOT NULL,    
+    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),    
     [KTConnectionId] [nchar](19) NOT NULL PRIMARY KEY NONCLUSTERED,
     [KTClientUserId] [nvarchar](32) NOT NULL,
     [KTConnectionEndStatus] [smallint] NOT NULL,
