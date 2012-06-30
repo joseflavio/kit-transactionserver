@@ -13,7 +13,7 @@ CREATE TABLE [dbo].[AuthenticatePassword] (
     [KTPassword] [nvarchar](50) NOT NULL,
     [KTActive] [bit] NOT NULL,
     [KTDeleted] [bit] NOT NULL,
-    [KTLastUpdateDBTime] [datetime2] NOT NULL,
+    [KTLastUpdateDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
     [KTRowVersion] rowversion NOT NULL,
     
 )
@@ -26,6 +26,6 @@ GO
 
 --------------------------------------------------------------
 
-INSERT INTO [dbo].[AuthenticatePassword] (KTClientUserId, KTPassword, KTActive, KTDeleted, KTLastUpdateDBTime) SELECT KTClientId, KTPassword, 1, 0, GETDATE() FROM [{origin_dbname}].[dbo].[Authenticate]
+INSERT INTO [dbo].[AuthenticatePassword] (KTClientUserId, KTPassword, KTActive, KTDeleted, KTLastUpdateDBTime) SELECT KTClientId, KTPassword, 1, 0, SYSUTCDATETIME() FROM [{origin_dbname}].[dbo].[Authenticate]
 
 
