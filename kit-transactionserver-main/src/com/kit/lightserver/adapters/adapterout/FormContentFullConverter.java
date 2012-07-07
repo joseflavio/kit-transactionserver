@@ -68,9 +68,9 @@ public final class FormContentFullConverter {
         final FieldAndContentBean numeroConhecimentoBean = new FieldAndContentBean("ancora", childrenCategoryAncora);
         response.add(numeroConhecimentoBean);
 
-        final String statusEntregaStr = StatusEntregaConverter.toKeyString(form.getStatusEntrega());
-        final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", statusEntregaStr);
-        response.add(statusEntregaBean);
+        //final String statusEntregaStr = StatusEntregaConverter.toKeyString(form.getStatusEntrega());
+        //final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", statusEntregaStr);
+        //response.add(statusEntregaBean);
 
         if( form.getDataEntrega() != null ) { // Sanity
             LOGGER.error("Investigate. form.getDataEntrega() != null, form="+form);

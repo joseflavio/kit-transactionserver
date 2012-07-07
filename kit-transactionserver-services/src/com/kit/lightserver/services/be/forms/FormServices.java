@@ -34,6 +34,8 @@ import com.kit.lightserver.services.db.dbl.InsertFormFieldString32Query;
 
 public final class FormServices {
 
+    static private final int MAX_RETRIEVE_CONHECIMENTOS = 250;
+
     static private final Logger LOGGER = LoggerFactory.getLogger(FormServices.class);
 
     static public FormServices getInstance(final ConfigAccessor configAccessor) {
@@ -66,7 +68,7 @@ public final class FormServices {
     public SimpleServiceResponse<FormsParaEnviarCTX> retrieveCurrentForms(final String ktClientUserId, final boolean retrieveNaoRecebidos) {
 
         SelectConhecimentosQueryResultAdapter queryAdapter = new SelectConhecimentosQueryResultAdapter();
-        SelectConhecimentosQuery query = new SelectConhecimentosQuery(ktClientUserId, retrieveNaoRecebidos);
+        SelectConhecimentosQuery query = new SelectConhecimentosQuery(ktClientUserId, retrieveNaoRecebidos, MAX_RETRIEVE_CONHECIMENTOS);
         SelectQueryResult<List<ConhecimentoSTY>> conhecimentosQueryResult = dbdQueryExecutor.executeSelectQuery(query, queryAdapter);
         if (conhecimentosQueryResult.isSelectQuerySuccessful() == false) {
             final SimpleServiceResponse<FormsParaEnviarCTX> errorServiceResponse = new SimpleServiceResponse<FormsParaEnviarCTX>();

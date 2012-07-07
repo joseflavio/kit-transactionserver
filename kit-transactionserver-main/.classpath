@@ -9,7 +9,8 @@
 	<classpathentry kind="lib" path="lib/logback-classic-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.6.jar"/>
-	<classpathentry kind="lib" path="lib/dajo-config-0.1.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/kit.primitives"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/kit-transactionserver-http"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dajo-config"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

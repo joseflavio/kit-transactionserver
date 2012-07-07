@@ -17,10 +17,9 @@ public final class ConhecimentoSTY extends FormSTY {
     private final String destinatarioNome;
 
     private final Date dataEntrega; // TODO: REMOVER?
-    private final StatusEntregaEnumSTY statusEntrega;
 
     public ConhecimentoSTY(final int ktRowId, final String ktClientUserId, final boolean isReceived, final boolean isRead, final boolean isEdited,
-            final String title, final String remetenteCNPJ, final String destinatarioNome, final Date dataEntrega, final StatusEntregaEnumSTY statusEntrega) {
+            final String title, final String remetenteCNPJ, final String destinatarioNome, final Date dataEntrega) {
 
         this.template = TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO;
 
@@ -35,7 +34,6 @@ public final class ConhecimentoSTY extends FormSTY {
         this.remetenteCNPJ = remetenteCNPJ;
         this.destinatarioNome = destinatarioNome;
         this.dataEntrega = dataEntrega;
-        this.statusEntrega = statusEntrega;
 
     }// constructor
 
@@ -75,19 +73,8 @@ public final class ConhecimentoSTY extends FormSTY {
         return destinatarioNome;
     }
 
-    public StatusEntregaEnumSTY getStatusEntrega() {
-        return statusEntrega;
-    }
-
     public Date getDataEntrega() {
         return dataEntrega;
-    }
-
-    @Override
-    public String toString() {
-        return "ConhecimentoSTY [template=" + template + ", ktRowId=" + ktFormRowId + ", ktClientId=" + ktClientId + ", isReceived=" + isReceived + ", isRead="
-                + isRead + ", isEdited=" + isEdited + ", title=" + title + ", remetenteCNPJ=" + remetenteCNPJ + ", destinatarioNome=" + destinatarioNome
-                + ", dataEntrega=" + dataEntrega + ", statusEntrega=" + statusEntrega + "]";
     }
 
 }// class

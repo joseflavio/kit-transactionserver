@@ -10,7 +10,6 @@ import org.dajo.framework.db.SelectQueryResultAdapter;
 import org.dajo.framework.db.util.MsSqlBitConverter;
 
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
-import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 
 public final class SelectConhecimentosQueryResultAdapter implements SelectQueryResultAdapter<List<ConhecimentoSTY>> {
 
@@ -33,15 +32,15 @@ public final class SelectConhecimentosQueryResultAdapter implements SelectQueryR
 
             final String remetenteCNPJ = rs.getString("KTFieldRemetenteId"); // senderId
             final String destinatarioNome = rs.getString("KTFieldNomeDoDestinatario"); // recipientName
-            final String statusDaEntregaStr = rs.getString("KTCelularEntregaStatus"); // deliveryStatus
-            final StatusEntregaEnumSTY statusDaEntrega = StatusEntregaSTYParser.parse(statusDaEntregaStr);// StatusEntregaEnumSTY.AN_AINDA_NAO_ENTREGUE;
+            //final String statusDaEntregaStr = rs.getString("KTCelularEntregaStatus"); // deliveryStatus
+            //final StatusEntregaEnumSTY statusDaEntrega = StatusEntregaSTYParser.parse(statusDaEntregaStr);// StatusEntregaEnumSTY.AN_AINDA_NAO_ENTREGUE;
 
             final Date conhecimentoDataEntrega = null;
 
             final String title = "CO " + numeroConhecimento + " " + serialConhecimento + " " + codigoFilial;
 
             final ConhecimentoSTY conhecimentoSTY = new ConhecimentoSTY(conhecimentoKtRowId, ktClientId, isReceived, isRead, isEdited, title, remetenteCNPJ,
-                    destinatarioNome, conhecimentoDataEntrega, statusDaEntrega);
+                    destinatarioNome, conhecimentoDataEntrega);
 
             result.add(conhecimentoSTY);
 

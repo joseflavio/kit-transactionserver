@@ -10,17 +10,18 @@ import org.dajo.framework.db.SelectQueryInterface;
 
 final public class SelectConhecimentosQuery implements SelectQueryInterface {
 
-    static private final int MAX_RETRIEVE_CONHECIMENTOS = 250;
-
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
     private final boolean selecionarSomenteNaoRecebidos;
+    private final int max;
 
-    public SelectConhecimentosQuery(final String ktClientId, final boolean selecionarSomenteNaoRecebidos) {
+    public SelectConhecimentosQuery(final String ktClientId, final boolean selecionarSomenteNaoRecebidos, final int max) {
 
         final QueryStringParameter ktClientIdParam = new QueryStringParameter(ktClientId);
         queryParameters.add(ktClientIdParam);
 
         this.selecionarSomenteNaoRecebidos = selecionarSomenteNaoRecebidos;
+
+        this.max = max;
 
     }// constructor
 
@@ -28,11 +29,11 @@ final public class SelectConhecimentosQuery implements SelectQueryInterface {
     public String getPreparedSelectQueryString() {
 
         String selectQueryStr =
-                "SELECT TOP " + MAX_RETRIEVE_CONHECIMENTOS + " " +
-                "KTRowId, KTClientUserId, KTFlagRecebido, KTFlagLido, KTFlagEditado, KTFieldNumeroDoConhecimento, KTFieldSerialDoConhecimento, " +
-                "KTFieldCodigoDaSubsidiaria, KTFieldRemetenteId, KTFieldNomeDoDestinatario, KTCelularEntregaStatus, KTLastUpdateDBTime, KTRowVersion" +
+                "SELECT TOP " + max + " " +
+                "ID, KTRowId, KTClientUserId, KTFlagRecebido, KTFlagLido, KTFlagEditado, KTFieldNumeroDoConhecimento, KTFieldSerialDoConhecimento, " +
+                "KTFieldCodigoDaSubsidiaria, KTFieldRemetenteId, KTFieldNomeDoDestinatario, KTLastUpdateDBTime, KTRowVersion" +
                 " FROM " + DBDTables.TABLE_NAME_CONHECIMENTOS +
-                " WHERE KTClientUserId=? AND KTFlagHistorico=0 AND KTControleProntoParaEnviar=1";
+                " WHERE KTClientUserId=? AND KTFlagRemovido=0 AND KTControleProntoParaEnviar=1";
 
         if( selecionarSomenteNaoRecebidos == true ) {
             selectQueryStr += " AND KTFlagRecebido=0";

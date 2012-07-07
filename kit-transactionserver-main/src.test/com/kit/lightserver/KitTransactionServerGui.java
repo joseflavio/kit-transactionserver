@@ -1,6 +1,8 @@
 package com.kit.lightserver;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -8,28 +10,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.dajo.framework.configuration.ConfigAccessor;
-import org.dajo.framework.configuration.ConfigurationReader;
 
 import com.kit.lightserver.config.ServerConfig;
 import com.kit.lightserver.gui.traymenu.KitTrayMenu;
 
 
-public final class KITLightServerGui {
+public final class KitTransactionServerGui {
 
-    static private final Logger LOGGER = LoggerFactory.getLogger(KITLightServerGui.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(KitTransactionServerGui.class);
 
     private final ConfigAccessor configAccessor;
     private final ServerConfig serverConfig;
     private final KITLightServer kitLightServer;
     private final KitTrayMenu trayMenu;
 
-    KITLightServerGui() {
+    private final List<ShutdownHandler> shutDownHandlers = new LinkedList<ShutdownHandler>();
+    private boolean shuttingDown = false;
 
-        configAccessor = ConfigurationReader.getConfiguration(KitPropertiesFiles.SERVER_PROPERTIES, KitPropertiesFiles.DATABASE_PROPERTIES);
+    KitTransactionServerGui(final ConfigAccessor configAcessor) {
+
+        this.configAccessor = configAcessor;
+
         serverConfig = ServerConfig.getInstance(configAccessor);
 
-        String dbaHost = configAccessor.getMandatoryProperty("database.dba.host");
-        String dbaPort = configAccessor.getMandatoryProperty("database.dba.port");
+        String dbaHost = this.configAccessor.getMandatoryProperty("database.dba.host");
+        String dbaPort = this.configAccessor.getMandatoryProperty("database.dba.port");
 
         String dbaDesc = "DBA: " + dbaHost + ":" + dbaPort;
 
@@ -48,10 +53,30 @@ public final class KITLightServerGui {
         thread.start();
     }
 
-    private void stopServer() {
-        LOGGER.info("Server is shutting down.");
-        kitLightServer.stopServer();
-        trayMenu.uninstall();
+    public synchronized boolean stopServer(final boolean removeTrayIcon) {
+        if (shuttingDown == false) {
+            shuttingDown = true;
+            LOGGER.info("Server is shutting down...");
+            try {
+                kitLightServer.stopServer();
+                for (ShutdownHandler handler : shutDownHandlers) {
+                    handler.onShutdown();
+                }
+                if( removeTrayIcon == true ) {
+                    trayMenu.uninstall();
+                }
+            }
+            catch (Throwable t) {
+                LOGGER.info("Error shutting down.", t);
+            }
+            LOGGER.info("Shutdown done.");
+            return true;
+        }
+        return false;
+    }
+
+    public void addShutdownHandler(final ShutdownHandler handler) {
+        shutDownHandlers.add(handler);
     }
 
     final class BootstrapUncaughtExceptionHandler implements UncaughtExceptionHandler {
@@ -64,21 +89,24 @@ public final class KITLightServerGui {
             else {
                 JOptionPane.showMessageDialog(null, "Um erro inexperado occoreu, por favor consulte os arquivos de log. (e="+e.getMessage()+")");
             }
-            stopServer();
+            stopServer(true);
         }
     }// class
 
     final class ShutdownThread extends Thread {
         @Override
         public void run() {
-            LOGGER.warn("Shutdown hook triggered.");
-            stopServer();
+            boolean stopServerResult = stopServer(false);
+            LOGGER.warn("here stopServerResult="+stopServerResult);
+            if( stopServerResult == true ) {
+                LOGGER.warn("Shutdown hook triggered by not normal event.");
+            }
         }
     }// class
 
     public class KitTrayIconListeners {
         public void desligarServidor() {
-            stopServer();
+            stopServer(true);
         }
     }// class
 

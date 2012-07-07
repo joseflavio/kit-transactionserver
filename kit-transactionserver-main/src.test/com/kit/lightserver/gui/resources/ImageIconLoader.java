@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 
 import org.dajo.framework.adapters.FilepathVO;
 
-import com.kit.lightserver.KITLightServerGui;
+import com.kit.lightserver.KitTransactionServerGui;
 
 public final class ImageIconLoader {
 
@@ -15,7 +15,7 @@ public final class ImageIconLoader {
 
     static public ImageIcon load(final FilepathVO file) {
         if( file.getType() == FilepathVO.FilepathType.CLASS_PATH ) {
-            URL imageIconJarUrl = KITLightServerGui.class.getResource(file.getFilepath());
+            URL imageIconJarUrl = KitTransactionServerGui.class.getResource(file.getFilepath());
             if( imageIconJarUrl == null ) {
                 throw new RuntimeException("File not found. file="+file);
             }

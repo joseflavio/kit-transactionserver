@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kit.lightserver.KITLightServerGui.KitTrayIconListeners;
+import com.kit.lightserver.KitTransactionServerGui.KitTrayIconListeners;
 import com.kit.lightserver.config.ServerConfig;
 import com.kit.lightserver.gui.resources.ImageIconLoader;
 
