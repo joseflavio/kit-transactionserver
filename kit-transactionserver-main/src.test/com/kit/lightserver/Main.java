@@ -33,6 +33,9 @@ public final class Main {
 
             LOGGER.info("Init finished.");
 
+            Thread.sleep(10000);
+            System.exit(1);
+
         } catch (Throwable t) {
             JOptionPane.showMessageDialog(null, "Um erro inexperado occoreu, por favor consulte os arquivos de log. (e="+t.getMessage()+")");
             if( server != null ) {

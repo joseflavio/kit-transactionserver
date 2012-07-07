@@ -96,8 +96,9 @@ public final class KitTransactionServerGui {
     final class ShutdownThread extends Thread {
         @Override
         public void run() {
+            LOGGER.info("Shutdown hook triggered.");
             boolean stopServerResult = stopServer(false);
-            LOGGER.warn("here stopServerResult="+stopServerResult);
+            LOGGER.info("Shutdown hook stopServerResult="+stopServerResult);
             if( stopServerResult == true ) {
                 LOGGER.warn("Shutdown hook triggered by not normal event.");
             }
