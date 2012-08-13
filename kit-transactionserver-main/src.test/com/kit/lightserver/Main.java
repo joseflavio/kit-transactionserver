@@ -20,7 +20,7 @@ public final class Main {
         KitTransactionServerHttpMain httpsServer = null;
         try {
 
-            ConfigAccessor configAcessor = ConfigurationReader.getConfiguration(KitPropertiesFiles.SERVER_PROPERTIES, KitPropertiesFiles.DATABASE_PROPERTIES);
+            ConfigAccessor configAcessor = ConfigurationReader.loadExternalProperties(KitPropertiesFiles.SERVER_PROPERTIES, KitPropertiesFiles.DATABASE_PROPERTIES);
 
             server = new KitTransactionServerGui(configAcessor);
 
@@ -32,9 +32,6 @@ public final class Main {
             httpsServer.start();
 
             LOGGER.info("Init finished.");
-
-            Thread.sleep(10000);
-            System.exit(1);
 
         } catch (Throwable t) {
             JOptionPane.showMessageDialog(null, "Um erro inexperado occoreu, por favor consulte os arquivos de log. (e="+t.getMessage()+")");
