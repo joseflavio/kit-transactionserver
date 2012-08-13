@@ -9,7 +9,9 @@
 	<classpathentry kind="lib" path="lib/logback-classic-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.6.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/kit.primitives"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dajo-config"/>
+	<classpathentry kind="lib" path="lib/dajo-config-0.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/dajo-database-0.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/kit-primitives-1.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/mssql2000_sqljdbc-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
