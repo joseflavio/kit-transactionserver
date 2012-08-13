@@ -4,8 +4,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/kit-transactionserver-simplestatemachine"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/slf4j-api-1.6.6.jar"/>
-	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/dajo-database-0.1.7.jar"/>
 	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/mssql2000_sqljdbc-1.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dajo-config"/>
+	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/dajo-config-0.1.2.jar"/>
+	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/dajo-database-0.1.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

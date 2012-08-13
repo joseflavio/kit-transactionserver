@@ -5,8 +5,6 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.test.KitTransactionServerHttpMain;
-
 import org.dajo.framework.configuration.ConfigAccessor;
 import org.dajo.framework.configuration.ConfigurationReader;
 
@@ -17,19 +15,17 @@ public final class Main {
     public static void main(final String[] args) {
 
         KitTransactionServerGui server = null;
-        KitTransactionServerHttpMain httpsServer = null;
+        //KitTransactionServerHttpMain httpsServer = null;
         try {
 
             ConfigAccessor configAcessor = ConfigurationReader.loadExternalProperties(KitPropertiesFiles.SERVER_PROPERTIES, KitPropertiesFiles.DATABASE_PROPERTIES);
 
             server = new KitTransactionServerGui(configAcessor);
 
-            httpsServer = new KitTransactionServerHttpMain(configAcessor, "res/kittransactionalserver-dev-keystore.jks", "Kit45$buZZzL#");
-
-            server.addShutdownHandler(new HttpServerShutdownHandler(httpsServer));
+            //httpsServer = new KitTransactionServerHttpMain(configAcessor, "res/kit-transactionserver-dev-keystore.jks", "Kit45$buZZzL#");
 
             server.start();
-            httpsServer.start();
+            //httpsServer.start();
 
             LOGGER.info("Init finished.");
 
@@ -38,22 +34,10 @@ public final class Main {
             if( server != null ) {
                 server.stopServer(true);
             }
-            if( httpsServer != null ) {
-                httpsServer.stop();
-            }
+            //if( httpsServer != null ) { httpsServer.stop(); }
         }
 
     }
 
-    static final class HttpServerShutdownHandler implements ShutdownHandler {
-        private final KitTransactionServerHttpMain server;
-        public HttpServerShutdownHandler(final KitTransactionServerHttpMain server) {
-            this.server = server;
-        }
-        @Override
-        public void onShutdown() {
-            server.stop();
-        }
-    }
 
 }// class
