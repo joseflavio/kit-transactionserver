@@ -1,2 +1,3 @@
 Ajuste o seu diretorio de trabalho do Eclipse:
+
 ${workspace_loc:kit-transactionserver-main/servers/local}
