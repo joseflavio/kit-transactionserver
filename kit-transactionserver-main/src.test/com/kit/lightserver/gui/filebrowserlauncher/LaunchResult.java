@@ -2,22 +2,22 @@ package com.kit.lightserver.gui.filebrowserlauncher;
 
 public final class LaunchResult {
 
-	static public LaunchResult SUCCESS = new LaunchResult();
-	
-	static public LaunchResult getError(String errorMessage) {
+	static final public LaunchResult SUCCESS = new LaunchResult();
+
+	static public LaunchResult getError(final String errorMessage) {
 		return new LaunchResult(errorMessage);
 	}
-	
+
 	private final boolean success;
-	
+
 	private final String errorMessage;
 
-	private LaunchResult() {		
+	private LaunchResult() {
 		this.success = true;
 		this.errorMessage = null;
 	}
-	
-	private LaunchResult(String errorMessage) {		
+
+	private LaunchResult(final String errorMessage) {
 		this.success = false;
 		this.errorMessage = errorMessage;
 	}
@@ -29,5 +29,5 @@ public final class LaunchResult {
 	public String getErrorMessage() {
 		return errorMessage;
 	}
-		
+
 }// class

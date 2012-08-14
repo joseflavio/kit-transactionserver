@@ -6,14 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-final class LinuxNautilusLauncher implements FileBrowserLauncher {
+final class WindowsExplorerLauncher implements FileBrowserLauncher {
 
-	static private final Logger LOGGER = LoggerFactory.getLogger(LinuxNautilusLauncher.class);
+	static private final Logger LOGGER = LoggerFactory.getLogger(WindowsExplorerLauncher.class);
 
 	private final ProcessBuilder processBuilder;
 
-	LinuxNautilusLauncher(final String dir) {
-		this.processBuilder =  new ProcessBuilder("nautilus", dir);
+	WindowsExplorerLauncher(final String dir) {
+		this.processBuilder =  new ProcessBuilder("explorer.exe", dir);
 	}
 
 	@Override
@@ -23,7 +23,7 @@ final class LinuxNautilusLauncher implements FileBrowserLauncher {
     	  return LaunchResult.SUCCESS;
       }
       catch (IOException e) {
-          LOGGER.error("Unexpected error launching: <nautilus>", e);
+          LOGGER.error("Unexpected error launching: <explorer.exe>.", e);
       }
       return LaunchResult.getError("Erro inesperado ao iniciar 'nautilus' no Ubuntu.");
 	}
