@@ -8,27 +8,24 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.kit.lightserver.KitTransactionServerGui.KitTrayIconListeners;
 import com.kit.lightserver.config.ServerConfig;
+import com.kit.lightserver.gui.filebrowserlauncher.FileBrowserLauncher;
+import com.kit.lightserver.gui.filebrowserlauncher.FileBrowserLauncherFactory;
+import com.kit.lightserver.gui.filebrowserlauncher.LaunchResult;
 import com.kit.lightserver.gui.resources.ImageIconLoader;
 
-public final class KitTrayMenu {
-
-    static private final Logger LOGGER = LoggerFactory.getLogger(KitTrayMenu.class);
+public final class KitTrayMenu {    
 
     private final TrayIcon trayIcon;
 
     private final File currentDir = new File("logs");
     private final String currentFullDir = currentDir.getAbsolutePath();
-    private final ProcessBuilder processBuilder = new ProcessBuilder("explorer.exe", currentFullDir);
+    private final FileBrowserLauncher processBuilder2 = FileBrowserLauncherFactory.build(currentFullDir);
 
     private final long startTime;
 
@@ -90,13 +87,12 @@ public final class KitTrayMenu {
     }
 
     private void launchExplorerInLogsDirectory() {
-        try {
-            processBuilder.start();
-        }
-        catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error tentando iniciar o explorer (verifique se o explorer.exe esta no seu PATH).");
-            LOGGER.error("Error launching explorer.exe", e);
-        }
+    	
+    	LaunchResult launchResult = processBuilder2.launchFileBrowser();
+    	if( launchResult.isSuccess() == false ) {
+    		JOptionPane.showMessageDialog( null, launchResult.getErrorMessage() );
+    	}    	    
+        
     }
 
     public void install() {
