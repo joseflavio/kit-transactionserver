@@ -43,7 +43,7 @@ public final class KITLightServer implements Runnable {
         this.configAccessor = configAccessor;
 
         /*
-         * TO log any unexpected exception
+         * To log any unexpected exception
          */
         Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
 
@@ -75,44 +75,50 @@ public final class KITLightServer implements Runnable {
     public void listenForConnections() {
 
         // Try to create the socket
-        final ServerSocket serverSocket;
+        ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(serverPort);
+
+        	serverSocket = new ServerSocket(serverPort);
+            
+            // Setting the timeout, so it is not blocking            
+            serverSocket.setSoTimeout(socketTimeout);            
+
+            // Success creating the server socket
+            LOGGER.info("Server socket created. serverPort=" + serverPort + ", socketTimeout=" + socketTimeout);
+
+            // Accepting income connections
+            while (isAlive) {
+                waitConnection2(serverSocket);
+            }
+            
         }
         catch (final BindException e) {
             LOGGER.error("Unexpected error! Could not start the server. serverPort=" + serverPort, e);
             throw new ServerPortNotAvailableException(serverPort, e);
         }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Setting the timeout, so it is not blocking
-        try {
-            serverSocket.setSoTimeout(socketTimeout);
-        }
         catch (SocketException e) {
             throw new RuntimeException(e);
         }
-
-        // Success creating the server socket
-        LOGGER.info("Server socket created. serverPort=" + serverPort + ", socketTimeout=" + socketTimeout);
-
-        // Accepting income connections
-        while (isAlive) {
-            waitConnection2(serverSocket);
-        }
-
-        // Closing the server socket
-        try {
-            serverSocket.close();
-        }
-        catch (final IOException e) {
-            LOGGER.error("Unexpected error.", e);
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
+        finally {
 
-        LOGGER.info("Not waiting for new connections.");
+	        if( serverSocket != null ) {
+		        // Closing the server socket
+		        try {
+		            serverSocket.close();
+		            LOGGER.info("Server socket closed.");
+		        }
+		        catch (final IOException e) {
+		            LOGGER.error("Unexpected error.", e);
+		            throw new RuntimeException(e);
+		        }
+	        }
+	        LOGGER.info("Not waiting for new connections.");
+	        
+        }
+        
 
     }
 
