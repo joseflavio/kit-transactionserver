@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="kit-transactionserver-services" default="jar" basedir=".">
-
-	<property name="jar.name" value="kit-transactionserver-services"/>
+	
 	<property name="lib.main.dir" value="../kit-transactionserver-main/"/>
 
 	<property file="version.properties"/>
+	<property file="build.properties"/>
 
 	<property name="tmp.dir" value="tmp/${jar.name}-${project.version}-jar"/>
 	<property name="tmp.classes.dir" value="${tmp.dir}/classes"/>
@@ -21,16 +21,21 @@
 	<target name="copy-sources">
 		<mkdir dir="${tmp.classes.dir}" />
 		<copy todir="${tmp.classes.dir}">
-			<fileset dir="src" includes="**/*" />
-			<fileset dir="src.util" includes="**/*" />
+			<fileset dir="src" includes="**/*" />			
 		</copy>
 	</target>
 
-	<target name="compile" depends="copy-sources">
-		<javac destdir="${tmp.classes.dir}" debug="true" optimize="true" deprecation="on" encoding="UTF-8" >
+	<target name="compile" depends="copy-sources">	
+		
+		<javac
+			destdir="${tmp.classes.dir}" debug="${jar.javac.debug}" optimize="true" deprecation="true" encoding="UTF-8"  includeantruntime="false"
+			target="${jar.javac.target}" source="${jar.javac.source}">
+			
 			<src path="${tmp.classes.dir}"/>
 			<classpath refid="project.classpath"/>
+			
 		</javac>
+		
 	</target>
 
 	<target name="jar">

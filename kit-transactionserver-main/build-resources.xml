@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="kit-transactionserver-resources-jar" default="jar" basedir=".">
+
+	<property name="jar.name" value="kit-transactionserver-resources"/>
+		
+	<property file="version.properties"/>
+	<property file="build.properties"/>
+
+	<tstamp><format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/></tstamp>
+	
+	<property name="tmp.manifest.rootdir" value="tmp/${jar.name}-manifest"/>
+	<property name="tmp.manifest.dir" value="${tmp.manifest.rootdir}/${project.version}/${build.id}"/>
+	
+	<target name="manifest">
+		<delete dir="${tmp.manifest.rootdir}"/>						
+		<mkdir dir="${tmp.manifest.dir}"/>		
+		<manifest file="${tmp.manifest.dir}/MANIFEST.MF">
+			<attribute name="Built-By" value="${jar.manifest.builtby}"/> 						
+			<attribute name="Specification-Title" value="${jar.name}"/>
+			<attribute name="Specification-Version" value="${project.version}"/>
+			<attribute name="Implementation-Title" value="${jar.name}"/>
+            <attribute name="Implementation-Version" value="build-${build.id}"/>
+		</manifest>		
+		<mkdir dir="${build.dest.dir}"/>
+		
+	</target>
+
+   <target name="jar">
+        <antcall target="build-external">
+            <param name="build.dest.dir" value="build"/>
+        </antcall>
+    </target>
+
+	<target name="build-external" depends="manifest">		
+		<mkdir dir="${build.dest.dir}"/>
+		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.manifest.dir}/MANIFEST.MF" basedir="src.resources"/>		
+	</target>
+
+</project>
