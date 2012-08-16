@@ -1,44 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="kit-transactionserver-services" default="jar" basedir=".">
-	
+
 	<property file="version.properties"/>
 	<property file="build.properties"/>
 
-	<property name="tmp.dir" value="tmp/${jar.name}-${project.version}-jar"/>
-	<property name="tmp.classes.dir" value="${tmp.dir}/classes"/>
-	
-    <path id="project.classpath">
-        <fileset dir="${jar.javac.lib.dir}">
-            <include name="slf4j-api-*.jar"/>
-            <include name="dajo-config-*.jar"/>
-        	<include name="dajo-database-*.jar"/>
-        	<include name="kit-transactionserver-simplestatemachine-*.jar"/>        	
-        </fileset>
-    </path>
-	
-    <target name="display-classpath">   
-        <property name="debugClassPath" refid="project.classpath"/>
-        <echo message="Classpath = ${debugClassPath}"/>
+	<tstamp>
+		<format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/>
+	</tstamp>
+
+	<property name="tmp.rootdir" value="tmp/${jar.name}/${project.version}"/>
+	<property name="tmp.builddir" value="${tmp.rootdir}/${build.id}"/>
+	<property name="tmp.manifest.dir" value="${tmp.builddir}/manifest"/>
+	<property name="tmp.classes.dir" value="${tmp.builddir}/jar/classes"/>
+
+	<path id="project.classpath">
+		<fileset dir="${jar.javac.lib.dir}">
+			<include name="slf4j-api-*.jar" />
+			<include name="dajo-config-*.jar" />
+			<include name="dajo-database-*.jar" />
+			<include name="kit-transactionserver-simplestatemachine-*.jar" />
+		</fileset>
+	</path>
+
+	<pathconvert property="manifest.classpath" pathsep=" ">
+		<path refid="project.classpath" />
+		<mapper>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.jar" to="*.jar" /><!-- to="lib/*.jar" -->
+			</chainedmapper>
+		</mapper>
+	</pathconvert>
+
+	<target name="display-classpath">
+		<property name="debugClassPath" refid="project.classpath" />
+		<echo level="info" message="manifest.classpath = ${manifest.classpath}" />
+		<echo level="info" message="build.classpath = ${debugClassPath}" />		
+	</target>
+
+    <target name="clean-tmp">
+        <delete dir="${tmp.rootdir}"/>
     </target>
-    	
+	
 	<target name="copy-sources">
 		<mkdir dir="${tmp.classes.dir}" />
 		<copy todir="${tmp.classes.dir}">
-			<fileset dir="src" includes="**/*" />			
+			<fileset dir="src" includes="**/*" />
 		</copy>
 	</target>
 
-	<target name="compile" depends="copy-sources">	
-		
+	<target name="compile" depends="copy-sources">
 		<javac
 			destdir="${tmp.classes.dir}" debug="${jar.javac.debug}" optimize="true" deprecation="true" encoding="UTF-8"  includeantruntime="false"
 			target="${jar.javac.target}" source="${jar.javac.source}" classpathref="project.classpath">
-			
 			<src path="${tmp.classes.dir}"/>
-
-			
 		</javac>
-		
 	</target>
 
 	<target name="jar">
@@ -47,26 +63,25 @@
 		</antcall>
 	</target>
 
-	<target name="build-external" depends="compile">
-
+	<target name="build-external" depends="clean-tmp,compile,manifest">
 		<fail message="Missing mandatory property.">
-			<condition>
-				<not>
-					<isset property="build.dest.dir"/>
-				</not>
-			</condition>
+			<condition><not><isset property="build.dest.dir"/></not></condition>
 		</fail>
-
-		<mkdir dir="${tmp.dir}/manifest"/>
-		<tstamp><format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/></tstamp>
-		<manifest file="${tmp.dir}/manifest/MANIFEST.MF">
-			<attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
-			<attribute name="Specification-Version" value="${project.version}"/>
-			<attribute name="Implementation-Version" value="build-${build.id}"/>
-		</manifest>
 		<mkdir dir="${build.dest.dir}"/>
-		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.dir}/manifest/MANIFEST.MF" basedir="${tmp.classes.dir}"/>
-
+		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.manifest.dir}/MANIFEST.MF" basedir="${tmp.classes.dir}"/>
 	</target>
 
+	<target name="manifest">
+		<delete dir="${tmp.manifest.dir}"/>
+		<mkdir dir="${tmp.manifest.dir}"/>
+		<manifest file="${tmp.manifest.dir}/MANIFEST.MF">
+			<attribute name="Built-By" value="${jar.manifest.builtby}"/>
+			<attribute name="Specification-Title" value="${jar.name}"/>
+			<attribute name="Specification-Version" value="${project.version}"/>
+			<attribute name="Implementation-Title" value="${jar.name}"/>
+			<attribute name="Implementation-Version" value="build-${build.id}"/>
+			<attribute name="Class-Path" value="${manifest.classpath}"/>
+		</manifest>
+	</target>
+	
 </project>
