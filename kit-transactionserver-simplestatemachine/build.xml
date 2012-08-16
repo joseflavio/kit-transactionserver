@@ -16,7 +16,17 @@
 			<include name="slf4j-api-*.jar"/>
 		</fileset>
 	</path>
-
+	
+    <pathconvert property="manifest.classpath" pathsep=" ">
+      <path refid="project.classpath"/>
+      <mapper>
+        <chainedmapper>
+           <flattenmapper/>
+           <globmapper from="*.jar" to="*.jar"/><!-- to="lib/*.jar" -->
+        </chainedmapper>
+      </mapper>
+    </pathconvert> 
+	
     <target name="clean-tmp">
         <delete dir="${tmp.rootdir}"/>
     </target>
@@ -45,16 +55,7 @@
 
     <target name="manifest">
     	<delete dir="${tmp.manifest.dir}"/>
-        <mkdir dir="${tmp.manifest.dir}"/>    	
-    	<pathconvert property="manifest.classpath" pathsep=" ">
-    	  <path refid="project.classpath"/>
-    	  <mapper>
-    	    <chainedmapper>
-    	       <flattenmapper/>
-    	       <globmapper from="*.jar" to="*.jar"/><!-- to="lib/*.jar" -->
-    	    </chainedmapper>
-    	  </mapper>
-    	</pathconvert>        
+        <mkdir dir="${tmp.manifest.dir}"/>    	      
         <manifest file="${tmp.manifest.dir}/MANIFEST.MF">
              <attribute name="Built-By" value="${jar.manifest.builtby}"/>                        
              <attribute name="Specification-Title" value="${jar.name}"/>

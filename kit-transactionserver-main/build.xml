@@ -8,27 +8,43 @@
 
 	<tstamp><format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/></tstamp>
 		
-	<property name="tmp.basedir" value="tmp/${jar.name}-${project.version}-jar"/>
-	
+	<property name="tmp.basedir" value="tmp/${jar.name}-${project.version}-jar"/>	
 	<property name="tmp.dir" value="${tmp.basedir}/${build.id}"/>
 	<property name="tmp.classes.dir" value="${tmp.dir}/classes"/>
+	
+    <property name="tmp.rootdir" value="tmp/${jar.name}/${project.version}"/>
+    <property name="tmp.builddir" value="${tmp.rootdir}/${build.id}"/>  
+    <property name="tmp.manifest.dir" value="${tmp.builddir}/manifest"/>
+    <property name="tmp.classes.dir" value="${tmp.builddir}/jar/classes"/>
+	
 		
 	<path id="project.classpath">
 		<fileset dir="lib">
 			<include name="**/*.jar"/>
 		</fileset>		                    
 	</path>
+    
+	<pathconvert property="manifest.classpath" pathsep=" ">
+      <path refid="project.classpath"/>
+      <mapper>
+        <chainedmapper>
+           <flattenmapper/>
+           <globmapper from="*.jar" to="*.jar"/><!-- to="lib/*.jar" -->
+        </chainedmapper>
+      </mapper>
+    </pathconvert> 
 
-	<target name="display-classpath">	
-	    <property name="debugClassPath" refid="project.classpath"/>
-		<echo message="Classpath = ${debugClassPath}"/>
-	</target>
+    <target name="display-classpath">
+        <property name="debugClassPath" refid="project.classpath" />
+        <echo level="info" message="manifest.classpath = ${manifest.classpath}" />
+        <echo level="info" message="build.classpath = ${debugClassPath}" />     
+    </target>	
 	
 	<target name="clean-tmp">
 		<delete dir="${tmp.basedir}"/>
     </target>
 	
-	<target name="copy-sources">	
+	<target name="copy-sources">
 		<mkdir dir="${tmp.classes.dir}" />
 		<copy todir="${tmp.classes.dir}">
 			<fileset dir="src" includes="**/*" />
@@ -42,21 +58,21 @@
 			<classpath refid="project.classpath"/>
 		</javac>
 	</target>
-
-	<target name="manifest">		
-        <mkdir dir="${tmp.dir}/manifest"/>		
-        <manifestclasspath property="manifest.classpath" jarfile="myjar.jar">
-            <classpath refid="project.classpath" />
-        </manifestclasspath>
-        <manifest file="${tmp.dir}/manifest/MANIFEST.MF">
-        	<attribute name="Built-By" value="${jar.manifest.builtby}"/>            
-            <attribute name="Main-Class" value="com.kit.lightserver.KITLightServerBootstrap"/>
+	
+    <target name="manifest">
+        <delete dir="${tmp.manifest.dir}"/>
+        <mkdir dir="${tmp.manifest.dir}"/>
+        <manifest file="${tmp.manifest.dir}/MANIFEST.MF">
+        	<attribute name="Main-Class" value="${jar.manifest.mainclass}"/>
+            <attribute name="Built-By" value="${jar.manifest.builtby}"/>        	
+            <attribute name="Specification-Title" value="${jar.name}"/>
             <attribute name="Specification-Version" value="${project.version}"/>
+            <attribute name="Implementation-Title" value="${jar.name}"/>
             <attribute name="Implementation-Version" value="build-${build.id}"/>
-            <attribute name="Class-Path" value="${manifest.classpath}"/>                        
+            <attribute name="Class-Path" value="${manifest.classpath}"/>
         </manifest>
-	</target>
-
+    </target>
+	
    <target name="jar">
         <antcall target="build-external">
             <param name="build.dest.dir" value="build"/>

@@ -4,9 +4,7 @@
 	<property file="version.properties"/>
 	<property file="build.properties"/>
 
-	<tstamp>
-		<format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/>
-	</tstamp>
+	<tstamp><format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/></tstamp>
 
 	<property name="tmp.rootdir" value="tmp/${jar.name}/${project.version}"/>
 	<property name="tmp.builddir" value="${tmp.rootdir}/${build.id}"/>
