@@ -2,6 +2,8 @@ package com.kit.lightserver.domain.types;
 
 import java.util.Date;
 
+import com.kit.lightserver.domain.util.DateCopier;
+
 public class DataEntregaSTY {
 
     private final Origin origin;
@@ -12,8 +14,8 @@ public class DataEntregaSTY {
     public DataEntregaSTY(final Origin origin, final String dataEntregaStr, final Date dataEntregaDate, final Date lastEditDate) {
         this.origin = origin;
         this.dataEntregaStr = dataEntregaStr;
-        this.dataEntregaDate = dataEntregaDate;
-        this.lastEditDate = new Date( lastEditDate.getTime() );
+        this.dataEntregaDate = DateCopier.newInstance( dataEntregaDate );
+        this.lastEditDate = DateCopier.newInstance( lastEditDate );
     }
 
     public enum Origin {
@@ -29,11 +31,11 @@ public class DataEntregaSTY {
     }
 
     public Date getDataEntregaDate() {
-        return dataEntregaDate;
+        return DateCopier.newInstance( dataEntregaDate );
     }
 
     public Date getLastEditDate() {
-        return lastEditDate;
+        return DateCopier.newInstance( lastEditDate );
     }
 
     @Override

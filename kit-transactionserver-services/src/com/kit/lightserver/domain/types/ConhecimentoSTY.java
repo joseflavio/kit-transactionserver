@@ -1,6 +1,5 @@
 package com.kit.lightserver.domain.types;
 
-import java.util.Date;
 
 public final class ConhecimentoSTY extends FormSTY {
 
@@ -16,10 +15,8 @@ public final class ConhecimentoSTY extends FormSTY {
     private final String remetenteCNPJ; // e.g: 03762480000116
     private final String destinatarioNome;
 
-    private final Date dataEntrega; // TODO: REMOVER?
-
     public ConhecimentoSTY(final int ktRowId, final String ktClientUserId, final boolean isReceived, final boolean isRead, final boolean isEdited,
-            final String title, final String remetenteCNPJ, final String destinatarioNome, final Date dataEntrega) {
+            final String title, final String remetenteCNPJ, final String destinatarioNome) {
 
         this.template = TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO;
 
@@ -33,7 +30,6 @@ public final class ConhecimentoSTY extends FormSTY {
         this.title = title;
         this.remetenteCNPJ = remetenteCNPJ;
         this.destinatarioNome = destinatarioNome;
-        this.dataEntrega = dataEntrega;
 
     }// constructor
 
@@ -71,10 +67,6 @@ public final class ConhecimentoSTY extends FormSTY {
 
     public String getDestinatarioNome() {
         return destinatarioNome;
-    }
-
-    public Date getDataEntrega() {
-        return dataEntrega;
     }
 
 }// class

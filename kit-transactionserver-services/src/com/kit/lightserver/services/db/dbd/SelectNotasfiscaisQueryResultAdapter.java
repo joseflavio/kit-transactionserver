@@ -10,6 +10,7 @@ import org.dajo.framework.db.SelectQueryResultAdapter;
 
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
+import com.kit.lightserver.domain.util.DateCopier;
 
 public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryResultAdapter<List<NotafiscalSTY>> {
 
@@ -34,13 +35,7 @@ public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryRe
             final StatusEntregaEnumSTY statusDaEntrega = StatusEntregaSTYParser.parse(statusDaEntregaStr);
 
             final java.sql.Timestamp  sqlDataDaEntrega = rs.getTimestamp("KTCelularEntregaData"); // DEVERIA REMOVER
-            final Date dataDaEntrega;
-            if( sqlDataDaEntrega != null ) {
-                dataDaEntrega = new Date(sqlDataDaEntrega.getTime());
-            } else {
-                dataDaEntrega = null;
-            }
-
+            final Date dataDaEntrega = DateCopier.newInstance( sqlDataDaEntrega );
 
             final String title = "NF " + numeroConhecimento + " " + serialConhecimento;
 

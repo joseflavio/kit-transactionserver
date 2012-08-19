@@ -2,7 +2,6 @@ package com.kit.lightserver.services.db.dbd;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,12 +34,10 @@ public final class SelectConhecimentosQueryResultAdapter implements SelectQueryR
             //final String statusDaEntregaStr = rs.getString("KTCelularEntregaStatus"); // deliveryStatus
             //final StatusEntregaEnumSTY statusDaEntrega = StatusEntregaSTYParser.parse(statusDaEntregaStr);// StatusEntregaEnumSTY.AN_AINDA_NAO_ENTREGUE;
 
-            final Date conhecimentoDataEntrega = null;
-
             final String title = "CO " + numeroConhecimento + " " + serialConhecimento + " " + codigoFilial;
 
             final ConhecimentoSTY conhecimentoSTY = new ConhecimentoSTY(conhecimentoKtRowId, ktClientId, isReceived, isRead, isEdited, title, remetenteCNPJ,
-                    destinatarioNome, conhecimentoDataEntrega);
+                    destinatarioNome);
 
             result.add(conhecimentoSTY);
 

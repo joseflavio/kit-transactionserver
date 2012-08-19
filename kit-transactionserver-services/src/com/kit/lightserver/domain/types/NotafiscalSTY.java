@@ -2,6 +2,8 @@ package com.kit.lightserver.domain.types;
 
 import java.util.Date;
 
+import com.kit.lightserver.domain.util.DateCopier;
+
 public final class NotafiscalSTY extends FormSTY {
 
     private final TemplateEnumSTY template;
@@ -30,7 +32,7 @@ public final class NotafiscalSTY extends FormSTY {
         this.parentKnowledgeRowId = parentKnowledgeRowId;
         this.title = title;
 
-        this.dataEntrega = dataEntrega;
+        this.dataEntrega = DateCopier.newInstance( dataEntrega );
         this.statusEntrega = statusEntrega;
 
     }// constructor
@@ -64,7 +66,7 @@ public final class NotafiscalSTY extends FormSTY {
     }
 
     public Date getDataEntrega() {
-        return dataEntrega;
+        return DateCopier.newInstance( dataEntrega );
     }
 
     public StatusEntregaEnumSTY getStatusEntrega() {

@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.dajo.framework.configuration.ConfigAccessor;
 import org.dajo.framework.configuration.ConfigurationReader;
 
-public final class Main {
+public final class KitTransactionServerMain {
 
-    static private final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(KitTransactionServerMain.class);
 
-    public static void main(final String[] args) {
+    static public void main(final String[] args) {
 
         KitTransactionServerGui server = null;
         //KitTransactionServerHttpMain httpsServer = null;
