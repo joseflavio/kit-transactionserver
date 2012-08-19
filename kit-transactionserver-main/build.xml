@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="kit-transactionserver-jar" default="jar" basedir=".">
+<project name="kit-transactionserver-main-jar" default="jar" basedir=".">
 
 	<property name="jar.name" value="kit-transactionserver-main"/>	
 
@@ -52,11 +52,12 @@
 		</copy>
 	</target>
 
-	<target name="compile" depends="copy-sources, display-classpath">		
-		<javac destdir="${tmp.classes.dir}" debug="${jar.javac.debug}" optimize="true" deprecation="on" encoding="UTF-8" includeantruntime="false">
-			<src path="${tmp.classes.dir}"/>
-			<classpath refid="project.classpath"/>
-		</javac>
+	<target name="compile" depends="copy-sources, display-classpath">
+	    <javac
+	            destdir="${tmp.classes.dir}" debug="${jar.javac.debug}" optimize="true" deprecation="true" encoding="UTF-8"  includeantruntime="false"
+	            target="${jar.javac.target}" source="${jar.javac.source}" classpathref="project.classpath">
+	            <src path="${tmp.classes.dir}"/>
+	    </javac>
 	</target>
 	
     <target name="manifest">
@@ -81,7 +82,7 @@
 
 	<target name="build-external" depends="compile,manifest">		
 		<mkdir dir="${build.dest.dir}"/>
-		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.dir}/manifest/MANIFEST.MF" basedir="${tmp.classes.dir}"/>
+		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.manifest.dir}/MANIFEST.MF" basedir="${tmp.classes.dir}"/>
 	</target>
 
 </project>
