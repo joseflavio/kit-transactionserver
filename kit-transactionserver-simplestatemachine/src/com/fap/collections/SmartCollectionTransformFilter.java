@@ -2,6 +2,6 @@ package com.fap.collections;
 
 public interface SmartCollectionTransformFilter<R, T> {
 
-    R transform(T t);
+    SmartCollectionTransformResult<R> transform(T t);
 
 }

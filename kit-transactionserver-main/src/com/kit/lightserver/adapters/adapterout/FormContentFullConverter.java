@@ -6,9 +6,9 @@ import kit.primitives.forms.FieldAndContentBean;
 import kit.primitives.forms.FormContent;
 import kit.primitives.forms.FormContentFull;
 
-import com.kit.lightserver.domain.types.ConhecimentoSTY;
-import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.domain.types.TemplateEnumSTY;
+import com.kit.lightserver.domain.types.ConhecimentoRSTY;
+import com.kit.lightserver.domain.types.FormFlagsSTY;
+import com.kit.lightserver.domain.types.NotafiscalRSTY;
 import com.kit.lightserver.types.response.FormContentFullConhecimentoRSTY;
 import com.kit.lightserver.types.response.FormContentFullNotafiscalRSTY;
 import com.kit.lightserver.types.response.FormContentFullRSTY;
@@ -43,17 +43,16 @@ public final class FormContentFullConverter {
 
     static private FormContentFull convertConhecimento(final FormContentFullConhecimentoRSTY formContentFullConhecimentoRSTY) {
 
-        final ConhecimentoSTY form = formContentFullConhecimentoRSTY.getConhecimentoSTY();
+        final ConhecimentoRSTY form = formContentFullConhecimentoRSTY.getConhecimentoSTY();
 
-        final int ktRowId = form.getKtFormRowId().getKtFormRowId();
+        final int ktRowId = form.getFormClientRowId().getKtFormRowId();
         final String anchorCategoryId = ktRowId + "P";
 
-        final TemplateEnumSTY template = form.getTemplate();
-        final String templateStr = TemplateEnumSTYConverter.convert(template);
+        final String templateStr = TemplateEnumSTYConverter.convertToClientString( form.getFormType() );
 
         final FormContentFull response = new FormContentFull();
         response.formId = templateStr + "%" + ktRowId;
-        response.formStatus = FormContentFullConverter.calculateFormStatus(form);
+        response.formStatus = FormContentFullConverter.calculateFormStatus( form.getFormFlags() );
         response.templateId = templateStr;
         response.category = anchorCategoryId;
         response.title = form.getTitle();
@@ -69,7 +68,7 @@ public final class FormContentFullConverter {
         //final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", statusEntregaStr);
         //response.add(statusEntregaBean);
 
-        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", "null");  // Mandatory, the mobile crashes without it
+        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", "");  // Mandatory, the mobile crashes without it
         response.add(dataEntregaBean);
 
         final String remetenteCNPJ = form.getRemetenteCNPJ();
@@ -84,21 +83,20 @@ public final class FormContentFullConverter {
 
     }
 
-    static public FormContentFull convertNotaFiscal(final FormContentFullNotafiscalRSTY formContentFullNotafiscalRSTY) {
+    static public FormContentFull convertNotaFiscal(final FormContentFullNotafiscalRSTY givenFormRSTY) {
 
-        final NotafiscalSTY form = formContentFullNotafiscalRSTY.getNotafiscalSTY();
-
-        final TemplateEnumSTY template = form.getTemplate();
+        final NotafiscalRSTY form = givenFormRSTY.getNotafiscalSTY();
 
         final FormContentFull response = new FormContentFull();
 
-        final String templateStr = TemplateEnumSTYConverter.convert(template);
-        final int ktFormRowId = form.getKtRowId().getKtFormRowId();
+        final String templateStr = TemplateEnumSTYConverter.convertToClientString( form.getFormType() );
+        final int ktFormRowId = form.getFormClientRowId().getKtFormRowId();
         response.formId = templateStr + "%" + ktFormRowId;
-        response.formStatus = FormContentFullConverter.calculateFormStatus(form);
+        response.formStatus = FormContentFullConverter.calculateFormStatus( form.getFormFlagsSTY() );
         response.templateId = templateStr;
 
-        final String category = Integer.toString(form.getParentKnowledgeRowId());
+        final int parentClientRowId = form.getParentFormClientKtRowId().getKtFormRowId();
+        final String category = Integer.toString( parentClientRowId );
         response.category = category;
 
         response.title = form.getTitle();
@@ -106,14 +104,14 @@ public final class FormContentFullConverter {
         response.firstReadDate = new Date();
         response.lastEditDate = new Date();
 
-        final String parentCategoryAncora = form.getParentKnowledgeRowId() + "P";
+        final String parentCategoryAncora = parentClientRowId + "P";
         final FieldAndContentBean numeroConhecimentoBean = new FieldAndContentBean("ancora", parentCategoryAncora);
         response.add(numeroConhecimentoBean);
 
         final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", "AN"); // AN = Ainda não entregue
         response.add(statusEntregaBean);
 
-        final String dataEntregaStr = DataEntregaConverter.convert(form.getDataEntrega());
+        final String dataEntregaStr = DataEntregaConverter.convertToClientString(form.getDataEntrega());
         final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", dataEntregaStr);
         response.add(dataEntregaBean);
 
@@ -121,38 +119,19 @@ public final class FormContentFullConverter {
 
     }
 
-    static private byte calculateFormStatus(final ConhecimentoSTY form) {
-
-        if (form.isEdited()) {
+    static private byte calculateFormStatus(final FormFlagsSTY formFlags) {
+        if (formFlags.isEdited()) {
             return FormContent.FORM_EDITED;
         }
-        else if (form.isRead()) {
+        else if (formFlags.isRead()) {
             return FormContent.FORM_READ;
         }
-        else if (form.isReceived()) {
+        else if (formFlags.isReceived()) {
             return FormContent.FORM_RECEIVED;
         }
         else {
             return FormContent.FORM_NEW;
         }
-
-    }
-
-    static private byte calculateFormStatus(final NotafiscalSTY form) {
-
-        if (form.isEdited()) {
-            return FormContent.FORM_EDITED;
-        }
-        else if (form.isRead()) {
-            return FormContent.FORM_READ;
-        }
-        else if (form.isReceived()) {
-            return FormContent.FORM_RECEIVED;
-        }
-        else {
-            return FormContent.FORM_NEW;
-        }
-
     }
 
 }// class

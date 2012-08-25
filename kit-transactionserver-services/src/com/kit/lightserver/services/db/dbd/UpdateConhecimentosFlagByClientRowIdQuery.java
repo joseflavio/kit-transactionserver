@@ -9,9 +9,9 @@ import org.dajo.framework.db.QueryStringParameter;
 import org.dajo.framework.db.UpdateQueryInterface;
 import org.dajo.framework.db.util.QueryUtil;
 
-import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
+import com.kit.lightserver.domain.types.FormClientRowIdSTY;
 
-final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {
+final class UpdateConhecimentosFlagByClientRowIdQuery implements UpdateQueryInterface {
 
     private final String flagColumn;
 
@@ -21,7 +21,7 @@ final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public UpdateConhecimentosFlagsQuery(final FormFlagEnum flag, final String ktClientUserId, final List<FormConhecimentoRowIdSTY> conhecimentosList) {
+    public UpdateConhecimentosFlagByClientRowIdQuery(final FormFlagEnum flag, final String ktClientUserId, final List<FormClientRowIdSTY> conhecimentosList) {
 
         if( conhecimentosList == null || conhecimentosList.size() == 0 ) {
             throw new RuntimeException("conhecimentosList can not be empty.");
@@ -35,9 +35,10 @@ final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {
         final QueryStringParameter ktClientIdParam = new QueryStringParameter(ktClientUserId);
         queryParameters.add(ktClientIdParam);
 
-        for (final FormConhecimentoRowIdSTY conhecimentoSTY : conhecimentosList) {
-            final int currentKtRowId = conhecimentoSTY.getKtFormRowId();
-            final QueryIntParameter ktRowIdParam = new QueryIntParameter(currentKtRowId);
+        for (final FormClientRowIdSTY clientRowIdSTY : conhecimentosList) {
+            assert( FormClientRowIdSTY.isConhecimento(clientRowIdSTY) == true );
+            int currentId = clientRowIdSTY.getKtFormRowId();
+            QueryIntParameter ktRowIdParam = new QueryIntParameter(currentId);
             queryParameters.add(ktRowIdParam);
         }
 
@@ -46,10 +47,9 @@ final class UpdateConhecimentosFlagsQuery implements UpdateQueryInterface {
     @Override
     public String getPreparedUpdateQueryString() {
 
-        final String tableName = DBDTables.TABLE_NAME_CONHECIMENTOS;
-
         final String queryStr =
-                "UPDATE " + tableName + " SET "+ flagColumn + "=1, "+ flagColumnDbUpdateTime + "=SYSUTCDATETIME() WHERE KTClientUserId=? AND " + rowIdsOrClause;
+                "UPDATE " + DBDTables.CONHECIMENTOS.TABLE_NAME +
+                " SET "+ flagColumn + "=1, "+ flagColumnDbUpdateTime + "=SYSUTCDATETIME() WHERE KTClientUserId=? AND " + rowIdsOrClause;
 
         return queryStr;
     }

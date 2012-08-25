@@ -32,7 +32,7 @@ final public class SelectConhecimentosQuery implements SelectQueryInterface {
                 "SELECT TOP " + max + " " +
                 "ID, KTRowId, KTClientUserId, KTFlagRecebido, KTFlagLido, KTFlagEditado, KTFieldNumeroDoConhecimento, KTFieldSerialDoConhecimento, " +
                 "KTFieldCodigoDaSubsidiaria, KTFieldRemetenteId, KTFieldNomeDoDestinatario, KTLastUpdateDBTime, KTRowVersion" +
-                " FROM " + DBDTables.TABLE_NAME_CONHECIMENTOS +
+                " FROM " + DBDTables.CONHECIMENTOS.TABLE_NAME +
                 " WHERE KTClientUserId=? AND KTFlagRemovido=0 AND KTControleProntoParaEnviar=1";
 
         if( selecionarSomenteNaoRecebidos == true ) {

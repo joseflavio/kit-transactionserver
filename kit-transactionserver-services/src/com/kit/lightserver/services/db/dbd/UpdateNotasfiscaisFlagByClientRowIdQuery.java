@@ -8,9 +8,9 @@ import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.UpdateQueryInterface;
 import org.dajo.framework.db.util.QueryUtil;
 
-import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
+import com.kit.lightserver.domain.types.FormClientRowIdSTY;
 
-final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
+final class UpdateNotasfiscaisFlagByClientRowIdQuery implements UpdateQueryInterface {
 
     private final String flagName;
 
@@ -20,7 +20,7 @@ final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
 
     private final String flagColumnDbUpdateTime;
 
-    public UpdateNotafiscaisFlagsQuery(final FormFlagEnum flagName, final List<FormNotafiscalRowIdSTY> notasfiscaisList) {
+    public UpdateNotasfiscaisFlagByClientRowIdQuery(final FormFlagEnum flagName, final List<FormClientRowIdSTY> notasfiscaisList) {
 
         if( notasfiscaisList == null || notasfiscaisList.size() == 0 ) {
             throw new RuntimeException("conhecimentosList can not be empty.");
@@ -31,7 +31,8 @@ final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
 
         this.rowIdsOrClause = QueryUtil.buildLongOrClause("KTRowId", notasfiscaisList.size());
 
-        for (final FormNotafiscalRowIdSTY notafiscalSTY : notasfiscaisList) {
+        for (final FormClientRowIdSTY notafiscalSTY : notasfiscaisList) {
+            assert( FormClientRowIdSTY.isNotafiscal(notafiscalSTY) == true );
             final int currentKtRowId = notafiscalSTY.getKtFormRowId();
             final QueryIntParameter ktRowIdParam = new QueryIntParameter(currentKtRowId);
             queryParameters.add(ktRowIdParam);
@@ -43,10 +44,8 @@ final class UpdateNotafiscaisFlagsQuery implements UpdateQueryInterface {
     @Override
     public String getPreparedUpdateQueryString() {
 
-        final String tableName = DBDTables.TABLE_NAME_NOTASFISCAIS;
-
         final String queryStr =
-                "UPDATE " + tableName + " SET "+ flagName + "=1, "+ flagColumnDbUpdateTime + "=SYSUTCDATETIME() WHERE " + rowIdsOrClause;
+                "UPDATE " + DBDTables.NOTASFISCAIS.TABLE_NAME + " SET "+ flagName + "=1, "+ flagColumnDbUpdateTime + "=SYSUTCDATETIME() WHERE " + rowIdsOrClause;
 
         return queryStr;
     }

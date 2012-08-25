@@ -6,30 +6,30 @@ import com.kit.lightserver.domain.util.DateCopier;
 
 public final class NotafiscalSTY extends FormSTY {
 
-    private final TemplateEnumSTY template;
-    private final FormNotafiscalRowIdSTY ktRowId;
+    private final FormUniqueIdSTY formUniqueId;
+    private final FormClientRowIdSTY formClientRowId;
 
     private final boolean isReceived;
     private final boolean isRead;
     private final boolean isEdited;
 
-    private final int parentKnowledgeRowId;
+    private final FormUniqueIdSTY parentFormId;
     private final String title;
 
     private final Date dataEntrega;
     private final StatusEntregaEnumSTY statusEntrega;
 
-    public NotafiscalSTY(final int ktRowId, final boolean isReceived, final boolean isRead, final boolean isEdited, final int parentKnowledgeRowId,
-            final String title, final Date dataEntrega, final StatusEntregaEnumSTY statusEntrega) {
+    public NotafiscalSTY(final FormIdSTY formId, final int ktRowId, final boolean isReceived, final boolean isRead, final boolean isEdited,
+            final FormUniqueIdSTY parentFormId, final String title, final Date dataEntrega, final StatusEntregaEnumSTY statusEntrega) {
 
-        this.template = TemplateEnumSTY.RECEIPT_NOTASFISCAIS;
-        this.ktRowId = new FormNotafiscalRowIdSTY(ktRowId);
+        this.formUniqueId = new FormUniqueIdSTY(TemplateEnumSTY.RECEIPT_NOTASFISCAIS, formId);
+        this.formClientRowId = new FormClientRowIdSTY(TemplateEnumSTY.RECEIPT_NOTASFISCAIS, ktRowId);
 
         this.isReceived = isReceived;
         this.isRead = isRead;
         this.isEdited = isEdited;
 
-        this.parentKnowledgeRowId = parentKnowledgeRowId;
+        this.parentFormId = parentFormId;
         this.title = title;
 
         this.dataEntrega = DateCopier.newInstance( dataEntrega );
@@ -37,12 +37,12 @@ public final class NotafiscalSTY extends FormSTY {
 
     }// constructor
 
-    public TemplateEnumSTY getTemplate() {
-        return template;
+    public FormUniqueIdSTY getFormUniqueId() {
+        return formUniqueId;
     }
 
-    public FormNotafiscalRowIdSTY getKtRowId() {
-        return ktRowId;
+    public FormClientRowIdSTY getFormClientRowId() {
+        return formClientRowId;
     }
 
     public boolean isReceived() {
@@ -57,8 +57,8 @@ public final class NotafiscalSTY extends FormSTY {
         return isEdited;
     }
 
-    public int getParentKnowledgeRowId() {
-        return parentKnowledgeRowId;
+    public FormUniqueIdSTY getParentFormId() {
+        return parentFormId;
     }
 
     public String getTitle() {
@@ -71,13 +71,6 @@ public final class NotafiscalSTY extends FormSTY {
 
     public StatusEntregaEnumSTY getStatusEntrega() {
         return statusEntrega;
-    }
-
-    @Override
-    public String toString() {
-        return "NotafiscalSTY [template=" + template + ", ktRowId=" + ktRowId + ", isReceived=" + isReceived + ", isRead=" + isRead + ", isEdited=" + isEdited
-                + ", parentKnowledgeRowId=" + parentKnowledgeRowId + ", title=" + title + ", dataEntrega=" + dataEntrega + ", statusEntrega=" + statusEntrega
-                + "]";
     }
 
 }// class

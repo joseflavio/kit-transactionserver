@@ -1,16 +1,16 @@
 package com.kit.lightserver.types.response;
 
-import com.kit.lightserver.domain.types.NotafiscalSTY;
+import com.kit.lightserver.domain.types.NotafiscalRSTY;
 
 public final class FormContentFullNotafiscalRSTY extends FormContentFullRSTY {
 
-    private final NotafiscalSTY notafiscalSTY;
+    private final NotafiscalRSTY notafiscalSTY;
 
-    public FormContentFullNotafiscalRSTY(final NotafiscalSTY conhecimentoSTY) {
+    public FormContentFullNotafiscalRSTY(final NotafiscalRSTY conhecimentoSTY) {
         this.notafiscalSTY = conhecimentoSTY;
     }// constructor
 
-    public NotafiscalSTY getNotafiscalSTY() {
+    public NotafiscalRSTY getNotafiscalSTY() {
         return notafiscalSTY;
     }
 

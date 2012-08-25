@@ -14,9 +14,12 @@ import org.dajo.framework.db.UpdateQueryResult;
 
 import com.fap.collections.SmartCollections;
 
-import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
-import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
+import com.kit.lightserver.domain.filters.ConhecimentoRowIdTransformFilter;
+import com.kit.lightserver.domain.filters.FormRowIdFilter;
+import com.kit.lightserver.domain.filters.NotafiscalRowIdTransformFilter;
+import com.kit.lightserver.domain.types.FormClientRowIdSTY;
 import com.kit.lightserver.domain.types.FormSTY;
+import com.kit.lightserver.domain.types.TemplateEnumSTY;
 import com.kit.lightserver.services.be.common.DatabaseAliases;
 
 public final class FormFlagsServices {
@@ -38,69 +41,63 @@ public final class FormFlagsServices {
 
     public boolean flagFormsAsReceived(final String ktClientId, final List<FormSTY> forms) {
 
-        final List<FormConhecimentoRowIdSTY> conhecimentos = new LinkedList<FormConhecimentoRowIdSTY>();
-        SmartCollections.specialFilter(conhecimentos, forms, new ConhecimentoRowIdFilter());
+        final List<FormClientRowIdSTY> conhecimentos = new LinkedList<>();
+        SmartCollections.specialFilter(conhecimentos, forms, new ConhecimentoRowIdTransformFilter());
 
-        boolean coSuccess = flagFormsConhecimentos(ktClientId, FormFlagEnum.RECEBIDO, conhecimentos);
+        boolean coSuccess = flagFormsByClientRowId(ktClientId, FormFlagEnum.RECEBIDO, conhecimentos);
 
-        final List<FormNotafiscalRowIdSTY> notasfiscais = new LinkedList<FormNotafiscalRowIdSTY>();
-        SmartCollections.specialFilter(notasfiscais, forms, new NotafiscalRowIdFilter());
+        final List<FormClientRowIdSTY> notasfiscais = new LinkedList<>();
+        SmartCollections.specialFilter(notasfiscais, forms, new NotafiscalRowIdTransformFilter());
 
-        boolean nfSuccess = flagFormsNotasfiscais(ktClientId, FormFlagEnum.RECEBIDO, notasfiscais);
+        boolean nfSuccess = flagFormsByClientRowId(ktClientId, FormFlagEnum.RECEBIDO, notasfiscais);
 
         return (coSuccess && nfSuccess);
 
     }
 
-    public boolean flagFormsAsLido(final String ktClientUserId, final FormConhecimentoRowIdSTY formRowId) {
-        List<FormConhecimentoRowIdSTY> list = new LinkedList<FormConhecimentoRowIdSTY>();
+    public boolean flagFormsAsLido(final String ktClientUserId, final FormClientRowIdSTY formRowId) {
+        List<FormClientRowIdSTY> list = new LinkedList<FormClientRowIdSTY>();
         list.add(formRowId);
-        return flagFormsConhecimentos(ktClientUserId, FormFlagEnum.LIDO, list);
+        return flagFormsByClientRowId(ktClientUserId, FormFlagEnum.LIDO, list);
     }
 
-    public boolean flagFormsAsEditado(final String ktClientUserId, final FormConhecimentoRowIdSTY formRowId) {
-        List<FormConhecimentoRowIdSTY> list = new LinkedList<FormConhecimentoRowIdSTY>();
+    public boolean flagFormsAsEditado(final String ktClientUserId, final FormClientRowIdSTY formRowId) {
+        List<FormClientRowIdSTY> list = new LinkedList<FormClientRowIdSTY>();
         list.add(formRowId);
-        return flagFormsConhecimentos(ktClientUserId, FormFlagEnum.EDITADO, list);
+        return flagFormsByClientRowId(ktClientUserId, FormFlagEnum.EDITADO, list);
     }
 
-    public boolean flagEditadoNotafiscal(final String ktClientUserId, final FormNotafiscalRowIdSTY formRowId) {
-        List<FormNotafiscalRowIdSTY> list = new LinkedList<FormNotafiscalRowIdSTY>();
-        list.add(formRowId);
-        return flagFormsNotasfiscais(ktClientUserId, FormFlagEnum.EDITADO, list);
-    }
+    private boolean flagFormsByClientRowId(final String ktClientUserId, final FormFlagEnum formFlag, final List<FormClientRowIdSTY> forms) {
 
-    private boolean flagFormsConhecimentos(final String ktClientUserId, final FormFlagEnum formFlag, final List<FormConhecimentoRowIdSTY> conhecimentos) {
+        LOGGER.info("Updating forms flags. forms="+forms.size());
+
+        if (forms.size() == 0) { LOGGER.warn("No forms to update."); return false; }
+
+        FormRowIdFilter conhecimentosFilter = new FormRowIdFilter(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO);
+        List<FormClientRowIdSTY> conhecimentos = new LinkedList<>();
+        SmartCollections.filter(conhecimentos, forms, conhecimentosFilter);
         LOGGER.info("Updating forms flags. conhecimentos="+conhecimentos.size());
-        if (conhecimentos.size() == 0) {
-            LOGGER.info("No 'conhecimentos' to update.");
-            return false;
-        }
-        else {
-            final UpdateConhecimentosFlagsQuery updateConhecimentoRecebidoFlagQuery = new UpdateConhecimentosFlagsQuery(formFlag, ktClientUserId, conhecimentos);
-            final UpdateQueryResult conhecimentosFlagResult = dbdQueryExecutor.executeUpdateQuery(updateConhecimentoRecebidoFlagQuery);
-            if (conhecimentosFlagResult.isUpdateQuerySuccessful() == false) {
-                LOGGER.error("Error updating the flag");
-                return false;
-            }
-        }
-        return true;
-    }
 
-    private boolean flagFormsNotasfiscais(final String ktClientId, final FormFlagEnum formFlag, final List<FormNotafiscalRowIdSTY> notasfiscais) {
-        LOGGER.info("Updating forms flags. notasfiscais="+notasfiscais.size());
-        if (notasfiscais.size() == 0) {
-            LOGGER.info("No 'notasfiscais' to update.");
+        final UpdateConhecimentosFlagByClientRowIdQuery updateConhecimentoRecebidoFlagQuery = new UpdateConhecimentosFlagByClientRowIdQuery(formFlag, ktClientUserId, conhecimentos);
+        final UpdateQueryResult conhecimentosFlagResult = dbdQueryExecutor.executeUpdateQuery(updateConhecimentoRecebidoFlagQuery);
+        if (conhecimentosFlagResult.isUpdateQuerySuccessful() == false) {
+            LOGGER.error("Error updating the flag");
             return false;
         }
-        else {
-            final UpdateNotafiscaisFlagsQuery updateNotasfiscaisRecebidasFlagQuery = new UpdateNotafiscaisFlagsQuery(formFlag, notasfiscais);
-            final UpdateQueryResult notasfiscaisFlagResult = dbdQueryExecutor.executeUpdateQuery(updateNotasfiscaisRecebidasFlagQuery);
-            if (notasfiscaisFlagResult.isUpdateQuerySuccessful() == false) {
-                LOGGER.error("Error updating the flag");
-                return false;
-            }
+
+        FormRowIdFilter notasfiscaisFilter = new FormRowIdFilter(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO);
+        List<FormClientRowIdSTY> notasfiscais = new LinkedList<>();
+        SmartCollections.filter(notasfiscais, forms, notasfiscaisFilter);
+        LOGGER.info("Updating forms flags. notasfiscais="+notasfiscais.size());
+
+
+        final UpdateNotasfiscaisFlagByClientRowIdQuery updateNotasfiscaisRecebidasFlagQuery = new UpdateNotasfiscaisFlagByClientRowIdQuery(formFlag, notasfiscais);
+        final UpdateQueryResult notasfiscaisFlagResult = dbdQueryExecutor.executeUpdateQuery(updateNotasfiscaisRecebidasFlagQuery);
+        if (notasfiscaisFlagResult.isUpdateQuerySuccessful() == false) {
+            LOGGER.error("Error updating the flag");
+            return false;
         }
+
         return true;
     }
 

@@ -3,29 +3,25 @@ package com.kit.lightserver.domain.types;
 
 public final class ConhecimentoSTY extends FormSTY {
 
-    private final TemplateEnumSTY template;
-    private final FormConhecimentoRowIdSTY ktFormRowId;
-    private final String ktClientId;
+    private final FormUniqueIdSTY formUniqueId;
+    private final FormClientRowIdSTY formClientRowId;
 
-    private final boolean isReceived;
-    private final boolean isRead;
-    private final boolean isEdited;
+    private final String ktClientUserId;
+    private final FormFlagsSTY formFlags;
 
     private final String title;
     private final String remetenteCNPJ; // e.g: 03762480000116
     private final String destinatarioNome;
 
-    public ConhecimentoSTY(final int ktRowId, final String ktClientUserId, final boolean isReceived, final boolean isRead, final boolean isEdited,
-            final String title, final String remetenteCNPJ, final String destinatarioNome) {
+    public ConhecimentoSTY(final FormIdSTY formId, final int ktRowId, final String ktClientUserId, final FormFlagsSTY formFlags, final String title,
+            final String remetenteCNPJ, final String destinatarioNome) {
 
-        this.template = TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO;
+        this.formUniqueId = new FormUniqueIdSTY( TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO, formId );
+        this.formClientRowId = new FormClientRowIdSTY(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO, ktRowId);
 
-        this.ktFormRowId = new FormConhecimentoRowIdSTY(ktRowId);
-        this.ktClientId = ktClientUserId;
+        this.ktClientUserId = ktClientUserId;
 
-        this.isReceived = isReceived;
-        this.isRead = isRead;
-        this.isEdited = isEdited;
+        this.formFlags = formFlags;
 
         this.title = title;
         this.remetenteCNPJ = remetenteCNPJ;
@@ -33,28 +29,20 @@ public final class ConhecimentoSTY extends FormSTY {
 
     }// constructor
 
-    public TemplateEnumSTY getTemplate() {
-        return template;
+    public FormUniqueIdSTY getFormUniqueId() {
+        return formUniqueId;
     }
 
-    public FormConhecimentoRowIdSTY getKtFormRowId() {
-        return ktFormRowId;
+    public FormClientRowIdSTY getFormClientRowId() {
+        return formClientRowId;
     }
 
     public String getKtClientUserId() {
-        return ktClientId;
+        return ktClientUserId;
     }
 
-    public boolean isReceived() {
-        return isReceived;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public boolean isEdited() {
-        return isEdited;
+    public FormFlagsSTY getFormFlags() {
+        return formFlags;
     }
 
     public String getTitle() {

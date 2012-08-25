@@ -1,5 +1,6 @@
 package com.kit.lightserver.statemachine.types;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,9 +8,9 @@ import com.kit.lightserver.domain.types.FormSTY;
 
 public final class CommunicationCTX {
 
-    private final LinkedList<FormSTY> formsToSendOrderedList = new LinkedList<FormSTY>();
+    private final LinkedList<FormSTY> formsToSendOrderedList = new LinkedList<>();
 
-    private final List<FormSTY> formSentList = new LinkedList<FormSTY>();
+    private final List<FormSTY> formSentList = new LinkedList<>();
 
     public void addToFormsToSendOrderedList(final FormSTY formSTY) {
         formsToSendOrderedList.add(formSTY);
@@ -21,7 +22,7 @@ public final class CommunicationCTX {
 
     public List<FormSTY> extractFormsToSendInOrder(final int maxNumberOfFormsToExtract) {
 
-        final List<FormSTY> result = new LinkedList<FormSTY>();
+        final List<FormSTY> result = new LinkedList<>();
 
         final int maxIndex;
         if( formsToSendOrderedList.size() < maxNumberOfFormsToExtract) {
@@ -40,8 +41,8 @@ public final class CommunicationCTX {
 
     }
 
-    public void addToFormSentList(final FormSTY formSTY) {
-        formSentList.add(formSTY);
+    public void addToFormSentList(final Collection<FormSTY> formSTY) {
+        formSentList.addAll(formSTY);
     }
 
     public List<FormSTY> getFormsSentWaitingForConfirmationList() {

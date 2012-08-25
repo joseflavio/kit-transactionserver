@@ -8,8 +8,11 @@ import java.util.List;
 
 import org.dajo.framework.db.SelectQueryResultAdapter;
 
+import com.kit.lightserver.domain.types.FormIdSTY;
+import com.kit.lightserver.domain.types.FormUniqueIdSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
+import com.kit.lightserver.domain.types.TemplateEnumSTY;
 import com.kit.lightserver.domain.util.DateCopier;
 
 public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryResultAdapter<List<NotafiscalSTY>> {
@@ -20,8 +23,12 @@ public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryRe
         final List<NotafiscalSTY> result = new LinkedList<NotafiscalSTY>();
         while (rs.next()) {
 
-            final int notafiscalKtRowId = rs.getInt("KTRowId");
-            final int parentConhecimentoRowId = rs.getInt("KTParentConhecimentoRowId");
+            final String idStr = rs.getString( DBDTables.NOTASFISCAIS.FORMID );
+            final FormIdSTY simpleFormId = FormIdSTY.newInstance(idStr);
+
+            final int notafiscalKtRowId = rs.getInt( DBDTables.NOTASFISCAIS.KTROWID );
+            final String parentIdStr = rs.getString(  DBDTables.NOTASFISCAIS.PARENT_FORMID );
+            final FormUniqueIdSTY parentFormId =  FormUniqueIdSTY.newInstance(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO, parentIdStr);
 
             final boolean isReceived = true;
             final boolean isRead = true;
@@ -39,7 +46,7 @@ public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryRe
 
             final String title = "NF " + numeroConhecimento + " " + serialConhecimento;
 
-            final NotafiscalSTY conhecimentoSTY = new NotafiscalSTY(notafiscalKtRowId, isReceived, isRead, isEdited, parentConhecimentoRowId, title,
+            final NotafiscalSTY conhecimentoSTY = new NotafiscalSTY(simpleFormId, notafiscalKtRowId, isReceived, isRead, isEdited, parentFormId, title,
                     dataDaEntrega, statusDaEntrega);
 
             result.add(conhecimentoSTY);

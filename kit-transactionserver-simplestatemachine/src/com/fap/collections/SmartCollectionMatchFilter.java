@@ -1,6 +1,6 @@
 package com.fap.collections;
 
-public interface SmartCollectionFilter<T> {
+public interface SmartCollectionMatchFilter<T> {
 
     boolean match(T t);
 

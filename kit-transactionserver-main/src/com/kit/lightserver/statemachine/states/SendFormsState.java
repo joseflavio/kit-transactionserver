@@ -6,15 +6,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fap.collections.SmartCollections;
 import com.fap.framework.statemachine.ProcessingResult;
 import com.fap.framework.statemachine.ResultStateTransition;
 import com.fap.framework.statemachine.ResultWaitEvent;
 import com.fap.framework.statemachine.StateSME;
 
 import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
-import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormSTY;
-import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.db.dbd.FormFlagsServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormOperationClientSuccessEventSME;
@@ -22,9 +21,6 @@ import com.kit.lightserver.statemachine.types.CommunicationCTX;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.ChannelProgressRSTY;
 import com.kit.lightserver.types.response.ClientResponseRSTY;
-import com.kit.lightserver.types.response.FormContentFullConhecimentoRSTY;
-import com.kit.lightserver.types.response.FormContentFullNotafiscalRSTY;
-import com.kit.lightserver.types.response.FormContentFullRSTY;
 import com.kit.lightserver.types.response.FormOperationGetStatusRSTY;
 import com.kit.lightserver.types.response.FormOperationResetRSTY;
 
@@ -162,33 +158,18 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
 
         LOGGER.info("Sending forms. formsToSend.size()=" + formsToSend.size());
 
-        if (formsToSend.size() == 0) { // Sanity
+        if (formsToSend.size() <= 0) { // Sanity
+            // TODO: Throw exception? Maybe...
             LOGGER.error("Investigate. formsToSend.size() == 0");
         }
+        else {
 
-        if (formsToSend.size() > 0) {
+            // Normal case
+            SmartCollections.specialFilter(responseList, formsToSend, new FormContentTransformFilter());
+            LOGGER.warn("debuging={}", responseList);
 
-            for (FormSTY formSTY : formsToSend) {
-
-                final FormContentFullRSTY clientResponse;
-                if (formSTY instanceof ConhecimentoSTY) {
-                    final ConhecimentoSTY conhecimentoSTY = (ConhecimentoSTY) formSTY;
-                    clientResponse = new FormContentFullConhecimentoRSTY(conhecimentoSTY);
-                }
-                else if (formSTY instanceof NotafiscalSTY) {
-                    final NotafiscalSTY notafiscalSTY = (NotafiscalSTY) formSTY;
-                    clientResponse = new FormContentFullNotafiscalRSTY(notafiscalSTY);
-                }
-                else {
-                    final String errorMessage = "Unexpected type. formSTY=" + formSTY;
-                    LOGGER.error(errorMessage);
-                    throw new RuntimeException(errorMessage);
-                }
-
-                responseList.add(clientResponse);
-                communicationCTX.addToFormSentList(formSTY);
-
-            }// for
+            // No exception we add the forms to the send list
+            communicationCTX.addToFormSentList(formsToSend);
 
         }
 

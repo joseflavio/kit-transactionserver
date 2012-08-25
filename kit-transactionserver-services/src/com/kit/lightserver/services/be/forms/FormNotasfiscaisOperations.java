@@ -8,7 +8,7 @@ import org.dajo.framework.db.SelectQueryResult;
 
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
-import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
+import com.kit.lightserver.domain.types.FormUniqueIdSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.services.db.dbd.SelectNotasfiscaisQuery;
 import com.kit.lightserver.services.db.dbd.SelectNotasfiscaisQueryResultAdapter;
@@ -21,15 +21,17 @@ final class FormNotasfiscaisOperations {
         this.dbdQueryExecutor = dbdQueryExecutor;
     }
 
-    SimpleServiceResponse<List<NotafiscalSTY>> retrieveNotasfiscais(final String ktClientUserId, final List<ConhecimentoSTY> conhecimentoList,
+    SimpleServiceResponse<List<NotafiscalSTY>> retrieveNotasfiscais(
+            final String ktClientUserId,
+            final List<ConhecimentoSTY> conhecimentoList,
             final boolean retrieveSomenteNaoRecebidos) {
 
         /*
          * Conhecimentos
          */
-        final List<FormConhecimentoRowIdSTY> parentKnowledgeRowIdList = new LinkedList<FormConhecimentoRowIdSTY>();
+        final List<FormUniqueIdSTY> parentKnowledgeRowIdList = new LinkedList<FormUniqueIdSTY>();
         for (ConhecimentoSTY conhecimentoSTY : conhecimentoList) {
-            parentKnowledgeRowIdList.add(conhecimentoSTY.getKtFormRowId());
+            parentKnowledgeRowIdList.add( conhecimentoSTY.getFormUniqueId() );
         }
 
         /*

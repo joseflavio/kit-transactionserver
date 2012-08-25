@@ -1,16 +1,16 @@
 package com.kit.lightserver.types.response;
 
-import com.kit.lightserver.domain.types.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.ConhecimentoRSTY;
 
 public final class FormContentFullConhecimentoRSTY extends FormContentFullRSTY {
 
-    private final ConhecimentoSTY conhecimentoSTY;
+    private final ConhecimentoRSTY conhecimentoSTY;
 
-    public FormContentFullConhecimentoRSTY(final ConhecimentoSTY conhecimentoSTY) {
+    public FormContentFullConhecimentoRSTY(final ConhecimentoRSTY conhecimentoSTY) {
         this.conhecimentoSTY = conhecimentoSTY;
     }// constructor
 
-    public ConhecimentoSTY getConhecimentoSTY() {
+    public ConhecimentoRSTY getConhecimentoSTY() {
         return conhecimentoSTY;
     }
 

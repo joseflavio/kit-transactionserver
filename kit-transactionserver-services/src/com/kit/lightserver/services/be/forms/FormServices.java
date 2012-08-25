@@ -18,11 +18,8 @@ import com.kit.lightserver.domain.containers.FormsParaEnviarCTX;
 import com.kit.lightserver.domain.containers.SimpleServiceResponse;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.DataEntregaSTY;
-import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
+import com.kit.lightserver.domain.types.FormClientRowIdSTY;
 import com.kit.lightserver.domain.types.FormFirstReadDateSTY;
-import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
-import com.kit.lightserver.domain.types.FormRowIdSTY;
-import com.kit.lightserver.domain.types.FormTypeEnumSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.services.be.common.DatabaseAliases;
@@ -102,15 +99,15 @@ public final class FormServices {
 
     }
 
-    public boolean saveFormFirstRead(final String ktClientUserId, final FormConhecimentoRowIdSTY formRowId, final FormFirstReadDateSTY formFirstReadDateSTY) {
+    public boolean saveFormFirstRead(final String ktClientUserId, final FormClientRowIdSTY clientRowId, final FormFirstReadDateSTY formFirstReadDateSTY) {
 
-        boolean flagSuccess = formFlagsServices.flagFormsAsLido(ktClientUserId, formRowId);
+        boolean flagSuccess = formFlagsServices.flagFormsAsLido(ktClientUserId, clientRowId);
         if( flagSuccess == false ) {
             return false;
         }
 
-        InsertFormFieldDateQuery insertQuery = new InsertFormFieldDateQuery(FormTypeEnumSTY.CO, formRowId, "PRIMEIRA_LEITURA",
-                formFirstReadDateSTY.getDate(), formFirstReadDateSTY.toString());
+        InsertFormFieldDateQuery insertQuery = new InsertFormFieldDateQuery(
+                clientRowId, "PRIMEIRA_LEITURA", formFirstReadDateSTY.getDate(), formFirstReadDateSTY.toString());
 
         InsertQueryResult queryResult = dblQueryExecutor.executeInsertQuery(insertQuery);
 
@@ -127,31 +124,17 @@ public final class FormServices {
 
     }
 
-    public boolean saveFormEdited(final String ktClientUserId, final FormRowIdSTY formRowId, final StatusEntregaEnumSTY statusEntregaEnumSTY,
+    public boolean saveFormEdited(final String ktClientUserId, final FormClientRowIdSTY formClientRowId, final StatusEntregaEnumSTY statusEntregaEnumSTY,
             final DataEntregaSTY dataEntrega) {
 
-
-        final FormTypeEnumSTY formType;
-        final boolean success;
-        if( formRowId instanceof FormConhecimentoRowIdSTY ) {
-            success = formFlagsServices.flagFormsAsEditado(ktClientUserId, (FormConhecimentoRowIdSTY) formRowId);
-            formType = FormTypeEnumSTY.CO;
-        }
-        else if( formRowId instanceof FormNotafiscalRowIdSTY ) {
-            success = formFlagsServices.flagEditadoNotafiscal(ktClientUserId, (FormNotafiscalRowIdSTY) formRowId);
-            formType = FormTypeEnumSTY.NF;
-        }
-        else {
-            success = false;
-            formType = null;
-        }
+        final boolean success = formFlagsServices.flagFormsAsEditado(ktClientUserId, formClientRowId);
 
         if( success == false ) {
             return false;
         }
 
-        InsertFormFieldDateQuery insertDataEntregaQuery = new InsertFormFieldDateQuery(formType, formRowId, "DATA_DA_ENTREGA",
-                dataEntrega.getDataEntregaDate(), dataEntrega.toString());
+        InsertFormFieldDateQuery insertDataEntregaQuery = new InsertFormFieldDateQuery(
+                formClientRowId, "DATA_DA_ENTREGA", dataEntrega.getDataEntregaDate(), dataEntrega.toString());
 
         InsertQueryResult dataEntregaResult = dblQueryExecutor.executeInsertQuery(insertDataEntregaQuery);
 
@@ -164,8 +147,8 @@ public final class FormServices {
             return false;
         }
 
-        InsertFormFieldString32Query insertStatusEntregaQuery = new InsertFormFieldString32Query(formType, formRowId, "STATUS_DA_ENTREGA",
-                statusEntregaEnumSTY.getDatabaseCode(), statusEntregaEnumSTY.toString());
+        InsertFormFieldString32Query insertStatusEntregaQuery = new InsertFormFieldString32Query(
+                formClientRowId, "STATUS_DA_ENTREGA", statusEntregaEnumSTY.getDatabaseCode(), statusEntregaEnumSTY.toString());
 
         InsertQueryResult statusEntregaResult = dblQueryExecutor.executeInsertQuery(insertStatusEntregaQuery);
 

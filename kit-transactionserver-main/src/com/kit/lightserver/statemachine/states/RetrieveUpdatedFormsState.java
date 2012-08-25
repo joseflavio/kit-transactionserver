@@ -48,7 +48,7 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
         final ProcessingResult<KitEventSME> result;
         if (event instanceof FormContentConhecimentoReadSME) {
             FormContentConhecimentoReadSME formReadEvent = (FormContentConhecimentoReadSME)event;
-            boolean serviceSuccess = formServices.saveFormFirstRead(clientUserId, formReadEvent.getConhecimentoId(), formReadEvent.getFirstReadDate());
+            boolean serviceSuccess = formServices.saveFormFirstRead(clientUserId, formReadEvent.getClientRowId(), formReadEvent.getFirstReadDate());
             if (serviceSuccess == false) {
                 final StateSME<KitEventSME> errorState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
                 result = new ResultStateTransition<KitEventSME>(errorState);

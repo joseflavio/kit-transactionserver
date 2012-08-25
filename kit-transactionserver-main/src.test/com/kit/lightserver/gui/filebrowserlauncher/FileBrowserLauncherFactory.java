@@ -17,11 +17,9 @@ public final class FileBrowserLauncherFactory {
 		String osIdentifier = osName + "/" + osVersion + "/" + osArch;
 		LOGGER.info("os={}", osIdentifier);
 
-		boolean isWindows7 = ( osName != null && osName.toUpperCase().indexOf("WINDOWS 7") != -1 );
+		boolean isWindows7 = ( osName != null && osName.toUpperCase().indexOf("WINDOWS 7") != -1 ); // Windows 7/6.1/amd64
 
 		boolean isLinux = ( osName != null && osName.toUpperCase().indexOf("LINUX") != -1 );
-
-
 
 		final FileBrowserLauncher launcher;
 		if( isWindows7 ) {

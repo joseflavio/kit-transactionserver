@@ -3,13 +3,12 @@ package com.kit.lightserver.services.db.dbd;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
 import org.dajo.framework.db.SelectQueryInterface;
 import org.dajo.framework.db.util.QueryUtil;
 
-import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
+import com.kit.lightserver.domain.types.FormUniqueIdSTY;
 
 final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 
@@ -19,12 +18,12 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 
     private final boolean selecionarSomenteNaoRecebidos;
 
-    public SelectNotasfiscaisQuery(final String ktClientUserId, final List<FormConhecimentoRowIdSTY> parentRowIds, final boolean selecionarSomenteNaoRecebidos) {
+    public SelectNotasfiscaisQuery(final String ktClientUserId, final List<FormUniqueIdSTY> parentFormsIds, final boolean selecionarSomenteNaoRecebidos) {
 
         /*
          * Sanity
          */
-        if (parentRowIds.size() < 1) {
+        if (parentFormsIds.size() < 1) {
             throw new RuntimeException("The list can not be empty.");
         }
 
@@ -32,11 +31,12 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 
         queryParameters.add( new QueryStringParameter(ktClientUserId) );
 
-        final String orClause = QueryUtil.buildLongOrClause("[KTParentConhecimentoRowId]", parentRowIds.size());
+        final String orClause = QueryUtil.buildLongOrClause("[KTParentConhecimentoRowId]", parentFormsIds.size());
 
-        for (final FormConhecimentoRowIdSTY currentParentKnowledgeRowId : parentRowIds) {
-            final QueryIntParameter ktClientIdParam = new QueryIntParameter( currentParentKnowledgeRowId.getKtFormRowId() );
-            queryParameters.add(ktClientIdParam);
+        for (final FormUniqueIdSTY parent : parentFormsIds) {
+            assert( FormUniqueIdSTY.isConhecimento(parent) == true );
+            final QueryStringParameter parentParam = new QueryStringParameter( parent.getFormId().getValue() );
+            queryParameters.add(parentParam);
         }
 
         this.parentKnowledgeRowIdOrClause = orClause;
@@ -46,8 +46,9 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        String selectQueryStr = "SELECT KTRowId, KTParentConhecimentoRowId, KTFieldReceiptNumber, KTFieldReceiptSerial, KTCelularEntregaStatus, KTCelularEntregaData FROM "
-                + DBDTables.TABLE_NAME_NOTASFISCAIS + " WHERE KTClientUserId=? AND KTFlagHistorico=0 AND ( " + parentKnowledgeRowIdOrClause + " )";
+        String selectQueryStr = "SELECT KTRowId, KTParentConhecimentoRowId, KTFieldReceiptNumber, KTFieldReceiptSerial, KTCelularEntregaStatus, " +
+        		"KTCelularEntregaData FROM " + DBDTables.NOTASFISCAIS.TABLE_NAME +
+        		" WHERE KTClientUserId=? AND KTFlagRemovido=0 AND ( " + parentKnowledgeRowIdOrClause + " )";
 
         if( selecionarSomenteNaoRecebidos == true ) {
             selectQueryStr += " AND KTFlagRecebido=0";

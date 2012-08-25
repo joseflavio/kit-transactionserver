@@ -9,6 +9,8 @@ import org.dajo.framework.db.SelectQueryResultAdapter;
 import org.dajo.framework.db.util.MsSqlBitConverter;
 
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
+import com.kit.lightserver.domain.types.FormFlagsSTY;
+import com.kit.lightserver.domain.types.FormIdSTY;
 
 public final class SelectConhecimentosQueryResultAdapter implements SelectQueryResultAdapter<List<ConhecimentoSTY>> {
 
@@ -18,7 +20,8 @@ public final class SelectConhecimentosQueryResultAdapter implements SelectQueryR
         final List<ConhecimentoSTY> result = new LinkedList<ConhecimentoSTY>();
         while (rs.next()) {
 
-            final int conhecimentoKtRowId = rs.getInt("KTRowId");
+            final FormIdSTY formId = FormIdSTY.newInstance( rs.getString("ID") );
+            final int coKtRowId = rs.getInt("KTRowId");
             final String ktClientId = rs.getString("KTClientUserId");
 
             final boolean isReceived = MsSqlBitConverter.convert(rs.getInt("KTFlagRecebido"));
@@ -36,8 +39,9 @@ public final class SelectConhecimentosQueryResultAdapter implements SelectQueryR
 
             final String title = "CO " + numeroConhecimento + " " + serialConhecimento + " " + codigoFilial;
 
-            final ConhecimentoSTY conhecimentoSTY = new ConhecimentoSTY(conhecimentoKtRowId, ktClientId, isReceived, isRead, isEdited, title, remetenteCNPJ,
-                    destinatarioNome);
+            final FormFlagsSTY formFlags = new FormFlagsSTY(isReceived, isRead, isEdited);
+
+            final ConhecimentoSTY conhecimentoSTY = new ConhecimentoSTY(formId, coKtRowId, ktClientId, formFlags, title, remetenteCNPJ, destinatarioNome);
 
             result.add(conhecimentoSTY);
 

@@ -33,12 +33,12 @@ final class ClientAuthenticationSuccessfulState extends BaseState implements Sta
          * GETTING ALL THE FORMS HERE, SHOULD IT BE HERE???
          */
         final String ktClientUserId = context.getClientInfo().getKtClientUserId();
+
+        final FormServices formServices = FormServices.getInstance(context.getConfigAccessor());
+
         final SimpleServiceResponse<FormsParaEnviarCTX> serviceResponse;
-
-        FormServices formServices = FormServices.getInstance(context.getConfigAccessor());
-
         if (context.getClientInfo().isMustReset()) {
-            serviceResponse = formServices.retrieveCurrentForms(ktClientUserId, false); //TODO: Eu nao queria usar flags aqui, pensar se melhor ter dois metodos
+            serviceResponse = formServices.retrieveCurrentForms(ktClientUserId, false); //TODO: Eu nao queria usar flags aqui, pensar se melhor usar duas funcoes
         }
         else {
             serviceResponse = formServices.retrieveCurrentForms(ktClientUserId, true);

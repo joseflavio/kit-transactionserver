@@ -1,15 +1,13 @@
 package com.kit.lightserver.domain.containers;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
-import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
+import com.kit.lightserver.domain.types.FormUniqueIdSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 
 public final class FormsParaEnviarCTX {
@@ -17,7 +15,7 @@ public final class FormsParaEnviarCTX {
     private final List<ConhecimentoSTY> conhecimentoList;
     private final List<NotafiscalSTY> notasfiscaisList;
 
-    private final Map<Integer, List<NotafiscalSTY>> notasfiscaisPorConhecimentoMap = new HashMap<Integer, List<NotafiscalSTY>>();
+    private final Map2<FormUniqueIdSTY, List<NotafiscalSTY>> notasfiscaisPorConhecimentoMap = new HashMap2<>();
 
     private final Logger LOGGER = LoggerFactory.getLogger(FormsParaEnviarCTX.class);
 
@@ -28,16 +26,16 @@ public final class FormsParaEnviarCTX {
 
         for (NotafiscalSTY notafiscalSTY : notasfiscaisList) {
 
-            final int parentConhecimentoRowId = notafiscalSTY.getParentKnowledgeRowId();
+            FormUniqueIdSTY parentFormId = notafiscalSTY.getParentFormId();
 
-            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get( Integer.valueOf(parentConhecimentoRowId) );
+            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.getByKey( parentFormId );
             if (notasFiscaisDoConhecimentoList != null) {
                 notasFiscaisDoConhecimentoList.add(notafiscalSTY);
             }
             else {
                 List<NotafiscalSTY> newNotasFiscaisDoConhecimentoList = new LinkedList<NotafiscalSTY>();
                 newNotasFiscaisDoConhecimentoList.add(notafiscalSTY);
-                notasfiscaisPorConhecimentoMap.put(parentConhecimentoRowId, newNotasFiscaisDoConhecimentoList);
+                notasfiscaisPorConhecimentoMap.put(parentFormId, newNotasFiscaisDoConhecimentoList);
             }
 
         }// for
@@ -46,10 +44,10 @@ public final class FormsParaEnviarCTX {
          * Sanity Test
          */
         for (ConhecimentoSTY conhecimentoSTY : conhecimentoList) {
-            final FormConhecimentoRowIdSTY parentRowId = conhecimentoSTY.getKtFormRowId();
-            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.get( Integer.valueOf(parentRowId.getKtFormRowId()) );
+            final FormUniqueIdSTY parentFormId = conhecimentoSTY.getFormUniqueId();
+            final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.getByKey( parentFormId );
             if (notasFiscaisDoConhecimentoList == null || notasFiscaisDoConhecimentoList.size() == 0) {
-                LOGGER.error("FormConhecimento without notasFiscais. parentConhecimentoRowId="+parentRowId+", notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList);
+                LOGGER.error("FormConhecimento without notasFiscais. parentConhecimentoRowId="+parentFormId+", notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList);
             }
         }// for
 
@@ -60,8 +58,8 @@ public final class FormsParaEnviarCTX {
     }
 
     public List<NotafiscalSTY> getNotasfiscaisPorConhecimento(final ConhecimentoSTY conhecimentoSTY) {
-        final FormConhecimentoRowIdSTY parentRowId = conhecimentoSTY.getKtFormRowId();
-        final List<NotafiscalSTY> notasfiscaisDoConhecimento = notasfiscaisPorConhecimentoMap.get( Integer.valueOf(parentRowId.getKtFormRowId()) );
+        final FormUniqueIdSTY parentFormId = conhecimentoSTY.getFormUniqueId();
+        final List<NotafiscalSTY> notasfiscaisDoConhecimento = notasfiscaisPorConhecimentoMap.getByKey( parentFormId );
         return notasfiscaisDoConhecimento;
     }
 

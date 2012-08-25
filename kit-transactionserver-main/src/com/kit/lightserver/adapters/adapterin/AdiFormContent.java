@@ -14,11 +14,10 @@ import org.slf4j.LoggerFactory;
 import com.fap.collections.TransformFilter;
 
 import com.kit.lightserver.domain.types.DataEntregaSTY;
-import com.kit.lightserver.domain.types.FormConhecimentoRowIdSTY;
+import com.kit.lightserver.domain.types.FormClientRowIdSTY;
 import com.kit.lightserver.domain.types.FormFirstReadDateSTY;
-import com.kit.lightserver.domain.types.FormNotafiscalRowIdSTY;
-import com.kit.lightserver.domain.types.FormRowIdSTY;
 import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
+import com.kit.lightserver.domain.types.TemplateEnumSTY;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
 import com.kit.lightserver.statemachine.events.FormContentEditedSME;
 import com.kit.lightserver.statemachine.states.KitEventSME;
@@ -36,24 +35,20 @@ final class AdiFormContent {
 	    final ReceivedPrimitiveConverterResult<KitEventSME> result;
 		if(primitive.formStatus == FormContent.FORM_READ) {
 
-		    FormRowIdSTY formId = AdiFormContent.convertFormId( primitive.formId ); // formId=conhecimentos%1094966
+		    FormClientRowIdSTY formId = AdiFormContent.convertFormId( primitive.formId ); // formId=conhecimentos%1094966
 	        if( formId == null ) {
-	                result = new ReceivedPrimitiveConverterResult<KitEventSME>();
-	        }
-	        else if( formId instanceof FormConhecimentoRowIdSTY ) {
-	            FormConhecimentoRowIdSTY conhecimentoId = (FormConhecimentoRowIdSTY ) formId;
-		        FormFirstReadDateSTY formFirstReadDate = new FormFirstReadDateSTY( primitive.firstReadDate );
-	            FormContentConhecimentoReadSME event = new FormContentConhecimentoReadSME(conhecimentoId, formFirstReadDate);
-	            result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, event);
-		    }
-	        else {
-	            LOGGER.error("Unexpected. formId={}", formId);
 	            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
 	        }
+	        else {
+		        FormFirstReadDateSTY formFirstReadDate = new FormFirstReadDateSTY( primitive.firstReadDate );
+	            FormContentConhecimentoReadSME event = new FormContentConhecimentoReadSME(formId, formFirstReadDate);
+	            result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, event);
+		    }
+
 		}
 		else if(primitive.formStatus == FormContent.FORM_EDITED) {
 
-		    final FormRowIdSTY formId = AdiFormContent.convertFormId( primitive.formId );
+		    final FormClientRowIdSTY formId = AdiFormContent.convertFormId( primitive.formId );
 		    if( formId == null ) {
                 result = new ReceivedPrimitiveConverterResult<KitEventSME>();
             }
@@ -92,21 +87,8 @@ final class AdiFormContent {
 		            result = new ReceivedPrimitiveConverterResult<KitEventSME>();
 		        }
 		        else {
-
-		            if ( formId instanceof FormConhecimentoRowIdSTY )  {
-		                final FormConhecimentoRowIdSTY conhecimentoId = (FormConhecimentoRowIdSTY) formId;
-		                FormContentEditedSME editedSME = new FormContentEditedSME(conhecimentoId, lastEditDate, statusEntregaField.getValue(), dataEntrega);
-		                result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, editedSME);
-		            }
-		            else if ( formId instanceof FormNotafiscalRowIdSTY ) {
-		                final FormNotafiscalRowIdSTY nfId = (FormNotafiscalRowIdSTY) formId;
-                        FormContentEditedSME editedSME = new FormContentEditedSME(nfId, lastEditDate, statusEntregaField.getValue(), dataEntrega);
-                        result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, editedSME);
-		            }
-		            else {
-		                LOGGER.error("Unexpected. formId={}", formId);
-		                result = new ReceivedPrimitiveConverterResult<KitEventSME>();
-		            }
+		            FormContentEditedSME editedSME = new FormContentEditedSME(formId, lastEditDate, statusEntregaField.getValue(), dataEntrega);
+		            result = new ReceivedPrimitiveConverterResult<KitEventSME>(true, editedSME);
 		        }
 
             }
@@ -121,18 +103,18 @@ final class AdiFormContent {
 
 	}
 
-	static private FormRowIdSTY convertFormId(final String rawFormId) {
+	static private FormClientRowIdSTY convertFormId(final String rawFormId) {
 
 	    String[] formIdArray = rawFormId.split("%");
         int ktRowId = Integer.parseInt( formIdArray[1] );
         String formType = formIdArray[0];
 
 	    if( CONHECIMENTOS_TYPE.equals(formType) ) {
-            final FormConhecimentoRowIdSTY conhecimentoId = new FormConhecimentoRowIdSTY(ktRowId);
+            final FormClientRowIdSTY conhecimentoId = new FormClientRowIdSTY(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO, ktRowId);
             return conhecimentoId;
         }
 	    else if( NOTAFISCAIS_TYPE.equals(formType) ) {
-	        final FormNotafiscalRowIdSTY nfId = new FormNotafiscalRowIdSTY(ktRowId);
+	        final FormClientRowIdSTY nfId = new FormClientRowIdSTY(TemplateEnumSTY.RECEIPT_NOTASFISCAIS, ktRowId);
 	        return nfId;
 	    }
         else {

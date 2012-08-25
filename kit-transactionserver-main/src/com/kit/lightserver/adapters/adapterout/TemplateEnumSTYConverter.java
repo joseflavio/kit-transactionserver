@@ -8,16 +8,16 @@ final class TemplateEnumSTYConverter {
 
     static private final String NOTAS_FISCAIS_STRING = "notasFiscais";
 
-    static String convert(final TemplateEnumSTY templateEnumSTY) {
+    static String convertToClientString(final TemplateEnumSTY formType) {
         final String result;
-        if(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO.equals(templateEnumSTY)) {
+        if( TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO.equals(formType) ) {
             result = CONHECIMENTOS_STRING;
         }
-        else if(TemplateEnumSTY.RECEIPT_NOTASFISCAIS.equals(templateEnumSTY)) {
+        else if (TemplateEnumSTY.RECEIPT_NOTASFISCAIS.equals(formType) ) {
             result = NOTAS_FISCAIS_STRING;
         }
         else {
-            throw new RuntimeException("Unable to convert. templateEnumSTY="+templateEnumSTY);
+            throw new RuntimeException("Unable to convert. templateEnumSTY="+formType);
         }
         return result;
     }
