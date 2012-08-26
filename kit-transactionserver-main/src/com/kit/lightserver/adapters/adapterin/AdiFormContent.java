@@ -11,7 +11,7 @@ import kit.primitives.forms.FormContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fap.collections.TransformFilter;
+import com.fap.collections.TransformAdapter;
 
 import com.kit.lightserver.domain.types.DataEntregaSTY;
 import com.kit.lightserver.domain.types.FormClientRowIdSTY;
@@ -126,19 +126,24 @@ final class AdiFormContent {
 
 	}
 
-	static <T> AdiFieldResult<T> getFieldByName(final FormContent primitive, final String fieldName,  final TransformFilter<T, String> converter) {
+	static <T> AdiFieldResult<T> getFieldByName(final FormContent primitive, final String fieldName,  final TransformAdapter<T, String> adapter) {
 	    for(int i=0; i < primitive.size(); ++i) {
 	        FieldAndContentBean current = primitive.get(i);
 	        if( fieldName.equals(current.getFieldName()) ) {
 	            String originalValue = current.getContent();
-	            T transformedValue = converter.transform(originalValue);
-	            return new AdiFieldResult<T>(transformedValue);
+	            T transformedValue = adapter.transform(originalValue);
+	            if(transformedValue != null) {
+	                return new AdiFieldResult<T>( transformedValue );
+	            }
+	            else {
+	                return new AdiFieldResult<T>();
+	            }
 	        }
 	    }
 	    return new AdiFieldResult<T>();
 	}
 
-	final static class StringFieldConverter implements TransformFilter<String, String> {
+	static final class StringFieldConverter implements TransformAdapter<String, String> {
         @Override
         public String transform(final String input) {
             if( input == null ) {
@@ -151,12 +156,12 @@ final class AdiFormContent {
         }
 	}// class
 
-	final static class StatusEntregaEnumFieldConverter implements TransformFilter<StatusEntregaEnumSTY, String> {
-
+	static final class StatusEntregaEnumFieldConverter implements TransformAdapter<StatusEntregaEnumSTY, String> {
         @Override
         public StatusEntregaEnumSTY transform(final String input) {
             try {
-            return StatusEntregaEnumSTY.valueOf(input);
+                final StatusEntregaEnumSTY statusEntregaEnum = StatusEntregaEnumSTY.valueOf(input);
+                return statusEntregaEnum;
             } catch(Exception e) {
                 LOGGER.error("Unexpected vule for StatusEntregaEnum. input={}", input);
                 return null;

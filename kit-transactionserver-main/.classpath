@@ -10,8 +10,8 @@
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.6.jar"/>
 	<classpathentry kind="lib" path="lib/kit-primitives-1.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/mssql2000_sqljdbc-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/kit-transactionserver-simplestatemachine-1.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/dajo-config-0.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/dajo-database-0.1.9.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/kit-transactionserver-simplestatemachine"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -42,12 +42,12 @@ public final class FormFlagsServices {
     public boolean flagFormsAsReceived(final String ktClientId, final List<FormSTY> forms) {
 
         final List<FormClientRowIdSTY> conhecimentos = new LinkedList<>();
-        SmartCollections.specialFilter(conhecimentos, forms, new ConhecimentoRowIdTransformFilter());
+        SmartCollections.specialFilter2(conhecimentos, forms, new ConhecimentoRowIdTransformFilter());
 
         boolean coSuccess = flagFormsByClientRowId(ktClientId, FormFlagEnum.RECEBIDO, conhecimentos);
 
         final List<FormClientRowIdSTY> notasfiscais = new LinkedList<>();
-        SmartCollections.specialFilter(notasfiscais, forms, new NotafiscalRowIdTransformFilter());
+        SmartCollections.specialFilter2(notasfiscais, forms, new NotafiscalRowIdTransformFilter());
 
         boolean nfSuccess = flagFormsByClientRowId(ktClientId, FormFlagEnum.RECEBIDO, notasfiscais);
 
@@ -75,7 +75,7 @@ public final class FormFlagsServices {
 
         FormRowIdFilter conhecimentosFilter = new FormRowIdFilter(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO);
         List<FormClientRowIdSTY> conhecimentos = new LinkedList<>();
-        SmartCollections.filter(conhecimentos, forms, conhecimentosFilter);
+        SmartCollections.filter2(conhecimentos, forms, conhecimentosFilter);
         LOGGER.info("Updating forms flags. conhecimentos="+conhecimentos.size());
 
         final UpdateConhecimentosFlagByClientRowIdQuery updateConhecimentoRecebidoFlagQuery = new UpdateConhecimentosFlagByClientRowIdQuery(formFlag, ktClientUserId, conhecimentos);
@@ -87,7 +87,7 @@ public final class FormFlagsServices {
 
         FormRowIdFilter notasfiscaisFilter = new FormRowIdFilter(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO);
         List<FormClientRowIdSTY> notasfiscais = new LinkedList<>();
-        SmartCollections.filter(notasfiscais, forms, notasfiscaisFilter);
+        SmartCollections.filter2(notasfiscais, forms, notasfiscaisFilter);
         LOGGER.info("Updating forms flags. notasfiscais="+notasfiscais.size());
 
 

@@ -6,7 +6,7 @@
 
 	<tstamp><format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/></tstamp>
 
-	<property name="tmp.rootdir" value="tmp/${jar.name}/${project.version}"/>
+	<property name="tmp.rootdir" value="${tmp.dir}/${jar.name}/${project.version}"/>
 	<property name="tmp.builddir" value="${tmp.rootdir}/${build.id}"/>
 	<property name="tmp.manifest.dir" value="${tmp.builddir}/manifest"/>
 	<property name="tmp.classes.dir" value="${tmp.builddir}/jar/classes"/>

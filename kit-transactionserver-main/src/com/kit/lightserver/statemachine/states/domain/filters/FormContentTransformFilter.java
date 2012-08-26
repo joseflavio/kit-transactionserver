@@ -1,9 +1,13 @@
-package com.kit.lightserver.statemachine.states;
+package com.kit.lightserver.statemachine.states.domain.filters;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fap.collections.SmartCollectionTransformFilter;
+import com.fap.collections.SmartCollectionTransformResult;
+import com.fap.collections.SmartCollections;
 
 import com.kit.lightserver.domain.types.ConhecimentoRSTY;
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
@@ -19,8 +23,15 @@ public final class FormContentTransformFilter implements SmartCollectionTransfor
 
     static private final Logger LOGGER = LoggerFactory.getLogger(FormContentTransformFilter.class);
 
+    private final List<FormSTY> allRelatedForms;
+
+    public FormContentTransformFilter(final List<FormSTY> allRelatedForms) {
+        LOGGER.info("allRelatedForms.size()="+allRelatedForms.size());
+        this.allRelatedForms = allRelatedForms;
+    }
+
     @Override
-    public ClientResponseRSTY transform(final FormSTY formSTY) {
+    public SmartCollectionTransformResult<ClientResponseRSTY> transform(final FormSTY formSTY) {
 
         final FormContentFullRSTY clientResponse;
         if (formSTY instanceof ConhecimentoSTY) {
@@ -33,10 +44,14 @@ public final class FormContentTransformFilter implements SmartCollectionTransfor
         }
         else {
             LOGGER.error("Unexpected form type. formSTY={}", formSTY);
-            throw new RuntimeException("Unexpected form type. formSTY="+formSTY);
+            clientResponse = null;
         }
 
-        return clientResponse;
+        if( clientResponse == null ) {
+            return new SmartCollectionTransformResult<ClientResponseRSTY>();
+        }
+
+        return new SmartCollectionTransformResult<ClientResponseRSTY>(clientResponse);
 
     }
 
@@ -47,10 +62,9 @@ public final class FormContentTransformFilter implements SmartCollectionTransfor
     }
 
     private NotafiscalRSTY buildNotafiscalForClient(final NotafiscalSTY formSTY) {
-        // TODO Auto-generated method stub
+        FormSTY found = SmartCollections.match2(allRelatedForms, new ConhecimentoMatchFilter(formSTY.getParentFormId()) );
+        LOGGER.info("found="+found);
         return null;
     }
-
-
 
 }// class

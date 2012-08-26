@@ -17,6 +17,7 @@ import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.services.db.dbd.FormFlagsServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormOperationClientSuccessEventSME;
+import com.kit.lightserver.statemachine.states.domain.filters.FormContentTransformFilter;
 import com.kit.lightserver.statemachine.types.CommunicationCTX;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.ChannelProgressRSTY;
@@ -118,7 +119,7 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
             final List<FormSTY> formsToSend = communicationCTX.extractFormsToSendInOrder(MAX_FORMS_TO_SEND_UNTIL_CONFIRMATION);
             if( formsToSend.size() > 0) {
 
-                List<ClientResponseRSTY> clientResponses = new LinkedList<ClientResponseRSTY>();
+                List<ClientResponseRSTY> clientResponses = new LinkedList<>();
                 sendFormsAndRequestClientStatus(clientResponses, formsToSend);
 
                 if(clientResponses.size() > 0 ) {
@@ -126,7 +127,7 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
                     context.getClientAdapterOut().sendBack(primitivesEnvelope);
                 }
 
-                return new ResultWaitEvent<KitEventSME>();
+                return new ResultWaitEvent<>();
 
             }
             else {
@@ -165,7 +166,8 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
         else {
 
             // Normal case
-            SmartCollections.specialFilter(responseList, formsToSend, new FormContentTransformFilter());
+            FormContentTransformFilter transformFilter = new FormContentTransformFilter(formsToSend);
+            SmartCollections.specialFilter2(responseList, formsToSend, transformFilter);
             LOGGER.warn("debuging={}", responseList);
 
             // No exception we add the forms to the send list
