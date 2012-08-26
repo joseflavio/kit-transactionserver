@@ -73,7 +73,7 @@ public final class FormServices {
         }
 
         List<ConhecimentoSTY> conhecimentosList = conhecimentosQueryResult.getResult();
-        FormServices.LOGGER.debug("conhecimentoList.size()=" + conhecimentosList.size());
+        FormServices.LOGGER.info("conhecimentoList.size()=" + conhecimentosList.size());
 
         // TODO: Usar um método melhor de salvar estatisticas dos serviços
         final Chronometer c1 = new Chronometer("NotasfiscaisServices.retrieveNotasfiscais");
@@ -89,7 +89,7 @@ public final class FormServices {
         }
 
         final List<NotafiscalSTY> notasfiscaisList = notasfiscaisResult.getValidResult();
-        FormServices.LOGGER.debug("notasfiscaisList.size()=" + notasfiscaisList.size());
+        FormServices.LOGGER.info("notasfiscaisList.size()=" + notasfiscaisList.size());
 
         final FormsParaEnviarCTX formsContext = new FormsParaEnviarCTX(conhecimentosList, notasfiscaisList);
 
@@ -148,7 +148,7 @@ public final class FormServices {
         }
 
         InsertFormFieldString32Query insertStatusEntregaQuery = new InsertFormFieldString32Query(
-                formClientRowId, "STATUS_DA_ENTREGA", statusEntregaEnumSTY.getDatabaseCode(), statusEntregaEnumSTY.toString());
+                formClientRowId, "STATUS_DA_ENTREGA", statusEntregaEnumSTY.getCode(), statusEntregaEnumSTY.toString());
 
         InsertQueryResult statusEntregaResult = dblQueryExecutor.executeInsertQuery(insertStatusEntregaQuery);
 

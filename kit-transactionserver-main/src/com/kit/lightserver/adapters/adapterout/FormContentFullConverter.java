@@ -9,6 +9,7 @@ import kit.primitives.forms.FormContentFull;
 import com.kit.lightserver.domain.types.ConhecimentoRSTY;
 import com.kit.lightserver.domain.types.FormFlagsSTY;
 import com.kit.lightserver.domain.types.NotafiscalRSTY;
+import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.types.response.FormContentFullConhecimentoRSTY;
 import com.kit.lightserver.types.response.FormContentFullNotafiscalRSTY;
 import com.kit.lightserver.types.response.FormContentFullRSTY;
@@ -65,10 +66,11 @@ public final class FormContentFullConverter {
         response.add(numeroConhecimentoBean);
 
         //final String statusEntregaStr = StatusEntregaConverter.toKeyString(form.getStatusEntrega());
-        //final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", statusEntregaStr);
-        //response.add(statusEntregaBean);
 
-        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", "");  // Mandatory, the mobile crashes without it
+        final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", StatusEntregaEnumSTY.AN.getCode() ); // TODO: Mandatory, hard-coded, AINDA NAO ENTREGUE
+        response.add(statusEntregaBean);
+
+        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", "" );  // Mandatory, the mobile crashes without it
         response.add(dataEntregaBean);
 
         final String remetenteCNPJ = form.getRemetenteCNPJ();
@@ -108,11 +110,11 @@ public final class FormContentFullConverter {
         final FieldAndContentBean numeroConhecimentoBean = new FieldAndContentBean("ancora", parentCategoryAncora);
         response.add(numeroConhecimentoBean);
 
-        final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", "AN"); // AN = Ainda não entregue
+        final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", StatusEntregaEnumSTY.AN.getCode() ); // Mandatory
         response.add(statusEntregaBean);
 
-        final String dataEntregaStr = ""; //DataEntregaConverter.convertToClientString(form.getDataEntrega()); // Mandatory, the mobile crashes without it?
-        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", dataEntregaStr);
+        //final String dataEntregaStr = ""; //DataEntregaConverter.convertToClientString(form.getDataEntrega()); // Mandatory, the mobile crashes without it?
+        final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", "");
         response.add(dataEntregaBean);
 
         return response;

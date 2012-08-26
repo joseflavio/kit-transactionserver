@@ -52,11 +52,12 @@ final class ClientAuthenticationSuccessfulState extends BaseState implements Sta
         }
 
         /*
-         * First we order the forms (group the Notasficais to be sent after its Conhecimento)
+         * First we order the forms (group the Notasfiscais to be sent after its Conhecimento)
          */
         final FormsParaEnviarCTX formsContext = serviceResponse.getValidResult();
+        LOGGER.warn("formsContext.getConhecimentoList()= " + formsContext.getConhecimentoList() );
         final CommunicationCTX communicationCTX = new CommunicationCTX();
-        for (final ConhecimentoSTY conhecimentoSTY : formsContext.getConhecimentoList()) {
+        for ( final ConhecimentoSTY conhecimentoSTY : formsContext.getConhecimentoList() ) {
             communicationCTX.addToFormsToSendOrderedList(conhecimentoSTY);
             final List<NotafiscalSTY> notasFiscaisDoConhecimento = formsContext.getNotasfiscaisPorConhecimento(conhecimentoSTY);
             if( notasFiscaisDoConhecimento != null ) {

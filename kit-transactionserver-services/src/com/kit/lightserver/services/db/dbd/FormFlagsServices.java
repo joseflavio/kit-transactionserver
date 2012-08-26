@@ -76,26 +76,29 @@ public final class FormFlagsServices {
         FormRowIdFilter conhecimentosFilter = new FormRowIdFilter(TemplateEnumSTY.CO);
         List<FormClientRowIdSTY> conhecimentos = new LinkedList<>();
         SmartCollections.filter2(conhecimentos, forms, conhecimentosFilter);
-        LOGGER.info("Updating forms flags. conhecimentos="+conhecimentos.size());
 
-        final UpdateConhecimentosFlagByClientRowIdQuery updateConhecimentoRecebidoFlagQuery = new UpdateConhecimentosFlagByClientRowIdQuery(formFlag, ktClientUserId, conhecimentos);
-        final UpdateQueryResult conhecimentosFlagResult = dbdQueryExecutor.executeUpdateQuery(updateConhecimentoRecebidoFlagQuery);
-        if (conhecimentosFlagResult.isUpdateQuerySuccessful() == false) {
-            LOGGER.error("Error updating the flag");
-            return false;
+        if( conhecimentos.size() > 0 ) {
+            LOGGER.info("Updating forms flags. conhecimentos="+conhecimentos.size());
+            UpdateConhecimentosFlagByClientIdQuery updateConhecimentoRecebidoFlagQuery = new UpdateConhecimentosFlagByClientIdQuery(formFlag, ktClientUserId, conhecimentos);
+            UpdateQueryResult conhecimentosFlagResult = dbdQueryExecutor.executeUpdateQuery(updateConhecimentoRecebidoFlagQuery);
+            if (conhecimentosFlagResult.isUpdateQuerySuccessful() == false) {
+                LOGGER.error("Error updating the flag");
+                return false;
+            }
         }
 
         FormRowIdFilter notasfiscaisFilter = new FormRowIdFilter(TemplateEnumSTY.CO);
         List<FormClientRowIdSTY> notasfiscais = new LinkedList<>();
         SmartCollections.filter2(notasfiscais, forms, notasfiscaisFilter);
-        LOGGER.info("Updating forms flags. notasfiscais="+notasfiscais.size());
 
-
-        final UpdateNotasfiscaisFlagByClientRowIdQuery updateNotasfiscaisRecebidasFlagQuery = new UpdateNotasfiscaisFlagByClientRowIdQuery(formFlag, notasfiscais);
-        final UpdateQueryResult notasfiscaisFlagResult = dbdQueryExecutor.executeUpdateQuery(updateNotasfiscaisRecebidasFlagQuery);
-        if (notasfiscaisFlagResult.isUpdateQuerySuccessful() == false) {
-            LOGGER.error("Error updating the flag");
-            return false;
+        if( notasfiscais.size() > 0 ) {
+            LOGGER.info("Updating forms flags. notasfiscais="+notasfiscais.size());
+            final UpdateNotasfiscaisFlagByClientRowIdQuery updateNotasfiscaisRecebidasFlagQuery = new UpdateNotasfiscaisFlagByClientRowIdQuery(formFlag, notasfiscais);
+            final UpdateQueryResult notasfiscaisFlagResult = dbdQueryExecutor.executeUpdateQuery(updateNotasfiscaisRecebidasFlagQuery);
+            if (notasfiscaisFlagResult.isUpdateQuerySuccessful() == false) {
+                LOGGER.error("Error updating the flag");
+                return false;
+            }
         }
 
         return true;

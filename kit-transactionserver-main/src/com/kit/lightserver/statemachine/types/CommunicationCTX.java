@@ -10,10 +10,14 @@ public final class CommunicationCTX {
 
     private final LinkedList<FormSTY> formsToSendOrderedList = new LinkedList<>();
 
-    private final List<FormSTY> formSentList = new LinkedList<>();
+    private final List<FormSTY> formAlreadySentList = new LinkedList<>();
 
     public void addToFormsToSendOrderedList(final FormSTY formSTY) {
         formsToSendOrderedList.add(formSTY);
+    }
+
+    public void addToFormSentList(final Collection<FormSTY> formSTY) {
+        formAlreadySentList.addAll(formSTY);
     }
 
     public int getAllFormsListSize() {
@@ -41,16 +45,14 @@ public final class CommunicationCTX {
 
     }
 
-    public void addToFormSentList(final Collection<FormSTY> formSTY) {
-        formSentList.addAll(formSTY);
-    }
+
 
     public List<FormSTY> getFormsSentWaitingForConfirmationList() {
-        return formSentList;
+        return formAlreadySentList;
     }
 
     public void clearSentListWaitingForConfirmation() {
-        formSentList.clear();
+        formAlreadySentList.clear();
     }
 
 }// class

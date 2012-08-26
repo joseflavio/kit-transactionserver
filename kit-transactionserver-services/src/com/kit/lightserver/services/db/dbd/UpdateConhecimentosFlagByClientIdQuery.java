@@ -11,7 +11,7 @@ import org.dajo.framework.db.util.QueryUtil;
 
 import com.kit.lightserver.domain.types.FormClientRowIdSTY;
 
-final class UpdateConhecimentosFlagByClientRowIdQuery implements UpdateQueryInterface {
+final class UpdateConhecimentosFlagByClientIdQuery implements UpdateQueryInterface {
 
     private final String flagColumn;
 
@@ -21,7 +21,7 @@ final class UpdateConhecimentosFlagByClientRowIdQuery implements UpdateQueryInte
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    public UpdateConhecimentosFlagByClientRowIdQuery(final FormFlagEnum flag, final String ktClientUserId, final List<FormClientRowIdSTY> conhecimentosList) {
+    public UpdateConhecimentosFlagByClientIdQuery(final FormFlagEnum flag, final String ktClientUserId, final List<FormClientRowIdSTY> conhecimentosList) {
 
         if( conhecimentosList == null || conhecimentosList.size() == 0 ) {
             throw new RuntimeException("conhecimentosList can not be empty.");

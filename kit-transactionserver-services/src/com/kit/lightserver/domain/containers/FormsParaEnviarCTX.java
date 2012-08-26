@@ -13,12 +13,12 @@ import com.kit.lightserver.domain.types.NotafiscalSTY;
 
 public final class FormsParaEnviarCTX {
 
+    static private final Logger LOGGER = LoggerFactory.getLogger(FormsParaEnviarCTX.class);
+
     private final List<ConhecimentoSTY> conhecimentoList;
     private final List<NotafiscalSTY> notasfiscaisList;
 
     private final Map2<FormUniqueIdSTY, List<NotafiscalSTY>> notasfiscaisPorConhecimentoMap = new HashMap2<>(new FormUniqueIdSTYStringKeyGen());
-
-    private final Logger LOGGER = LoggerFactory.getLogger(FormsParaEnviarCTX.class);
 
     public FormsParaEnviarCTX(final List<ConhecimentoSTY> conhecimentoList, final List<NotafiscalSTY> notasfiscaisList) {
 

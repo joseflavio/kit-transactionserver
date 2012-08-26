@@ -12,7 +12,7 @@ public enum StatusEntregaEnumSTY {
         this.databaseCode = databaseCode;
     }
 
-    public String getDatabaseCode() {
+    public String getCode() {
         return databaseCode;
     }
 
