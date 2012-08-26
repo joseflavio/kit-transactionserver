@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormUniqueIdSTY;
+import com.kit.lightserver.domain.types.FormUniqueIdSTYStringKeyGen;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
 
 public final class FormsParaEnviarCTX {
@@ -15,7 +16,7 @@ public final class FormsParaEnviarCTX {
     private final List<ConhecimentoSTY> conhecimentoList;
     private final List<NotafiscalSTY> notasfiscaisList;
 
-    private final Map2<FormUniqueIdSTY, List<NotafiscalSTY>> notasfiscaisPorConhecimentoMap = new HashMap2<>();
+    private final Map2<FormUniqueIdSTY, List<NotafiscalSTY>> notasfiscaisPorConhecimentoMap = new HashMap2<>(new FormUniqueIdSTYStringKeyGen());
 
     private final Logger LOGGER = LoggerFactory.getLogger(FormsParaEnviarCTX.class);
 
@@ -47,7 +48,7 @@ public final class FormsParaEnviarCTX {
             final FormUniqueIdSTY parentFormId = conhecimentoSTY.getFormUniqueId();
             final List<NotafiscalSTY> notasFiscaisDoConhecimentoList = notasfiscaisPorConhecimentoMap.getByKey( parentFormId );
             if (notasFiscaisDoConhecimentoList == null || notasFiscaisDoConhecimentoList.size() == 0) {
-                LOGGER.error("FormConhecimento without notasFiscais. parentConhecimentoRowId="+parentFormId+", notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList);
+                LOGGER.error("FormConhecimento without notasFiscais. parentFormId="+parentFormId+", notasFiscaisDoConhecimentoList="+notasFiscaisDoConhecimentoList);
             }
         }// for
 

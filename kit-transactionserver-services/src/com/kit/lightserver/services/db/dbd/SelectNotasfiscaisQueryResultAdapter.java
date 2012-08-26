@@ -2,18 +2,16 @@ package com.kit.lightserver.services.db.dbd;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.dajo.framework.db.SelectQueryResultAdapter;
 
+import com.kit.lightserver.domain.types.FormFlagsSTY;
 import com.kit.lightserver.domain.types.FormIdSTY;
 import com.kit.lightserver.domain.types.FormUniqueIdSTY;
 import com.kit.lightserver.domain.types.NotafiscalSTY;
-import com.kit.lightserver.domain.types.StatusEntregaEnumSTY;
 import com.kit.lightserver.domain.types.TemplateEnumSTY;
-import com.kit.lightserver.domain.util.DateCopier;
 
 public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryResultAdapter<List<NotafiscalSTY>> {
 
@@ -23,12 +21,11 @@ public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryRe
         final List<NotafiscalSTY> result = new LinkedList<NotafiscalSTY>();
         while (rs.next()) {
 
-            final String idStr = rs.getString( DBDTables.NOTASFISCAIS.FORMID );
-            final FormIdSTY simpleFormId = FormIdSTY.newInstance(idStr);
+            final FormIdSTY simpleFormId = FormIdSTY.newInstance( rs.getString( DBDTables.NOTASFISCAIS.FORMID ) );
 
-            final int notafiscalKtRowId = rs.getInt( DBDTables.NOTASFISCAIS.KTROWID );
+            final int notafiscalKtRowId = rs.getInt( DBDTables.NOTASFISCAIS.FORM_CLIENT_ROWID );
             final String parentIdStr = rs.getString(  DBDTables.NOTASFISCAIS.PARENT_FORMID );
-            final FormUniqueIdSTY parentFormId =  FormUniqueIdSTY.newInstance(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO, parentIdStr);
+            final FormUniqueIdSTY parentFormId =  FormUniqueIdSTY.newInstance(TemplateEnumSTY.CO, parentIdStr);
 
             final boolean isReceived = true;
             final boolean isRead = true;
@@ -38,16 +35,16 @@ public final class SelectNotasfiscaisQueryResultAdapter implements SelectQueryRe
             final String numeroConhecimento = rs.getString("KTFieldReceiptNumber");
             final String serialConhecimento = rs.getString("KTFieldReceiptSerial");
 
-            final String statusDaEntregaStr = rs.getString("KTCelularEntregaStatus");
-            final StatusEntregaEnumSTY statusDaEntrega = StatusEntregaSTYParser.parse(statusDaEntregaStr);
+            final FormFlagsSTY formFlags = new FormFlagsSTY(isReceived, isRead, isEdited);
+            //final String statusDaEntregaStr = rs.getString("KTCelularEntregaStatus");
+            //final StatusEntregaEnumSTY statusDaEntrega = StatusEntregaSTYParser.parse(statusDaEntregaStr);
 
-            final java.sql.Timestamp  sqlDataDaEntrega = rs.getTimestamp("KTCelularEntregaData"); // DEVERIA REMOVER
-            final Date dataDaEntrega = DateCopier.newInstance( sqlDataDaEntrega );
+            //final java.sql.Timestamp  sqlDataDaEntrega = rs.getTimestamp("KTCelularEntregaData"); // DEVERIA REMOVER
+            //final Date dataDaEntrega = DateCopier.newInstance( sqlDataDaEntrega );
 
             final String title = "NF " + numeroConhecimento + " " + serialConhecimento;
 
-            final NotafiscalSTY conhecimentoSTY = new NotafiscalSTY(simpleFormId, notafiscalKtRowId, isReceived, isRead, isEdited, parentFormId, title,
-                    dataDaEntrega, statusDaEntrega);
+            final NotafiscalSTY conhecimentoSTY = new NotafiscalSTY(simpleFormId, notafiscalKtRowId, formFlags, parentFormId, title);
 
             result.add(conhecimentoSTY);
 

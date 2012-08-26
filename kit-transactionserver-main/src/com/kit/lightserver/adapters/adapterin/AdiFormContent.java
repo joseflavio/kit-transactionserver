@@ -110,11 +110,11 @@ final class AdiFormContent {
         String formType = formIdArray[0];
 
 	    if( CONHECIMENTOS_TYPE.equals(formType) ) {
-            final FormClientRowIdSTY conhecimentoId = new FormClientRowIdSTY(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO, ktRowId);
+            final FormClientRowIdSTY conhecimentoId = new FormClientRowIdSTY(TemplateEnumSTY.CO, ktRowId);
             return conhecimentoId;
         }
 	    else if( NOTAFISCAIS_TYPE.equals(formType) ) {
-	        final FormClientRowIdSTY nfId = new FormClientRowIdSTY(TemplateEnumSTY.RECEIPT_NOTASFISCAIS, ktRowId);
+	        final FormClientRowIdSTY nfId = new FormClientRowIdSTY(TemplateEnumSTY.NF, ktRowId);
 	        return nfId;
 	    }
         else {

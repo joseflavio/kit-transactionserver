@@ -1,10 +1,9 @@
 package com.kit.lightserver.domain.types;
 
-import java.util.Date;
 
 public final class NotafiscalRSTY {
 
-    private final TemplateEnumSTY formType = TemplateEnumSTY.RECEIPT_NOTASFISCAIS;
+    private final TemplateEnumSTY formType = TemplateEnumSTY.NF;
 
     private final FormClientRowIdSTY formClientRowIdSTY;
 
@@ -14,16 +13,13 @@ public final class NotafiscalRSTY {
 
     private final String title;
 
-    private final Date dataEntrega;
-
     public NotafiscalRSTY(final FormClientRowIdSTY formClientRowIdSTY, final FormClientRowIdSTY parentFormClientRowIdSTY, final FormFlagsSTY formFlagsSTY,
-            final String title, final Date dataEntrega) {
+            final String title) {
 
         this.formClientRowIdSTY = formClientRowIdSTY;
         this.parentFormClientRowIdSTY = parentFormClientRowIdSTY;
         this.formFlagsSTY = formFlagsSTY;
         this.title = title;
-        this.dataEntrega = new Date(dataEntrega.getTime());
 
     }
 
@@ -47,8 +43,5 @@ public final class NotafiscalRSTY {
         return title;
     }
 
-    public Date getDataEntrega() {
-        return new Date(dataEntrega.getTime());
-    }
 
 }// class

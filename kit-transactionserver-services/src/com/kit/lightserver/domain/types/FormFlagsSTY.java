@@ -24,4 +24,9 @@ public final class FormFlagsSTY {
         return isEdited;
     }
 
+    @Override
+    public String toString() {
+        return "FormFlagsSTY [isReceived=" + isReceived + ", isRead=" + isRead + ", isEdited=" + isEdited + "]";
+    }
+
 }// class

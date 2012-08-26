@@ -16,8 +16,8 @@ public final class ConhecimentoSTY extends FormSTY {
     public ConhecimentoSTY(final FormIdSTY formId, final int ktRowId, final String ktClientUserId, final FormFlagsSTY formFlags, final String title,
             final String remetenteCNPJ, final String destinatarioNome) {
 
-        this.formUniqueId = new FormUniqueIdSTY( TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO, formId );
-        this.formClientRowId = new FormClientRowIdSTY(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO, ktRowId);
+        this.formUniqueId = new FormUniqueIdSTY( TemplateEnumSTY.CO, formId );
+        this.formClientRowId = new FormClientRowIdSTY(TemplateEnumSTY.CO, ktRowId);
 
         this.ktClientUserId = ktClientUserId;
 
@@ -55,6 +55,12 @@ public final class ConhecimentoSTY extends FormSTY {
 
     public String getDestinatarioNome() {
         return destinatarioNome;
+    }
+
+    @Override
+    public String toString() {
+        return "ConhecimentoSTY [formUniqueId=" + formUniqueId + ", formClientRowId=" + formClientRowId + ", ktClientUserId=" + ktClientUserId + ", formFlags="
+                + formFlags + ", title=" + title + ", remetenteCNPJ=" + remetenteCNPJ + ", destinatarioNome=" + destinatarioNome + "]";
     }
 
 }// class

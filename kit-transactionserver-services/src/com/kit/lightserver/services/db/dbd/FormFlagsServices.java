@@ -73,7 +73,7 @@ public final class FormFlagsServices {
 
         if (forms.size() == 0) { LOGGER.warn("No forms to update."); return false; }
 
-        FormRowIdFilter conhecimentosFilter = new FormRowIdFilter(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO);
+        FormRowIdFilter conhecimentosFilter = new FormRowIdFilter(TemplateEnumSTY.CO);
         List<FormClientRowIdSTY> conhecimentos = new LinkedList<>();
         SmartCollections.filter2(conhecimentos, forms, conhecimentosFilter);
         LOGGER.info("Updating forms flags. conhecimentos="+conhecimentos.size());
@@ -85,7 +85,7 @@ public final class FormFlagsServices {
             return false;
         }
 
-        FormRowIdFilter notasfiscaisFilter = new FormRowIdFilter(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO);
+        FormRowIdFilter notasfiscaisFilter = new FormRowIdFilter(TemplateEnumSTY.CO);
         List<FormClientRowIdSTY> notasfiscais = new LinkedList<>();
         SmartCollections.filter2(notasfiscais, forms, notasfiscaisFilter);
         LOGGER.info("Updating forms flags. notasfiscais="+notasfiscais.size());

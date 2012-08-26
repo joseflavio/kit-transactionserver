@@ -12,6 +12,11 @@ public final class FormIdSTY {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return "FormIdSTY [value=" + value + "]";
+    }
+
     static public FormIdSTY newInstance(final String value) {
         if( value == null ) {
             throw new RuntimeException("The FormID can not be null.");

@@ -31,7 +31,7 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 
         queryParameters.add( new QueryStringParameter(ktClientUserId) );
 
-        final String orClause = QueryUtil.buildLongOrClause("[KTParentConhecimentoRowId]", parentFormsIds.size());
+        final String orClause = QueryUtil.buildLongOrClause(DBDTables.NOTASFISCAIS.PARENT_FORMID, parentFormsIds.size());
 
         for (final FormUniqueIdSTY parent : parentFormsIds) {
             assert( FormUniqueIdSTY.isConhecimento(parent) == true );
@@ -46,8 +46,12 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
     @Override
     public String getPreparedSelectQueryString() {
 
-        String selectQueryStr = "SELECT KTRowId, KTParentConhecimentoRowId, KTFieldReceiptNumber, KTFieldReceiptSerial, KTCelularEntregaStatus, " +
-        		"KTCelularEntregaData FROM " + DBDTables.NOTASFISCAIS.TABLE_NAME +
+        String selectQueryStr = "SELECT " +
+                DBDTables.NOTASFISCAIS.FORMID + ", " +
+                DBDTables.NOTASFISCAIS.PARENT_FORMID + ", " +
+                DBDTables.NOTASFISCAIS.FORM_CLIENT_ROWID + ", " +
+                "KTFieldReceiptNumber, KTFieldReceiptSerial FROM " + // KTCelularEntregaStatus, KTCelularEntregaData
+                DBDTables.NOTASFISCAIS.TABLE_NAME +
         		" WHERE KTClientUserId=? AND KTFlagRemovido=0 AND ( " + parentKnowledgeRowIdOrClause + " )";
 
         if( selecionarSomenteNaoRecebidos == true ) {

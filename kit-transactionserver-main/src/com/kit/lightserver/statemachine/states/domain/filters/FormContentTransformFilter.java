@@ -55,16 +55,20 @@ public final class FormContentTransformFilter implements SmartCollectionTransfor
 
     }
 
-    private ConhecimentoRSTY buildConhecimentoForClient(final ConhecimentoSTY formSTY) {
+    static private ConhecimentoRSTY buildConhecimentoForClient(final ConhecimentoSTY formSTY) {
         ConhecimentoRSTY conhecimentoRSTY = new ConhecimentoRSTY(formSTY.getFormClientRowId(), formSTY.getFormFlags(), formSTY.getTitle(),
                 formSTY.getRemetenteCNPJ(), formSTY.getDestinatarioNome());
         return conhecimentoRSTY;
     }
 
     private NotafiscalRSTY buildNotafiscalForClient(final NotafiscalSTY formSTY) {
-        FormSTY found = SmartCollections.match2(allRelatedForms, new ConhecimentoMatchFilter(formSTY.getParentFormId()) );
-        LOGGER.info("found="+found);
-        return null;
+        FormSTY parentForm = SmartCollections.match2(allRelatedForms, new ConhecimentoMatchFilter(formSTY.getParentFormId()));
+        ConhecimentoSTY parentConhecimento = (ConhecimentoSTY) parentForm;
+
+        NotafiscalRSTY notafiscalRSTY = new NotafiscalRSTY(formSTY.getFormClientRowId(), parentConhecimento.getFormClientRowId(), formSTY.getFormFlags(),
+                formSTY.getTitle());
+
+        return notafiscalRSTY;
     }
 
 }// class

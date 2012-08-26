@@ -111,12 +111,19 @@ public final class FormContentFullConverter {
         final FieldAndContentBean statusEntregaBean = new FieldAndContentBean("statusEntrega", "AN"); // AN = Ainda não entregue
         response.add(statusEntregaBean);
 
-        final String dataEntregaStr = DataEntregaConverter.convertToClientString(form.getDataEntrega());
+        final String dataEntregaStr = ""; //DataEntregaConverter.convertToClientString(form.getDataEntrega()); // Mandatory, the mobile crashes without it?
         final FieldAndContentBean dataEntregaBean = new FieldAndContentBean("dataEntrega", dataEntregaStr);
         response.add(dataEntregaBean);
 
         return response;
 
+    }
+
+    static public String convertToClientString(final Date date) {
+        if( date == null ) {
+            return ""; // The primitive date string should not be null but an empty string
+        }
+        return Long.toString( date.getTime() );
     }
 
     static private byte calculateFormStatus(final FormFlagsSTY formFlags) {

@@ -7,6 +7,9 @@ public final class FormContentFullConhecimentoRSTY extends FormContentFullRSTY {
     private final ConhecimentoRSTY conhecimentoSTY;
 
     public FormContentFullConhecimentoRSTY(final ConhecimentoRSTY conhecimentoSTY) {
+        if( conhecimentoSTY == null ) {
+            throw new NullPointerException();
+        }
         this.conhecimentoSTY = conhecimentoSTY;
     }// constructor
 

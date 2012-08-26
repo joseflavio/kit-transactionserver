@@ -6,8 +6,11 @@ public final class FormContentFullNotafiscalRSTY extends FormContentFullRSTY {
 
     private final NotafiscalRSTY notafiscalSTY;
 
-    public FormContentFullNotafiscalRSTY(final NotafiscalRSTY conhecimentoSTY) {
-        this.notafiscalSTY = conhecimentoSTY;
+    public FormContentFullNotafiscalRSTY(final NotafiscalRSTY notafiscalSTY) {
+        if( notafiscalSTY == null ) {
+            throw new NullPointerException();
+        }
+        this.notafiscalSTY = notafiscalSTY;
     }// constructor
 
     public NotafiscalRSTY getNotafiscalSTY() {

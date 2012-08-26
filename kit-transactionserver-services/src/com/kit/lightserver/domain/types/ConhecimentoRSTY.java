@@ -2,7 +2,7 @@ package com.kit.lightserver.domain.types;
 
 public final class ConhecimentoRSTY {
 
-    private final TemplateEnumSTY formType = TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO;
+    private final TemplateEnumSTY formType = TemplateEnumSTY.CO;
 
     private final FormClientRowIdSTY formClientRowIdSTY;
 

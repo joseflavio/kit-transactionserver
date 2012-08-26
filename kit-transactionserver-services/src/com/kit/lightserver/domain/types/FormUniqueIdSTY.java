@@ -20,7 +20,7 @@ public final class FormUniqueIdSTY {
     }
 
     static public boolean isConhecimento(final FormUniqueIdSTY formId) {
-        if( formId == null || formId.getFormType().equals(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO) == false ) {
+        if( formId == null || formId.getFormType().equals(TemplateEnumSTY.CO) == false ) {
             return false;
         }
         return true;
@@ -29,6 +29,11 @@ public final class FormUniqueIdSTY {
     static public FormUniqueIdSTY newInstance(final TemplateEnumSTY type, final String idStr) {
         final FormIdSTY formId = FormIdSTY.newInstance(idStr);
         return new FormUniqueIdSTY(type, formId);
+    }
+
+    @Override
+    public String toString() {
+        return "FormUniqueIdSTY [formId=" + formId + ", formType=" + formType + "]";
     }
 
 }// class

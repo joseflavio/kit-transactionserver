@@ -10,10 +10,10 @@ final class TemplateEnumSTYConverter {
 
     static String convertToClientString(final TemplateEnumSTY formType) {
         final String result;
-        if( TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO.equals(formType) ) {
+        if( TemplateEnumSTY.CO.equals(formType) ) {
             result = CONHECIMENTOS_STRING;
         }
-        else if (TemplateEnumSTY.RECEIPT_NOTASFISCAIS.equals(formType) ) {
+        else if (TemplateEnumSTY.NF.equals(formType) ) {
             result = NOTAS_FISCAIS_STRING;
         }
         else {
@@ -24,10 +24,10 @@ final class TemplateEnumSTYConverter {
 
     static TemplateEnumSTY getByClientTemplateIdStr(final String value) {
         if( CONHECIMENTOS_STRING.equals(value) ) {
-            return TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO;
+            return TemplateEnumSTY.CO;
         }
         if( NOTAS_FISCAIS_STRING.equals(value) ) {
-            return TemplateEnumSTY.RECEIPT_NOTASFISCAIS;
+            return TemplateEnumSTY.NF;
         }
         throw new RuntimeException("Unable to convert. value="+value);
     }

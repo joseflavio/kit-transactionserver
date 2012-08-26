@@ -24,14 +24,14 @@ public final class FormClientRowIdSTY {
     }
 
     static public boolean isConhecimento(final FormClientRowIdSTY formClientRowId) {
-        if( formClientRowId == null || formClientRowId.getFormType().equals(TemplateEnumSTY.KNOWLEDGE_CONHECIMENTO) == false ) {
+        if( formClientRowId == null || formClientRowId.getFormType().equals(TemplateEnumSTY.CO) == false ) {
             return false;
         }
         return true;
     }
 
     public static boolean isNotafiscal(final FormClientRowIdSTY formClientRowId) {
-        if( formClientRowId == null || formClientRowId.getFormType().equals(TemplateEnumSTY.RECEIPT_NOTASFISCAIS) == false ) {
+        if( formClientRowId == null || formClientRowId.getFormType().equals(TemplateEnumSTY.NF) == false ) {
             return false;
         }
         return true;
