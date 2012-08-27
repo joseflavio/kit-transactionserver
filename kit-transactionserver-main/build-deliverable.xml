@@ -2,10 +2,9 @@
 <project name="kit-transactionserver-zip" default="build-deliverable" basedir=".">
 
 	<property file="build-deliverable.properties"/>
-	<property name="deliverable.name" value="kit-server"/>
-	<property name="deliverable.version" value="beta3"/>
+	
 	<property name="deliverable.zipfilename" value="${deliverable.name}-${deliverable.version}-${server.config.name}"/>
-	<property name="tmp.deliverable.zipdir" value="tmp/${deliverable.zipfilename}.zip" />
+	<property name="tmp.deliverable.zipdir" value="${tmp.dir}/${deliverable.zipfilename}.zip" />
 	<property name="tmp.deliverable.dir" value="${tmp.deliverable.zipdir}/${deliverable.zipfilename}"/>
 
 	<target name="clean-all">
