@@ -29,15 +29,31 @@ public class CommandLineSelect {
         String selectQueryStr = args[1];
         System.out.println("selectQueryStr="+selectQueryStr);
 
+        String[] firstSplit = connectionStr.split("@");
+        String[] secondSplit = firstSplit[0].split("/");
+
+        String username = secondSplit[0];
+        String password = secondSplit[1];
+
+        String[] thirdSplit = firstSplit[1].split("/");
+        String[] fourthSplit = thirdSplit[0].split(":");
+
+        String host = fourthSplit[0];
+        String port = fourthSplit[1];
+        String databaseName = thirdSplit[1];
+
         /*
          * Build the configuration
          */
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("database.default.host", "107.22.162.94");
-        map.put("database.default.port", "1433");
-        map.put("database.default.name", "KEEPIN_V01_DEMO01");
-        map.put("database.default.user", "sa");
-        map.put("database.default.password", "chicabom2012!");
+        map.put("database.default.host", host );
+        map.put("database.default.port", port );
+        map.put("database.default.name", databaseName );
+        map.put("database.default.user", username );
+        map.put("database.default.password", password );
+
+        System.out.println("map="+map);
+
         SimpleConfigAccessor configAccessor = SimpleConfigAccessor.getInstance(map);
         DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor, true);
         SimpleQueryExecutor executor = new SimpleQueryExecutor(dbConfig);
@@ -53,12 +69,10 @@ public class CommandLineSelect {
             List<String> result = queryResult.getResult();
             int i = 1;
             for (String currentLine : result) {
-                System.out.println(i +". " + currentLine);
+                System.out.println(i+". \t" + currentLine);
                 ++i;
             }
         }
-
-
 
     }
 
@@ -84,10 +98,16 @@ public class CommandLineSelect {
             ResultSetMetaData rsmd = rs.getMetaData();
             int columns = rsmd.getColumnCount();
             while( rs.next() ) {
-               String currentLine = "";
+               String currentLine = null;
                for (int i = 0; i < columns; i++) {
-                   String currentColumn = rs.getString(i);
-                   currentLine += currentColumn + " | ";
+                   int columnIndex = i + 1; // first column index is 1
+                   String currentColumnContent = rs.getString(columnIndex);
+                   if( currentLine == null ) {
+                       currentLine = currentColumnContent;
+                   }
+                   else {
+                       currentLine += "\t" + currentColumnContent;
+                   }
                }
                result.add(currentLine);
             }
