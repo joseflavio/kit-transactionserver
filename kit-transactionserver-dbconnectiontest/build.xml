@@ -61,13 +61,16 @@
 		<mkdir dir="${tmp.build.dir}/manifest"/>
 
 		<manifest file="${tmp.build.dir}/manifest/MANIFEST.MF">
+			<attribute name="Main-Class" value="${jar.manifest.mainclass}"/>
+			<attribute name="Class-Path" value="."/>
 			<attribute name="Built-By" value="${jar.manifest.builtby}"/>
 			<attribute name="Specification-Version" value="${project.version}"/>
-			<attribute name="Implementation-Version" value="build-${build.id}"/>
-			<attribute name="Main-Class" value="${jar.manifest.mainclass}"/>
+			<attribute name="Implementation-Version" value="build-${build.id}"/>			
 		</manifest>
 		<mkdir dir="${build.dest.dir}"/>
-		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.build.dir}/manifest/MANIFEST.MF" basedir="${tmp.classes.dir}"/>
+		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.build.dir}/manifest/MANIFEST.MF" basedir="${tmp.classes.dir}">
+			<zipgroupfileset dir="${jar.javac.lib.dir}" includes="*.jar" excludes="META-INF/**/*" />
+		</jar>
 
 	</target>
 
