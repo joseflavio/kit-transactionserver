@@ -64,6 +64,7 @@
 			<attribute name="Built-By" value="${jar.manifest.builtby}"/>
 			<attribute name="Specification-Version" value="${project.version}"/>
 			<attribute name="Implementation-Version" value="build-${build.id}"/>
+			<attribute name="Main-Class" value="${jar.manifest.mainclass}"/>
 		</manifest>
 		<mkdir dir="${build.dest.dir}"/>
 		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.build.dir}/manifest/MANIFEST.MF" basedir="${tmp.classes.dir}"/>

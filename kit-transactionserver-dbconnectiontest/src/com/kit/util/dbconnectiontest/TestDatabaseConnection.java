@@ -1,4 +1,4 @@
-package main;
+package com.kit.util.dbconnectiontest;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
