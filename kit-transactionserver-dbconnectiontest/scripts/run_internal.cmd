@@ -1,0 +1,1 @@
+java -jar dbconnectiontest-0.1.0.jar sa/chicabom2012!@10.42.121.191:1433/KEEPIN_V01_DEMO01  "SELECT * FROM Authenticate"
