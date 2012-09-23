@@ -12,12 +12,8 @@ public final class TestDatabaseConnection {
 
     static public void main(final String[] args) throws ClassNotFoundException, SQLException {
 
-	    final String driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-        Class.forName(driverClassName);
-        System.out.println("JDBC Driver loaded: " + driverClassName);
-
-		ConfigAccessor configAccessor = ConfigurationReader.getConfiguration("config/database.keepin_v01_demo01.at.kitdev01_win.properties");
-		DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
+		ConfigAccessor configAccessor = ConfigurationReader.loadExternalProperties("config/database.keepin_v01_demo01.at.kitdev01_win.properties");
+		DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor, true);
 		System.out.println(dbConfig);
 
 		List<Thread> threads = new LinkedList<Thread>();

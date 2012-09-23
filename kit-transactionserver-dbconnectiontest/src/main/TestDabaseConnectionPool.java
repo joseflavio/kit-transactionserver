@@ -20,12 +20,8 @@ public class TestDabaseConnectionPool {
 
     static public void main(final String[] args) throws ClassNotFoundException, SQLException {
 
-        final String driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-        Class.forName(driverClassName);
-        System.out.println("JDBC Driver loaded: " + driverClassName);
-
-        ConfigAccessor configAccessor = ConfigurationReader.getConfiguration("config/database.joseflavio-mira-srvkit-tinet.properties");
-        DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor);
+        ConfigAccessor configAccessor = ConfigurationReader.loadExternalProperties("config/database.joseflavio-mira-srvkit-tinet.properties");
+        DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor, true);
 
         QueryExecutor dataSource = new SimpleQueryExecutor(dbConfig);
 
