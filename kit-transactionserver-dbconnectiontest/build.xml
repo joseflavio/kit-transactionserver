@@ -1,25 +1,73 @@
-<?xml version="1.0"?>
-<project name="KIT Server Connectivity Test" default="GenerateJar" basedir=".">
-  
-<target name="compile">
-  <mkdir dir="tmp"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="kit-transactionserver-dbconnectiontest" default="jar" basedir=".">
 
-  <javac srcdir="src" destdir="tmp" debug="off" deprecation="on" >
-  </javac>
-</target>
-		
-<target name="GenerateJar" depends="compile">
+	<property file="version.properties"/>
+	<property file="build.properties"/>
 
-    <manifest file="MANIFEST.MF">
-      <attribute name="Built-By" value="Jose Flavio Aguilar Paulino"/>
-      <attribute name="Main-Class" value="TestDatabaseConnection"/>
-      <attribute name="Class-Path" value="lib/sqljdbc_1.2/enu/sqljdbc.jar"/>
-    </manifest>
+	<tstamp>
+		<format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/>
+	</tstamp>
+	<property name="tmp.basedir" value="tmp/${jar.name}-${project.version}-jar"/>
+	<property name="tmp.build.dir" value="${tmp.basedir}/${build.id}"/>
+	<property name="tmp.classes.dir" value="${tmp.build.dir}/classes"/>
 
-    <mkdir dir="build"/>
-
-    <jar jarfile="build/testconnection.jar" manifest="MANIFEST.MF" basedir="tmp"/>
-
-  </target>
+    <path id="project.classpath">
+        <fileset dir="${jar.javac.lib.dir}">
+        	<include name="dajo-config-0.1.6.jar"/>
+            <include name="dajo-config-0.1.6.jar"/>
+        	<include name="dajo-database-0.2.0.jar"/>
+        </fileset>
+    </path>
 	
+	<target name="show-config">
+		<echo level="info" message="tmp.build.dir=${tmp.build.dir}"/>
+		<echo level="info" message="tmp.classes.dir=${tmp.classes.dir}"/>
+	</target>
+
+	<target name="copy-sources">
+		<delete dir="${tmp.basedir}"/>
+		<mkdir dir="${tmp.classes.dir}" />
+		<copy todir="${tmp.classes.dir}">
+			<fileset dir="src" includes="**/*" />
+		</copy>
+	</target>
+
+	<target name="compile" depends="copy-sources">
+		<javac
+    	  optimize="true" deprecation="true" encoding="UTF-8" includeantruntime="false"
+          destdir="${tmp.classes.dir}" debug="${jar.javac.debug}" 
+		  target="${jar.javac.target}" source="${jar.javac.source}">			
+			<src path="${tmp.classes.dir}" />
+			<classpath refid="project.classpath"/>			
+		</javac>
+	</target>
+
+	<target name="jar">
+		<antcall target="build-external">
+			<param name="build.dest.dir" value="build/${build.id}"/>
+		</antcall>
+	</target>
+
+	<target name="build-external" depends="compile">
+
+		<fail message="Missing mandatory property.">
+			<condition>
+				<not>
+					<isset property="build.dest.dir"/>
+				</not>
+			</condition>
+		</fail>
+
+		<mkdir dir="${tmp.build.dir}/manifest"/>
+
+		<manifest file="${tmp.build.dir}/manifest/MANIFEST.MF">
+			<attribute name="Built-By" value="${jar.manifest.builtby}"/>
+			<attribute name="Specification-Version" value="${project.version}"/>
+			<attribute name="Implementation-Version" value="build-${build.id}"/>
+		</manifest>
+		<mkdir dir="${build.dest.dir}"/>
+		<jar jarfile="${build.dest.dir}/${jar.name}-${project.version}.jar" manifest="${tmp.build.dir}/manifest/MANIFEST.MF" basedir="${tmp.classes.dir}"/>
+
+	</target>
+
 </project>
