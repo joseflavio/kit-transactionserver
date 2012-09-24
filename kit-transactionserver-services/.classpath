@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/dajo-config-0.1.7.jar"/>
 	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/mssql_sqljdbc_4.0.2206.100.jar"/>
 	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/slf4j-api-1.7.1.jar"/>
-	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/dajo-database-0.2.3.jar"/>
+	<classpathentry kind="lib" path="/kit-transactionserver-main/lib/dajo-database-0.2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

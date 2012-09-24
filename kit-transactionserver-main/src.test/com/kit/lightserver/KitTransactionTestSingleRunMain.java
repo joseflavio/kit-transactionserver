@@ -8,7 +8,7 @@ import org.dajo.framework.configuration.ConfigurationReader;
 
 import com.fap.framework.exception.LogUncaughtExceptionHandler;
 
-final class KITLightServerTestMain {
+final class KitTransactionTestSingleRunMain {
 
     static private final int SERVER_PORT = 3003;
 

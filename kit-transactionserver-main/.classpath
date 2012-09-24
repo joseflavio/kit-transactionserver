@@ -12,6 +12,6 @@
 	<classpathentry kind="lib" path="lib/mssql_sqljdbc_4.0.2206.100.jar"/>
 	<classpathentry kind="lib" path="lib/logback-classic-1.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/logback-core-1.0.7.jar"/>
-	<classpathentry kind="lib" path="lib/dajo-database-0.2.3.jar"/>
+	<classpathentry kind="lib" path="lib/dajo-database-0.2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
