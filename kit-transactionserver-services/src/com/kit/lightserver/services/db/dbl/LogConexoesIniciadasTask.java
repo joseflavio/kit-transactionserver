@@ -31,7 +31,7 @@ public final class LogConexoesIniciadasTask implements NamedRunnable {
             final ConfigAccessor configAccessor, final ConnectionInfoVO connectionInfo, final InstallationIdAbVO installationId,
             final String clientUserId, final int status) {
 
-        final DatabaseConfig dblConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBL);
+        final DatabaseConfig dblConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBL, false);
 
         this.queryExecutor = new SimpleQueryExecutor(dblConfig);
         this.connectionInfo = connectionInfo;

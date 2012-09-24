@@ -51,6 +51,7 @@ public class CommandLineSelect {
         map.put("database.default.name", databaseName );
         map.put("database.default.user", username );
         map.put("database.default.password", password );
+        map.put("database.default.driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver2" );
 
         System.out.println("map="+map);
 

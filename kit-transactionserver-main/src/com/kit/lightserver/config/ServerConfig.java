@@ -3,9 +3,8 @@ package com.kit.lightserver.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dajo.framework.adapters.FilepathAdapter;
-import org.dajo.framework.adapters.FilepathVO;
-import org.dajo.framework.adapters.FilepathVO.FilepathType;
+import org.dajo.framework.adapters.DajoFilepath;
+import org.dajo.framework.adapters.DajoFilepathAdapter;
 import org.dajo.framework.adapters.IntegerAdapter;
 import org.dajo.framework.configuration.ConfigAccessor;
 
@@ -16,7 +15,7 @@ public final class ServerConfig {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
-    static private final FilepathVO DEFAULT_TRAY_ICON = new FilepathVO(FilepathType.CLASS_PATH, "/images/kit-icone-azul.png");
+    static private final DajoFilepath DEFAULT_TRAY_ICON = new DajoFilepath(DajoFilepath.Type.CLASS_PATH, "/images/kit-icone-azul.png");
 
     static public ServerConfig getInstance(final ConfigAccessor configAccessor) {
         final ServerConfig serverConfiguration = new ServerConfig(configAccessor);
@@ -24,16 +23,14 @@ public final class ServerConfig {
         return serverConfiguration;
     }
 
-    //static private final ConfigurationAccessor CONFIG = ConfigurationReader.getConfiguration(DatabaseConfiguration.class);
-
     private final String serverName;
     private final int serverPort;
-    private final FilepathVO serverIcon;
+    private final DajoFilepath serverIcon;
 
     private ServerConfig(final ConfigAccessor accessor) {
         this.serverName = accessor.getMandatoryProperty("server.name");
         this.serverPort = accessor.getMandatoryProperty("server.port", new IntegerAdapter()).intValue();
-        this.serverIcon = accessor.getOptionalProperty("server.icon", new FilepathAdapter(FilepathType.FILESYSTEM), DEFAULT_TRAY_ICON);
+        this.serverIcon = accessor.getOptionalProperty("server.icon", new DajoFilepathAdapter(DajoFilepath.Type.FILESYSTEM), DEFAULT_TRAY_ICON);
     }
 
     public String getServerName() {
@@ -44,7 +41,7 @@ public final class ServerConfig {
         return serverPort;
     }
 
-    public FilepathVO getServerIcon() {
+    public DajoFilepath getServerIcon() {
         return serverIcon;
     }
 

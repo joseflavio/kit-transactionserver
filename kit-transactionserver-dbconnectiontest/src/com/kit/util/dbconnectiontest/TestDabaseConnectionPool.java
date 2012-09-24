@@ -20,8 +20,8 @@ public class TestDabaseConnectionPool {
 
     static public void main(final String[] args) throws ClassNotFoundException, SQLException {
 
-        ConfigAccessor configAccessor = ConfigurationReader.loadExternalProperties("config/database.joseflavio-mira-srvkit-tinet.properties");
-        DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor, true);
+        ConfigAccessor configAccessor = ConfigurationReader.loadExternalProperties("config/database.properties");
+        DatabaseConfig dbConfig = DatabaseConfig.getInstance(configAccessor, "demo", true);
 
         QueryExecutor dataSource = new SimpleQueryExecutor(dbConfig);
 
@@ -72,12 +72,8 @@ public class TestDabaseConnectionPool {
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
             SelectQueryResult<List<String>> result = dataSource.executeSelectQuery(selectUsers, selectUsersAdapter);
-
             System.out.println("result="+result);
-
-
         }
     }
 

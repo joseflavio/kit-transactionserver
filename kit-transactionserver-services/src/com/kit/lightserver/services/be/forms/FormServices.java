@@ -52,10 +52,10 @@ public final class FormServices {
 
         this.formFlagsServices = FormFlagsServices.getInstance(configAccessor);
 
-        DatabaseConfig dbdConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBD);
+        DatabaseConfig dbdConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBD, false);
         this.dbdQueryExecutor = new SimpleQueryExecutor(dbdConfig);
 
-        DatabaseConfig dblConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBL);
+        DatabaseConfig dblConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBL, false);
         this.dblQueryExecutor = new SimpleQueryExecutor(dblConfig);
 
         this.formNotasfiscaisOperations = new FormNotasfiscaisOperations(dbdQueryExecutor);

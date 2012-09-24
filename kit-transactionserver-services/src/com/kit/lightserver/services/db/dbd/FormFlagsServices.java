@@ -35,7 +35,7 @@ public final class FormFlagsServices {
     private final QueryExecutor dbdQueryExecutor;
 
     private FormFlagsServices(final ConfigAccessor configAccessor) {
-        DatabaseConfig dbdConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBD);
+        DatabaseConfig dbdConfig = DatabaseConfig.getInstance(configAccessor,  DatabaseAliases.DBD, false);
         this.dbdQueryExecutor = new SimpleQueryExecutor(dbdConfig);
     }
 

@@ -38,8 +38,8 @@ public final class AuthenticationService {
 
     private AuthenticationService(final ConfigAccessor configAccessor) {
         this.configAccessor = configAccessor;
-        this.dbaConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBA);
-        this.dbdConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBD);
+        this.dbaConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBA, true);
+        this.dbdConfig = DatabaseConfig.getInstance(configAccessor, DatabaseAliases.DBD, true);
     }
 
     public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionInfo, final String clientUserId, final String password,
