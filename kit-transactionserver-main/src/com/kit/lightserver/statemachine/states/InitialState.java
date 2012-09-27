@@ -19,10 +19,9 @@ import com.kit.lightserver.services.be.authentication.AuthenticationService;
 import com.kit.lightserver.services.be.authentication.AuthenticationServiceResponse;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.AuthenticationRequestSME;
-import com.kit.lightserver.statemachine.types.ClientInfoCTX;
+import com.kit.lightserver.statemachine.types.ClientContext;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 import com.kit.lightserver.types.response.AuthenticationResponseRSTY;
-import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 
 public final class InitialState extends BaseState implements StateSME<KitEventSME> {
 
@@ -68,40 +67,20 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         /*
          * Invoking the service
          */
-        Chronometer c = new Chronometer("authenticationService.authenticate");
-        c.start();
-        AuthenticationServiceResponse authServResponse;
-        try {
-            AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
-            authServResponse = authenticationService.authenticate(connInfo, clientUserId, password, installId, authRequestType);
-        } catch (Throwable t) {
-            LOGGER.error("Unexpected error.", t);
-            authServResponse = AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR;
-        }
-        c.stop();
-        LOGGER.info(c.toString());
+        AuthenticationServiceResponse authServResponse = authenticate(connInfo, clientUserId, password, installId, authRequestType);
 
         /*
          * Handling the service response
          */
         final StateSME<KitEventSME> newState;
-        final ClientInfoCTX clientInfo;
-        if ( authServResponse == AuthenticationServiceResponse.SUCCESS_MUST_RESET ||
-             authServResponse == AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET ) {
+        final ClientContext clientInfo;
+        if ( authServResponse.isSuccess() == true ) {
 
             LOGGER.info("Authentication successful. authServResponse=" + authServResponse);
 
-            final boolean mustReset;
-            if( AuthenticationServiceResponse.SUCCESS_MUST_RESET == authServResponse ) {
-                LOGGER.info("MUST RESET. clientUserId="+clientUserId);
-                mustReset = true;
-            }
-            else {
-                LOGGER.info("NO NEED TO RESET. clientUserId="+clientUserId);
-                mustReset = false;
-            }
-
-            clientInfo = new ClientInfoCTX(clientUserId, authServResponse, true, mustReset);
+            final boolean mustReset = authServResponse.isMustReset();
+            boolean isGpsEnabled = authServResponse.isGpsEnabled();
+            clientInfo = new ClientContext(clientUserId, authServResponse, true, mustReset, isGpsEnabled);
 
             newState = new ClientAuthenticationSuccessfulState(context);
 
@@ -117,11 +96,10 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
              * In case of Authenticate error, we just need to send the auth response with error and the client should send
              * back the Channel Notification End Channel (We don't need to request it)? depend on the case in case of protocol error yes, in database error no
              */
-            final AuthenticationResponseRSTY clientAuthResponse =  new AuthenticationResponseRSTY(authServResponse);
-            final ChannelNotificationEndConversationRSTY clientEndConversation = new ChannelNotificationEndConversationRSTY();
-            context.getClientAdapterOut().sendBack(clientAuthResponse, clientEndConversation);
+            AuthenticationResponseRSTY clientAuthResponse =  new AuthenticationResponseRSTY(authServResponse);
+            context.getClientAdapterOut().sendBack(clientAuthResponse);
 
-            clientInfo = new ClientInfoCTX(clientUserId, authServResponse, false, false);
+            clientInfo = new ClientContext(clientUserId, authServResponse);
             newState = WaitForEventEndConversationState.getInstance(context);
 
         }// if-else
@@ -129,6 +107,25 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
         context.setClientInfo(clientInfo);
 
         return newState;
+
+    }
+
+    private AuthenticationServiceResponse authenticate(final ConnectionInfoVO connInfo, final String clientUserId, final String password,
+            final InstallationIdAbVO installId, final AuthenticationRequestTypeEnumSTY authRequestType) {
+
+        Chronometer serviceChrono = new Chronometer("authenticationService.authenticate");
+        serviceChrono.start();
+        AuthenticationServiceResponse authServResponse;
+        try {
+            AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
+            authServResponse = authenticationService.authenticate(connInfo, clientUserId, password, installId, authRequestType);
+        } catch (Throwable t) {
+            LOGGER.error("Unexpected error.", t);
+            authServResponse = AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_UNEXPECTED_ERROR);
+        }
+        serviceChrono.stop();
+        LOGGER.info(serviceChrono.toString());
+        return authServResponse;
 
     }
 

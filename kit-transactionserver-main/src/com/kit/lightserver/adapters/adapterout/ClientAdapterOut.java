@@ -28,23 +28,29 @@ public final class ClientAdapterOut {
 
     }// constructor
 
+    public void sendBack(final List<ClientResponseRSTY> clientResponses) {
+        final AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(clientResponses);
+        this.sendBack(primitivesEnvelope);
+    }
+
     public void sendBack(final ClientResponseRSTY... responses) {
         final AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(responses);
         this.sendBack(primitivesEnvelope);
     }
 
-    public void sendBack(final AdoResponseEnvelope adoResponseEnvelope) {
+    public final void closeDataOutput() {
+        LOGGER.info("Closing data output stream to mobile.");
+        sender.closeOutput();
+    }
+
+    private void sendBack(final AdoResponseEnvelope adoResponseEnvelope) {
 
         if( sender.isValidToSend() == false ) {
             LOGGER.error("The clientAdapterOut can not send. adoResponseEnvelope="+adoResponseEnvelope);
             return;
         }
 
-        if( adoResponseEnvelope instanceof CloseDataOutputCommandRSTY ) {
-            LOGGER.info("Closing data output stream to mobile. adoResponseEnvelope=" + adoResponseEnvelope);
-            sender.closeOutput();
-        }
-        else if( adoResponseEnvelope instanceof AdoPrimitiveListEnvelope ) {
+        if( adoResponseEnvelope instanceof AdoPrimitiveListEnvelope ) {
 
             AdoPrimitiveListEnvelope primitiveListEnvelope = (AdoPrimitiveListEnvelope)adoResponseEnvelope;
 

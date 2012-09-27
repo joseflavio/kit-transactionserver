@@ -56,7 +56,8 @@ final class KitServerDataInput implements DataInput {
 
     @Override
     public void readFully(final byte[] b) throws IOException {
-        throw new UnsupportedOperationException();
+        dataInputStream.readFully(b);
+        totalBytes += b.length;
     }
 
     @Override

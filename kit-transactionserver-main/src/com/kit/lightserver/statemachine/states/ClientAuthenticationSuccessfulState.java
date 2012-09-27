@@ -45,7 +45,7 @@ final class ClientAuthenticationSuccessfulState extends BaseState implements Sta
         }
 
         if (serviceResponse.isValid() == false) {
-            LOGGER.error("Unexpected service response=" + serviceResponse);
+            LOGGER.error("Unexpected service response={}", serviceResponse);
             final StateSME<KitEventSME> newState = UnrecoverableErrorState.getInstance(context, ConversationFinishedStatusCTX.FINISHED_GENERAL_ERROR);
             final ResultStateTransition<KitEventSME> transition = new ResultStateTransition<KitEventSME>(newState);
             return transition;

@@ -79,7 +79,7 @@ public final class AuthenticationService {
 
             if (AuthenticationRequestTypeEnumSTY.RES_MANUAL == authRequestType || AuthenticationRequestTypeEnumSTY.RES_AUTOMATIC == authRequestType) {
                 if (lastSuccessfulAuthenticationResult.getLastInstallationIdAb().equals(installIdAb) == false) {
-                    return AuthenticationServiceResponse.FAILED_NEWINSTALLATIONID_NO_AUTO_UPDATE;
+                    return AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_NEWINSTALLATIONID_NO_AUTO_UPDATE);
                 }
             }
 
@@ -89,8 +89,7 @@ public final class AuthenticationService {
             AuthenticationServiceResponse checkPasswordResponse = AuthenticationService.checkPassword(tableAuthenticateOperations, clientUserId, password,
                     authRequestType);
 
-            if (checkPasswordResponse == AuthenticationServiceResponse.SUCCESS_MUST_RESET
-                    || checkPasswordResponse == AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET) {
+            if ( checkPasswordResponse.isSuccess() == true ) {
 
                 /*
                  * Updating last successful authentication table
@@ -99,10 +98,10 @@ public final class AuthenticationService {
                         lastSuccessfulAuthenticationResult);
 
                 if (result.isUpdateQuerySuccessful() == false) {
-                    return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+                    return AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_DATABASE_ERROR);
                 }
                 if (result.getRowsUpdated() != 1) {
-                    return AuthenticationServiceResponse.FAILED_SIMULTANEUS_LOGIN;
+                    return AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_SIMULTANEUS_LOGIN);
                 }
 
             }
@@ -111,8 +110,8 @@ public final class AuthenticationService {
 
         }
         catch (Exception e) {
-            LOGGER.error("Unexpected Error (Should never occur)", e);
-            return AuthenticationServiceResponse.FAILED_UNEXPECTED_ERROR;
+            LOGGER.error("Unexpected Error.", e); // This shall never happen
+            return AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_UNEXPECTED_ERROR);
         }
 
     }
@@ -157,7 +156,7 @@ public final class AuthenticationService {
         final SelectQueryResult<AuthenticateQueryResult> resultContainer = tableAuthenticateOperations.selectClientIdExists(clientUserId);
 
         if (resultContainer.isSelectQuerySuccessful() == false) { // Just checking if the query was successful
-            return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+            return AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_DATABASE_ERROR);
         }
 
         /*
@@ -166,11 +165,11 @@ public final class AuthenticationService {
         final AuthenticateQueryResult result = resultContainer.getResult();
         final boolean userExists = result.isUserExists();
         if (userExists == false) {
-            return AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST;
+            return AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_CLIENTID_DO_NOT_EXIST);
         }
 
         if (result.getPassword().equals(password) == false) {
-            return AuthenticationServiceResponse.FAILED_INVALID_PASSWORD;
+            return AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_INVALID_PASSWORD);
         }
 
         /*
@@ -178,15 +177,15 @@ public final class AuthenticationService {
          */
         SelectQueryResult<SelectQuerySingleResult<Boolean>> mustResetResultContainer = tableAuthenticateOperations.selectMustReset(clientUserId);
         if (mustResetResultContainer.isSelectQuerySuccessful() == false) {
-            return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+            return AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_DATABASE_ERROR);
         }
 
-        final boolean deveResetar;
+        boolean deveResetar = true;
         if (mustResetResultContainer.getResult().isAvailable() == false) {
             LOGGER.warn("ClientId not found in the AuthenticateDeveResetar table. clientUserId=" + clientUserId);
             InsertQueryResult firstInsertMustResetResult = tableAuthenticateOperations.firstInsertMustReset(clientUserId);
             if (firstInsertMustResetResult.isInsertQuerySuccessfull() == false) {
-                return AuthenticationServiceResponse.FAILED_DATABASE_ERROR;
+                return AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_DATABASE_ERROR);
             }
             deveResetar = false;
         }
@@ -195,18 +194,16 @@ public final class AuthenticationService {
             deveResetar = deveResetarBoolean.booleanValue();
         }
 
+        boolean gpsEnabled = true;
+
         /*
-         * Success cases
+         * Success case
          */
         if (AuthenticationRequestTypeEnumSTY.RES_MANUAL_NEW_USER == authRequestType) {
-            return AuthenticationServiceResponse.SUCCESS_MUST_RESET;
+            deveResetar = true;
         }
 
-        if (deveResetar == true) {
-            return AuthenticationServiceResponse.SUCCESS_MUST_RESET;
-        }
-
-        return AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET;
+        return AuthenticationServiceResponse.getSuccessInstance(deveResetar, gpsEnabled);
 
     }
 

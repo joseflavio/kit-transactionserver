@@ -9,7 +9,7 @@ import com.fap.framework.statemachine.StateSME;
 
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
-import com.kit.lightserver.statemachine.types.ClientInfoCTX;
+import com.kit.lightserver.statemachine.types.ClientContext;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
 
 public final class MachineEndedState implements StateSME<KitEventSME> {
@@ -28,7 +28,7 @@ public final class MachineEndedState implements StateSME<KitEventSME> {
     @Override
     public ProcessingResult<KitEventSME> transitionOccurred() {
 
-        final ClientInfoCTX clientInfo = context.getClientInfo();
+        final ClientContext clientInfo = context.getClientInfo();
 
         if (clientInfo == null) {
             LOGGER.error("Unexpected. clientInfo=null");

@@ -8,14 +8,12 @@ import com.fap.framework.statemachine.ResultStateTransition;
 import com.fap.framework.statemachine.ResultWaitEvent;
 import com.fap.framework.statemachine.StateSME;
 
-import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.services.be.forms.FormServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.FormContentConhecimentoReadSME;
 import com.kit.lightserver.statemachine.events.FormContentEditedSME;
 import com.kit.lightserver.statemachine.events.FormOperationUpdateFormsCompleteEventSME;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
-import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 import com.kit.lightserver.types.response.FormOperationUpdatedFormsClearFlagsRSTY;
 import com.kit.lightserver.types.response.FormOperationUpdatedFormsRequestRSTY;
 
@@ -31,10 +29,9 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
 
     @Override
     public ProcessingResult<KitEventSME> transitionOccurred() {
-        FormOperationUpdatedFormsRequestRSTY formOperationUpdatedRowsGetRSTY = new FormOperationUpdatedFormsRequestRSTY();
-        AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(formOperationUpdatedRowsGetRSTY);
         LOGGER.info("Requesting updated forms");
-        context.getClientAdapterOut().sendBack(primitivesEnvelope);
+        FormOperationUpdatedFormsRequestRSTY formOperationUpdatedRowsGetRSTY = new FormOperationUpdatedFormsRequestRSTY();
+        context.getClientAdapterOut().sendBack(formOperationUpdatedRowsGetRSTY);
         return new ResultWaitEvent<KitEventSME>();
     }
 
@@ -71,10 +68,8 @@ final class RetrieveUpdatedFormsState extends BaseState implements StateSME<KitE
         }
         else if ( event instanceof FormOperationUpdateFormsCompleteEventSME ) {
             FormOperationUpdatedFormsClearFlagsRSTY formOperationClearFlags = new FormOperationUpdatedFormsClearFlagsRSTY();
-            ChannelNotificationEndConversationRSTY channelNotificationEndConversationRSTY = new ChannelNotificationEndConversationRSTY();
-            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(formOperationClearFlags, channelNotificationEndConversationRSTY);
-            context.getClientAdapterOut().sendBack(primitivesEnvelope);
-            StateSME<KitEventSME> newState = WaitForEventEndConversationState.getInstance(context);
+            context.getClientAdapterOut().sendBack(formOperationClearFlags);
+            StateSME<KitEventSME> newState = GpsActivityState.getInstance(context);
             result = new ResultStateTransition<KitEventSME>(newState);
         }
         else {

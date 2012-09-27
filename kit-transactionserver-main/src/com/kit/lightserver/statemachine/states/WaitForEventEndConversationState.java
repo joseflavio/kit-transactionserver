@@ -11,6 +11,7 @@ import com.fap.framework.statemachine.StateSME;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.ChannelNotificationSME;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
+import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 
 public final class WaitForEventEndConversationState implements StateSME<KitEventSME> {
 
@@ -29,6 +30,10 @@ public final class WaitForEventEndConversationState implements StateSME<KitEvent
 
     @Override
     public ProcessingResult<KitEventSME> transitionOccurred() {
+
+        ChannelNotificationEndConversationRSTY clientEndConversation = new ChannelNotificationEndConversationRSTY();
+        context.getClientAdapterOut().sendBack(clientEndConversation);
+
         return new ResultWaitEvent<>();
     }
 

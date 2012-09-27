@@ -12,7 +12,6 @@ import com.fap.framework.statemachine.ResultStateTransition;
 import com.fap.framework.statemachine.ResultWaitEvent;
 import com.fap.framework.statemachine.StateSME;
 
-import com.kit.lightserver.adapters.adapterout.AdoPrimitiveListEnvelope;
 import com.kit.lightserver.domain.types.FormSTY;
 import com.kit.lightserver.services.db.dbd.FormFlagsServices;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
@@ -73,8 +72,7 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
         }
 
         if(clientResponses.size() > 0 ) {
-            AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(clientResponses);
-            context.getClientAdapterOut().sendBack(primitivesEnvelope);
+            context.getClientAdapterOut().sendBack(clientResponses);
         }
 
         return result;
@@ -123,8 +121,7 @@ final class SendFormsState extends BaseState implements StateSME<KitEventSME> {
                 sendFormsAndRequestClientStatus(clientResponses, formsToSend);
 
                 if(clientResponses.size() > 0 ) {
-                    AdoPrimitiveListEnvelope primitivesEnvelope = new AdoPrimitiveListEnvelope(clientResponses);
-                    context.getClientAdapterOut().sendBack(primitivesEnvelope);
+                    context.getClientAdapterOut().sendBack(clientResponses);
                 }
 
                 return new ResultWaitEvent<>();

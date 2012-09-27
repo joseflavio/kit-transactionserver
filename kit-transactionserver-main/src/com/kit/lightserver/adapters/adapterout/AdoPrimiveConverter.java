@@ -1,5 +1,6 @@
 package com.kit.lightserver.adapters.adapterout;
 
+import kit.primitives.activity.ActivityPrimitive;
 import kit.primitives.authentication.AuthenticationResponse;
 import kit.primitives.base.Primitive;
 import kit.primitives.channel.ChannelNotification;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.services.be.authentication.AuthenticationServiceResponse;
+import com.kit.lightserver.services.be.authentication.AuthenticationServiceResponse.FailureType;
 import com.kit.lightserver.types.response.AuthenticationResponseRSTY;
 import com.kit.lightserver.types.response.ChannelNotificationEndConversationRSTY;
 import com.kit.lightserver.types.response.ChannelNotificationServerErrorRSTY;
@@ -16,6 +18,7 @@ import com.kit.lightserver.types.response.ChannelProgressRSTY;
 import com.kit.lightserver.types.response.ClientResponseRSTY;
 import com.kit.lightserver.types.response.FormContentFullRSTY;
 import com.kit.lightserver.types.response.FormOperationRSTY;
+import com.kit.lightserver.types.response.SimpleRSTY;
 
 final class AdoPrimiveConverter {
 
@@ -32,33 +35,38 @@ final class AdoPrimiveConverter {
         }
         else if (genericResponseRSTY instanceof AuthenticationResponseRSTY) {
 
-            final AuthenticationResponseRSTY responseRSTY = (AuthenticationResponseRSTY)genericResponseRSTY;
+            AuthenticationResponseRSTY responseRSTY = (AuthenticationResponseRSTY)genericResponseRSTY;
+            AuthenticationServiceResponse authenticationResult = responseRSTY.getType();
             final byte primitiveType;
-            if( responseRSTY.getType() == AuthenticationServiceResponse.SUCCESS_MUST_RESET ) {
-                primitiveType = AuthenticationResponse.INF_SUCCESS;
-            }
-            else
-            if( responseRSTY.getType() == AuthenticationServiceResponse.SUCCESS_NO_NEED_TO_RESET ) {
-                primitiveType = AuthenticationResponse.INF_SUCCESS;
-            }
-            else
-            if( responseRSTY.getType() == AuthenticationServiceResponse.FAILED_INVALID_PASSWORD ) {
-                primitiveType = AuthenticationResponse.INF_FAILED; // soon should be INF_INCORRECT_PASSWORD;
-            }
-            else
-            if( responseRSTY.getType() == AuthenticationServiceResponse.FAILED_CLIENTID_DO_NOT_EXIST ) {
-                primitiveType = AuthenticationResponse.INF_INEXISTENT_USER;
-            }
-            else
-            if( responseRSTY.getType() == AuthenticationServiceResponse.FAILED_NEWINSTALLATIONID_NO_AUTO_UPDATE ) {
-                primitiveType = AuthenticationResponse.CMD_LOGOUT;
-            }
-            else
-            if( responseRSTY.getType() == AuthenticationServiceResponse.FAILED_DATABASE_ERROR ) {
-                primitiveType = AuthenticationResponse.INF_DATABASE_ERROR;
+            if( authenticationResult.isSuccess() == true ) {
+                if( authenticationResult.isMustReset() == true ) {
+                    primitiveType = AuthenticationResponse.INF_SUCCESS;
+                }
+                else {
+                    primitiveType = AuthenticationResponse.INF_SUCCESS;
+                }
             }
             else {
-                primitiveType = AuthenticationResponse.UNDEFINED;
+
+                FailureType failureType = authenticationResult.getFailureType();
+                if( failureType == AuthenticationServiceResponse.FailureType.FAILED_INVALID_PASSWORD ) {
+                    primitiveType = AuthenticationResponse.INF_FAILED; // soon should be INF_INCORRECT_PASSWORD;
+                }
+                else
+                if( failureType == AuthenticationServiceResponse.FailureType.FAILED_CLIENTID_DO_NOT_EXIST ) {
+                    primitiveType = AuthenticationResponse.INF_INEXISTENT_USER;
+                }
+                else
+                if( failureType == AuthenticationServiceResponse.FailureType.FAILED_NEWINSTALLATIONID_NO_AUTO_UPDATE ) {
+                    primitiveType = AuthenticationResponse.CMD_LOGOUT;
+                }
+                else
+                if( failureType == AuthenticationServiceResponse.FailureType.FAILED_DATABASE_ERROR ) {
+                    primitiveType = AuthenticationResponse.INF_DATABASE_ERROR;
+                }
+                else {
+                    primitiveType = AuthenticationResponse.UNDEFINED;
+                }
             }
 
             final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
@@ -86,6 +94,17 @@ final class AdoPrimiveConverter {
         else if (genericResponseRSTY instanceof FormContentFullRSTY) {
             final FormContentFullRSTY formContentFullRSTY = (FormContentFullRSTY) genericResponseRSTY;
             converterResult = FormContentFullConverter.convertForm(formContentFullRSTY);
+        }
+        else if(genericResponseRSTY instanceof SimpleRSTY ) {
+            final SimpleRSTY simple = (SimpleRSTY) genericResponseRSTY;
+            if( SimpleRSTY.Type.ACTIVITY_GPS_REQUEST_LOG_LINE.equals(simple.getType()) ) {
+                ActivityPrimitive activityPrimitive = new ActivityPrimitive();
+                activityPrimitive.type = ActivityPrimitive.REQ_LOG_LINE;
+                converterResult = new ConverterResult(true, activityPrimitive);
+            }
+            else {
+                converterResult = new ConverterResult();
+            }
         }
         else {
             converterResult = new ConverterResult();

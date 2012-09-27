@@ -4,7 +4,7 @@ import org.dajo.framework.configuration.ConfigAccessor;
 
 import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
-import com.kit.lightserver.statemachine.types.ClientInfoCTX;
+import com.kit.lightserver.statemachine.types.ClientContext;
 
 public final class StateMachineMainContext {
 
@@ -12,7 +12,7 @@ public final class StateMachineMainContext {
 
     private final ConnectionInfoVO connectionInfo;
 
-    private ClientInfoCTX clientInfo = null;
+    private ClientContext clientInfo = null;
 
     private final ConfigAccessor configAccessor;
 
@@ -34,11 +34,11 @@ public final class StateMachineMainContext {
         return configAccessor;
     }
 
-    public ClientInfoCTX getClientInfo() {
+    public ClientContext getClientInfo() {
         return clientInfo;
     }
 
-    public void setClientInfo(final ClientInfoCTX clientInfo) {
+    public void setClientInfo(final ClientContext clientInfo) {
         if (this.clientInfo != null) {
             throw new RuntimeException("clientInfo already assigned.");
         }
