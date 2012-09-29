@@ -15,7 +15,8 @@ public final class SimpleRSTY implements ClientResponseRSTY {
     }
 
     static public enum Type {
-        ACTIVITY_GPS_REQUEST_LOG_LINE
+        ACTIVITY_GPS_REQ_LOG_LINE_LAST_ENTRIES,
+        ACTIVITY_GPS_CMD_DELETE_LAST_ENTRIES;
     }
 
 }

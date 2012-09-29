@@ -2,7 +2,7 @@ package com.kit.lightserver.domain.types;
 
 import java.util.Date;
 
-public class CoordenadaGpsSTY {
+public final class CoordenadaGpsSTY {
 
     private final long logicalClock;
     private final Date time;
@@ -20,12 +20,34 @@ public class CoordenadaGpsSTY {
         this.accuracy = accuracy;
     }
 
+    public long getLogicalClock() {
+        return logicalClock;
+    }
+
+    public Date getTime() {
+        return new Date(time.getTime());
+    }
+
+    public byte getActivityPosition() {
+        return activityPosition;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public float getAccuracy() {
+        return accuracy;
+    }
+
     @Override
     public String toString() {
         return "CoordenadaGpsSTY [logicalClock=" + logicalClock + ", time=" + time + ", activityPosition=" + activityPosition + ", latitude=" + latitude
                 + ", longitude=" + longitude + ", accuracy=" + accuracy + "]";
     }
 
-
-
-}
+}// class

@@ -97,14 +97,28 @@ final class AdoPrimiveConverter {
         }
         else if(genericResponseRSTY instanceof SimpleRSTY ) {
             final SimpleRSTY simple = (SimpleRSTY) genericResponseRSTY;
-            if( SimpleRSTY.Type.ACTIVITY_GPS_REQUEST_LOG_LINE.equals(simple.getType()) ) {
-                ActivityPrimitive activityPrimitive = new ActivityPrimitive();
-                activityPrimitive.type = ActivityPrimitive.REQ_LOG_LINE;
-                converterResult = new ConverterResult(true, activityPrimitive);
-            }
-            else {
+
+            switch ( simple.getType() ) {
+
+            case ACTIVITY_GPS_REQ_LOG_LINE_LAST_ENTRIES:
+                ActivityPrimitive morePrimitive = new ActivityPrimitive();
+                morePrimitive.type = ActivityPrimitive.REQ_LOG_LINE;
+                converterResult = new ConverterResult(true, morePrimitive);
+                break;
+
+            case ACTIVITY_GPS_CMD_DELETE_LAST_ENTRIES:
+                ActivityPrimitive deletePrimitive = new ActivityPrimitive();
+                deletePrimitive.type = ActivityPrimitive.CMD_DELETE;
+                converterResult = new ConverterResult(true, deletePrimitive);
+                break;
+
+            default:
                 converterResult = new ConverterResult();
+                LOGGER.error("Unexpected type. type={}",  simple.getType());
+                break;
             }
+
+
         }
         else {
             converterResult = new ConverterResult();

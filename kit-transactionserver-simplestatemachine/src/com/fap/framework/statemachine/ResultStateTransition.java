@@ -9,6 +9,10 @@ public final class ResultStateTransition<T> extends ProcessingResult<T> {
         this.newState = newState;
     }
 
+    static public <T> ResultStateTransition<T> getInstance(final StateSME<T> newState) {
+        return new ResultStateTransition<>(newState);
+    }
+
     public StateSME<T> getNewState() {
         return newState;
     }

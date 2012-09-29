@@ -8,4 +8,4 @@ final class TableAuthenticateConstants {
 
     static public  final String TABLE_AUTHENTICATE_ULTIMACONEXAO = "[dbo].[AuthenticateUltimoSucesso]";
 
-}// class
+}

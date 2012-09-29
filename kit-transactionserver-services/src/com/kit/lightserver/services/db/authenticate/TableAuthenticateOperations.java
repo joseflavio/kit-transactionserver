@@ -24,8 +24,6 @@ public final class TableAuthenticateOperations {
 
     private final SelectAuthenticatePasswordQueryResultAdapter queryResultAdapter = new SelectAuthenticatePasswordQueryResultAdapter();
 
-    private final SelectQueryResultAdapterBoolean selectMustResetResultAdapter = new SelectQueryResultAdapterBoolean();
-
     private final SelectAuthenticateUltimoSucessoResultAdapter selectLastSuccessAuthenticationAdapter = new SelectAuthenticateUltimoSucessoResultAdapter();
 
     public SelectQueryResult<AuthenticateQueryResult> selectClientIdExists(final String clientUserId) {
@@ -36,7 +34,8 @@ public final class TableAuthenticateOperations {
 
     public SelectQueryResult<SelectQuerySingleResult<Boolean>> selectMustReset(final String clientUserId) {
         SelectAuthenticateDeveResetarQuery selectQuery = new SelectAuthenticateDeveResetarQuery(clientUserId);
-        SelectQueryResult<SelectQuerySingleResult<Boolean>> result = dbdQueryExecutor.executeSelectQuery(selectQuery, selectMustResetResultAdapter);
+        SelectQueryResultAdapterBoolean rsAdapter = new SelectQueryResultAdapterBoolean();
+        SelectQueryResult<SelectQuerySingleResult<Boolean>> result = dbdQueryExecutor.executeSelectQuery(selectQuery, rsAdapter);
         return result;
     }
 
@@ -45,6 +44,8 @@ public final class TableAuthenticateOperations {
         InsertQueryResult result = dbdQueryExecutor.executeInsertQuery(insertQuery);
         return result;
     }
+
+
 
     public SelectQueryResult<SelectAuthenticateUltimoSucessoResult> selectLastSuccessAuthentication(final String clientUserId) {
         SelectAuthenticateUltimoSucessoQuery selectQuery = new SelectAuthenticateUltimoSucessoQuery(clientUserId);

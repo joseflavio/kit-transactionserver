@@ -13,4 +13,9 @@ public final class ChannelProgressRSTY implements ClientResponseRSTY {
         return numberOfSteps;
     }
 
+    @Override
+    public String toString() {
+        return "ChannelProgressRSTY [numberOfSteps=" + numberOfSteps + "]";
+    }
+
 }// class
