@@ -80,7 +80,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
 
             final boolean mustReset = authServResponse.isMustReset();
             boolean isGpsEnabled = authServResponse.isGpsEnabled();
-            clientInfo = new ClientContext(clientUserId, authServResponse, true, mustReset, isGpsEnabled);
+            clientInfo = new ClientContext(clientUserId, installId, authServResponse, true, mustReset, isGpsEnabled);
 
             newState = new ClientAuthenticationSuccessfulState(context);
 
@@ -99,7 +99,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
             AuthenticationResponseRSTY clientAuthResponse =  new AuthenticationResponseRSTY(authServResponse);
             context.getClientAdapterOut().sendBack(clientAuthResponse);
 
-            clientInfo = new ClientContext(clientUserId, authServResponse);
+            clientInfo = new ClientContext(clientUserId, installId, authServResponse);
             newState = WaitForEventEndConversationState.getInstance(context);
 
         }// if-else

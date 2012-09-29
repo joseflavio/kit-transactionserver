@@ -17,6 +17,7 @@ import com.fap.framework.statemachine.ResultWaitEvent;
 import com.fap.framework.statemachine.StateSME;
 
 import com.kit.lightserver.domain.types.CoordenadaGpsSTY;
+import com.kit.lightserver.services.be.gps.GpsService;
 import com.kit.lightserver.statemachine.StateMachineMainContext;
 import com.kit.lightserver.statemachine.events.ActivityGpsSME;
 import com.kit.lightserver.statemachine.types.ConversationFinishedStatusCTX;
@@ -75,6 +76,9 @@ public class GpsActivityState extends BaseState implements StateSME<KitEventSME>
         for (int i = 0; i < coordenadasReceived.size(); i++) {
             LOGGER.info(i + " - " + coordenadasReceived.get(i));
         }
+
+        GpsService.getInstance(context.getConfigAccessor()).logGpsActivities(
+                context.getConnectionInfo(), context.getClientInfo().getKtClientUserId(), context.getClientInfo().getClientInstallId(), coordenadasReceived);
 
         StateSME<KitEventSME> newState = WaitForEventEndConversationState.getInstance(context);
         return ResultStateTransition.getInstance(newState);
