@@ -24,7 +24,7 @@ public class GpsService {
 
     static private final Logger LOGGER = LoggerFactory.getLogger(GpsService.class);
 
-    static private ExecutorService pool = Executors.newFixedThreadPool(4);
+    static private ExecutorService pool = Executors.newCachedThreadPool();
 
     static public GpsService getInstance(final ConfigAccessor configAccessor) {
         return new GpsService(configAccessor);
