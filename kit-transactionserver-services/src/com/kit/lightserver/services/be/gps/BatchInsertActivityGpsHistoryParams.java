@@ -3,7 +3,7 @@ package com.kit.lightserver.services.be.gps;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.dajo.framework.db.InsertQueryInterface;
+import org.dajo.framework.db.BatchInsertQueryParameters;
 import org.dajo.framework.db.QueryBooleanParameter;
 import org.dajo.framework.db.QueryDateParameter;
 import org.dajo.framework.db.QueryIntParameter;
@@ -15,11 +15,11 @@ import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.CoordenadaGpsSTY;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
 
-final class InsertActivityGpsHistoryQuery implements InsertQueryInterface {
+final class BatchInsertActivityGpsHistoryParams implements BatchInsertQueryParameters {
 
     private final List<QueryParameter> queryParameters = new LinkedList<QueryParameter>();
 
-    InsertActivityGpsHistoryQuery(final InstallationIdAbVO installationId, final String clientUserId, final ConnectionInfoVO connectionId,
+    BatchInsertActivityGpsHistoryParams(final InstallationIdAbVO installationId, final String clientUserId, final ConnectionInfoVO connectionId,
             final boolean available, final CoordenadaGpsSTY coordenadaGps) {
 
         int lat = IntegerUtils.checkedLongToInt( Math.round( ((double)coordenadaGps.getLatitude()) * 10000000) );
@@ -51,18 +51,6 @@ final class InsertActivityGpsHistoryQuery implements InsertQueryInterface {
 
 
     }// constructor
-
-    @Override
-    public String getPreparedInsertQueryString() {
-
-        final String insertQueryStr =
-                "INSERT INTO " + DBGTables.ACTIVITY_GPS_HISTORY.TABLE_NAME + " ( " +
-                "[KTClientInstallIdAB], [KTClientUserId], [KTConnectionId], [KTAvailable], " +
-                "[KTLat], [KTLng], [KTAccuracy], [KTActivityLogicalClock], [KTActivityTime] ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        return insertQueryStr;
-
-    }
 
     @Override
     public List<QueryParameter> getInsertQueryParameters() {
