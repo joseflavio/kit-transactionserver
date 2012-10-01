@@ -5,8 +5,6 @@ import kit.primitives.channel.ChannelProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dajo.chronometer.Chronometer;
-
 import com.fap.framework.statemachine.ProcessingResult;
 import com.fap.framework.statemachine.ResultStateTransition;
 import com.fap.framework.statemachine.ResultWaitEvent;
@@ -113,8 +111,6 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
     private AuthenticationServiceResponse authenticate(final ConnectionInfoVO connInfo, final String clientUserId, final String password,
             final InstallationIdAbVO installId, final AuthenticationRequestTypeEnumSTY authRequestType) {
 
-        Chronometer serviceChrono = new Chronometer("authenticationService.authenticate");
-        serviceChrono.start();
         AuthenticationServiceResponse authServResponse;
         try {
             AuthenticationService authenticationService = AuthenticationService.getInstance(context.getConfigAccessor());
@@ -123,8 +119,7 @@ public final class InitialState extends BaseState implements StateSME<KitEventSM
             LOGGER.error("Unexpected error.", t);
             authServResponse = AuthenticationServiceResponse.getFailedInstance(AuthenticationServiceResponse.FailureType.FAILED_UNEXPECTED_ERROR);
         }
-        serviceChrono.stop();
-        LOGGER.info(serviceChrono.toString());
+
         return authServResponse;
 
     }

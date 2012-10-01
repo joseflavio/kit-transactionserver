@@ -8,12 +8,13 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dajo.chronometer.Chronometer;
+import org.dajo.chronometer.Chronometer7;
+import org.dajo.chronometer.Chronometer7.ChronometerResource;
 import org.dajo.framework.configuration.ConfigAccessor;
 import org.dajo.framework.db.BatchInsertQueryParameters;
 import org.dajo.framework.db.BatchInsertQueryResult;
 import org.dajo.framework.db.DatabaseConfig;
-import org.dajo.framework.db.SingleConnectionQueryExecutor;
+import org.dajo.framework.db.SingleConnectionQueryExecutor7;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.CoordenadaGpsSTY;
@@ -65,24 +66,25 @@ public class GpsService {
         @Override
         public void run() {
             LOGGER.info("LogGpsActivitiesTask - started");
-            Chronometer serviceChrono = new Chronometer("GpsService.logGpsActivities");
-            serviceChrono.start();
+            Chronometer7 serviceChrono = new Chronometer7("GpsService.logGpsActivities");
+            try( ChronometerResource oi = serviceChrono.getAsResource() ) {
+                serviceChrono.start();
 
-            final boolean gpsDataAvailable = true;
-            List<BatchInsertQueryParameters> paramList = new LinkedList<>();
-            for(CoordenadaGpsSTY coordenadaGps:coordenadasReceived) {
-                BatchInsertQueryParameters params =
-                        new BatchInsertActivityGpsHistoryParams(installationId, clientUserId, connectionInfo, gpsDataAvailable, coordenadaGps);
-                paramList.add(params);
+                final boolean gpsDataAvailable = true;
+                List<BatchInsertQueryParameters> paramList = new LinkedList<>();
+                for(CoordenadaGpsSTY coordenadaGps:coordenadasReceived) {
+                    BatchInsertQueryParameters params =
+                            new BatchInsertActivityGpsHistoryParams(installationId, clientUserId, connectionInfo, gpsDataAvailable, coordenadaGps);
+                    paramList.add(params);
+                }
+
+                try( SingleConnectionQueryExecutor7 dbgQueryExecutor = new SingleConnectionQueryExecutor7(dbgConfig) ) {
+                    BatchInsertActivityGpsHistoryQuery batchInsertQuery = new BatchInsertActivityGpsHistoryQuery(paramList);
+                    BatchInsertQueryResult insertResult = dbgQueryExecutor.executeBatchInsertQuery(batchInsertQuery);
+                    LOGGER.info("insertResult=" + insertResult);
+                }
             }
 
-            try( SingleConnectionQueryExecutor dbgQueryExecutor = new SingleConnectionQueryExecutor(dbgConfig) ) {
-                BatchInsertActivityGpsHistoryQuery batchInsertQuery = new BatchInsertActivityGpsHistoryQuery(paramList);
-                BatchInsertQueryResult insertResult = dbgQueryExecutor.executeBatchInsertQuery(batchInsertQuery);
-                LOGGER.info("insertResult=" + insertResult);
-            }
-
-            serviceChrono.stop();
             LOGGER.info(serviceChrono.toString(coordenadasReceived.size()));
 
         }

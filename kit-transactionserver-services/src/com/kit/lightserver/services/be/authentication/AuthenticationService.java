@@ -1,5 +1,9 @@
 package com.kit.lightserver.services.be.authentication;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.dajo.chronometer.Chronometer;
 import org.dajo.framework.configuration.ConfigAccessor;
 import org.dajo.framework.db.DatabaseConfig;
 import org.dajo.framework.db.SimpleQueryExecutor;
@@ -18,7 +22,7 @@ import com.kit.lightserver.services.db.dbl.LogConexoesIniciadasTask;
 
 public final class AuthenticationService {
 
-    //static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
     static public AuthenticationService getInstance(final ConfigAccessor configAccessor) {
         return new AuthenticationService(configAccessor);
@@ -37,6 +41,9 @@ public final class AuthenticationService {
     public AuthenticationServiceResponse authenticate(final ConnectionInfoVO connectionInfo, final String clientUserId, final String password,
             final InstallationIdAbVO installIdAb, final AuthenticationRequestTypeEnumSTY authRequestType) {
 
+        Chronometer serviceChrono = new Chronometer(this, "authenticate");
+        serviceChrono.start();
+
         SingleConnectionQueryExecutor dbaQueryExecutor = new SingleConnectionQueryExecutor(dbaConfig);
         SingleConnectionQueryExecutor dbdQueryExecutor = new SingleConnectionQueryExecutor(dbdConfig);
 
@@ -44,13 +51,16 @@ public final class AuthenticationService {
 
         AuthenticationServiceResponse authenticationResponse = serviceInternal.authenticate(connectionInfo, clientUserId, password, installIdAb, authRequestType);
 
-        dbaQueryExecutor.finish();
-        dbdQueryExecutor.finish();
+        dbaQueryExecutor.close();
+        dbdQueryExecutor.close();
 
         int responseStatusForLog = AuthenticationServiceStatusConverter.convertToStatus(authenticationResponse);
         LogConexoesIniciadasTask logConectionTask = new LogConexoesIniciadasTask(configAccessor, connectionInfo, installIdAb, clientUserId, responseStatusForLog);
         Thread logConectionThread = RichThreadFactory.newThread(logConectionTask, connectionInfo);
         logConectionThread.start();
+
+        serviceChrono.close();
+        LOGGER.info(serviceChrono.toString());
 
         return authenticationResponse;
 

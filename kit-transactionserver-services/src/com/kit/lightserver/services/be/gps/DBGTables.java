@@ -9,4 +9,8 @@ public final class DBGTables {
         static public final String FORM_CLIENT_ROWID = "KTRowId";
     }
 
+    static public class ACTIVITY_GPS_LAST {
+        static public final String TABLE_NAME = "[dbo].[ActivityGpsLast]";
+    }
+
 }// class

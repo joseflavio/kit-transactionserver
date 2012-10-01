@@ -8,10 +8,10 @@ GO
 USE KEEPIN_V02_DEVTEST_DBG
 
 CREATE TABLE [dbo].[ActivityGpsHistory] (
-    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
-    [KTConnectionId] [nchar](19) NOT NULL,    
+    [KTInsertDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),       
     [KTClientUserId] [nvarchar](32) NOT NULL,
     [KTClientInstallIdAB] [nchar](33) NOT NULL,
+    [KTConnectionId] [nchar](19) NOT NULL,
     [KTAvailable] [bit] NOT NULL,
     [KTLat] [int] NOT NULL,
     [KTLng] [int] NOT NULL,
@@ -27,6 +27,24 @@ CREATE NONCLUSTERED INDEX NIDX_ACTIVITYGPSHISTORY_KTAVAILABLE ON [ActivityGpsHis
 CREATE NONCLUSTERED INDEX NIDX_ACTIVITYGPSHISTORY_KTACCURACY ON [ActivityGpsHistory](KTAccuracy);
 CREATE NONCLUSTERED INDEX NIDX_ACTIVITYGPSHISTORY_KTACTIVITYLOGICALCLOCK ON [ActivityGpsHistory](KTActivityLogicalClock);
 CREATE CLUSTERED INDEX CIDX_ACTIVITYGPSHISTORY_KTLATKTLNG ON [ActivityGpsHistory](KTLat,KTLng);
+
+
+
+CREATE TABLE [dbo].[ActivityGpsLast] (           
+    [KTClientUserId] [nvarchar](32) NOT NULL,
+    [KTClientInstallIdAB] [nchar](33) NOT NULL,
+    [KTConnectionId] [nchar](19) NOT NULL,
+    [KTAvailable] [bit] NOT NULL,
+    [KTLat] [int] NOT NULL,
+    [KTLng] [int] NOT NULL,
+    [KTAccuracy] [int] NOT NULL,
+    [KTActivityLogicalClock] [int] NOT NULL,
+    [KTActivityTime] [datetime2] NOT NULL,
+    [KTLastUpdateDBTime] [datetime2] NOT NULL DEFAULT SYSUTCDATETIME(),
+    [KTRowVersion] rowversion NOT NULL
+    CONSTRAINT PK_ACTIVITYGPSLAST PRIMARY KEY NONCLUSTERED ([KTClientUserId], [KTClientInstallIdAB])
+)
+
 
 
 
