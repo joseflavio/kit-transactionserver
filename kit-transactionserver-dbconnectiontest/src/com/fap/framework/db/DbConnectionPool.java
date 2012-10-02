@@ -57,7 +57,7 @@ public class DbConnectionPool {
     public <T> SelectQueryResult<T> executeSelectQuery(final SelectQueryInterface selectQuery, final SelectQueryResultAdapter<T> resultAdapter) {
         SingleConnectionQueryExecutor simpleQueryExecutor = new SingleConnectionQueryExecutor(dbConfig);
         final SelectQueryResult<T> result = simpleQueryExecutor.executeSelectQuery(selectQuery, resultAdapter);
-        simpleQueryExecutor.finish();
+        simpleQueryExecutor.close();
         return result;
     }
 

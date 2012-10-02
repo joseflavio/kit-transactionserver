@@ -48,7 +48,7 @@ public class TestDabaseConnectionPool {
             }
         } while (allFinished == false);
 
-        totalTime.stop();
+        totalTime.close();
 
     }
 

@@ -5,7 +5,7 @@
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple-1.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/sqljdbc_4.0.2206.100_nosigned.jar"/>
-	<classpathentry kind="lib" path="lib/dajo-config-0.1.7.jar"/>
-	<classpathentry kind="lib" path="lib/dajo-database-0.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/dajo-config-0.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/dajo-database-0.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
