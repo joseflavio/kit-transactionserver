@@ -23,7 +23,7 @@ public final class KitTransactionServerMain {
             //httpsServer.start();
             LOGGER.info("Init finished.");
         } catch (Throwable t) {
-            JOptionPane.showMessageDialog(null, "Um erro inexperado occoreu, por favor consulte os arquivos de log. (e="+t.getMessage()+")");
+            JOptionPane.showMessageDialog(null, "Um erro inexperado occoreu, por favor consulte os arquivos de log. (t.getClass()="+t.getClass()+", t="+t+")");
             if( server != null ) {
                 server.stopServer(true);
             }

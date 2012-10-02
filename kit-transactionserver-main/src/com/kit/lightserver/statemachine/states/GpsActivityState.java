@@ -1,15 +1,10 @@
 package com.kit.lightserver.statemachine.states;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.dajo.math.IntegerUtils;
 
 import com.fap.framework.statemachine.ProcessingResult;
 import com.fap.framework.statemachine.ResultStateTransition;
@@ -70,27 +65,12 @@ public class GpsActivityState extends BaseState implements StateSME<KitEventSME>
             return new ResultWaitEvent<>();
         }
 
-        Collections.sort( coordenadasReceived, new LogicalClockComparator() );
-
-        LOGGER.info("Coordenadas recebidas: ");
-        for (int i = 0; i < coordenadasReceived.size(); i++) {
-            LOGGER.info(i + " - " + coordenadasReceived.get(i));
-        }
-
         GpsService.getInstance(context.getConfigAccessor()).logGpsActivities(
                 context.getConnectionInfo(), context.getClientInfo().getKtClientUserId(), context.getClientInfo().getClientInstallId(), coordenadasReceived);
 
         StateSME<KitEventSME> newState = WaitForEventEndConversationState.getInstance(context);
         return ResultStateTransition.getInstance(newState);
 
-    }
-
-    static private final class LogicalClockComparator implements Comparator<CoordenadaGpsSTY>, Serializable {
-        static private final long serialVersionUID = 1L;
-        @Override
-        public int compare(final CoordenadaGpsSTY o1, final CoordenadaGpsSTY o2) {
-            return IntegerUtils.safeLongToInt( o1.getLogicalClock() - o2.getLogicalClock() );
-        }
     }
 
 }// class

@@ -1,5 +1,8 @@
 package com.kit.lightserver.services.be.gps;
 
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -14,7 +17,9 @@ import org.dajo.framework.configuration.ConfigAccessor;
 import org.dajo.framework.db.BatchInsertQueryParameters;
 import org.dajo.framework.db.BatchInsertQueryResult;
 import org.dajo.framework.db.DatabaseConfig;
+import org.dajo.framework.db.InsertQueryResult;
 import org.dajo.framework.db.SingleConnectionQueryExecutor7;
+import org.dajo.math.IntegerUtils;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.CoordenadaGpsSTY;
@@ -23,7 +28,7 @@ import com.kit.lightserver.services.be.common.DatabaseAliases;
 
 public class GpsService {
 
-    static private final Logger LOGGER = LoggerFactory.getLogger(GpsService.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(LogGpsActivitiesTask.class);
 
     static private ExecutorService pool = Executors.newCachedThreadPool();
 
@@ -66,27 +71,51 @@ public class GpsService {
         @Override
         public void run() {
             LOGGER.info("LogGpsActivitiesTask - started");
-            Chronometer7 serviceChrono = new Chronometer7("GpsService.logGpsActivities");
-            try( ChronometerResource oi = serviceChrono.getAsResource() ) {
-                serviceChrono.start();
 
-                final boolean gpsDataAvailable = true;
-                List<BatchInsertQueryParameters> paramList = new LinkedList<>();
-                for(CoordenadaGpsSTY coordenadaGps:coordenadasReceived) {
-                    BatchInsertQueryParameters params =
-                            new BatchInsertActivityGpsHistoryParams(installationId, clientUserId, connectionInfo, gpsDataAvailable, coordenadaGps);
-                    paramList.add(params);
-                }
+            Collections.sort( coordenadasReceived, new LogicalClockComparator() );
 
-                try( SingleConnectionQueryExecutor7 dbgQueryExecutor = new SingleConnectionQueryExecutor7(dbgConfig) ) {
+            LOGGER.info("Coordenadas recebidas: ");
+            for (int i = 0; i < coordenadasReceived.size(); i++) {
+                LOGGER.info(i + " - " + coordenadasReceived.get(i));
+            }
+
+            boolean gpsDataAvailable = true;
+            List<BatchInsertQueryParameters> paramList = new LinkedList<>();
+            for(CoordenadaGpsSTY coordenadaGps:coordenadasReceived) {
+                BatchInsertQueryParameters params = new BatchInsertActivityGpsHistoryParams(installationId, clientUserId, connectionInfo, gpsDataAvailable, coordenadaGps);
+                paramList.add(params);
+            }
+
+            try( SingleConnectionQueryExecutor7 dbgQueryExecutor = new SingleConnectionQueryExecutor7(dbgConfig) ) {
+
+                CoordenadaGpsSTY mostRecent = coordenadasReceived.get(coordenadasReceived.size()-1);
+                LOGGER.info("mostRecent="+mostRecent);
+
+                InsertActivityGpsLastQuery insertActivityGpsLastQuery = new InsertActivityGpsLastQuery(installationId, clientUserId, connectionInfo, gpsDataAvailable, mostRecent);
+                InsertQueryResult rs = dbgQueryExecutor.executeInsertQuery(insertActivityGpsLastQuery);
+                LOGGER.info("rs="+rs);
+
+                Chronometer7 serviceChrono = new Chronometer7("GpsService.logGpsActivities");
+                try( ChronometerResource cr = serviceChrono.getAsResource() ) {
+                    serviceChrono.start();
                     BatchInsertActivityGpsHistoryQuery batchInsertQuery = new BatchInsertActivityGpsHistoryQuery(paramList);
                     BatchInsertQueryResult insertResult = dbgQueryExecutor.executeBatchInsertQuery(batchInsertQuery);
                     LOGGER.info("insertResult=" + insertResult);
                 }
+                LOGGER.info(serviceChrono.toString(coordenadasReceived.size()));
+
+            } catch (Throwable t) {
+                LOGGER.error("Unexpected error.", t);
             }
+        }
 
-            LOGGER.info(serviceChrono.toString(coordenadasReceived.size()));
+    }
 
+    static private final class LogicalClockComparator implements Comparator<CoordenadaGpsSTY>, Serializable {
+        static private final long serialVersionUID = 1L;
+        @Override
+        public int compare(final CoordenadaGpsSTY o1, final CoordenadaGpsSTY o2) {
+            return IntegerUtils.safeLongToInt( o1.getLogicalClock() - o2.getLogicalClock() );
         }
     }
 
