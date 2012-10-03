@@ -74,16 +74,11 @@ public class GpsService {
         @Override
         public void run() {
             LOGGER.info("LogGpsActivitiesTask - started");
-            try { 
-            	
-            	if( coordenadasReceived.size() > 0 ) {
-            		return;
-            	}
-            	
-            	Collections.sort( coordenadasReceived, new LogicalClockComparator() );
-            	
-            	storeGpsData();
-            	
+            try {             	
+            	if( coordenadasReceived.size() > 0 ) {            	
+            		Collections.sort( coordenadasReceived, new LogicalClockComparator() );            	
+            		storeGpsData();
+            	}            	
             } catch (Throwable t) {
                 LOGGER.error("Unexpected error.", t);
             }
