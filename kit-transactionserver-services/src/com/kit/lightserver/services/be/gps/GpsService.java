@@ -74,17 +74,27 @@ public class GpsService {
         @Override
         public void run() {
             LOGGER.info("LogGpsActivitiesTask - started");
-
-            if( coordenadasReceived.size() == 0 ) {
-                return;
+            try { 
+            	
+            	if( coordenadasReceived.size() > 0 ) {
+            		return;
+            	}
+            	
+            	Collections.sort( coordenadasReceived, new LogicalClockComparator() );
+            	
+            	storeGpsData();
+            	
+            } catch (Throwable t) {
+                LOGGER.error("Unexpected error.", t);
             }
-
-            Collections.sort( coordenadasReceived, new LogicalClockComparator() );
-
-            LOGGER.info("Coordenadas recebidas: ");
-            for (int i = 0; i < coordenadasReceived.size(); i++) {
-                LOGGER.info(i + " - " + coordenadasReceived.get(i));
-            }
+        }
+                    
+        public void storeGpsData() {
+            
+//            LOGGER.info("Coordenadas recebidas: ");
+//            for (int i = 0; i < coordenadasReceived.size(); i++) {
+//                LOGGER.info(i + " - " + coordenadasReceived.get(i));
+//            }
 
             boolean gpsDataAvailable = true;
             List<BatchInsertQueryParameters> paramList = new LinkedList<>();
@@ -127,8 +137,6 @@ public class GpsService {
                 }
                 LOGGER.info(serviceChrono.toString(coordenadasReceived.size()));
 
-            } catch (Throwable t) {
-                LOGGER.error("Unexpected error.", t);
             }
         }
 
