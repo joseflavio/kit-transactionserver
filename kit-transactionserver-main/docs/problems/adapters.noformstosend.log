@@ -1,0 +1,7 @@
+[21:58:38.698] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.authentication.AuthenticationRequest (1', 'cnorris, 666')
+[21:58:43.696] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.authentication.AuthenticationResponse (1)
+[21:58:45.306] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (2)
+[21:58:46.071] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.forms.FormOperation (3)
+[21:58:46.307] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.forms.FormOperation (4)
+[21:58:46.308] [Thread-1] [TRACE] [AdaptersLogger] [SEND] primitive=kit.primitives.channel.ChannelNotification ( 1 )
+[21:58:46.572] [Thread-2] [TRACE] [AdaptersLogger] [RECV] primitive=kit.primitives.channel.ChannelNotification ( 1 )
