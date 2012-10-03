@@ -27,7 +27,7 @@ public class InsertActivityGpsLastQuery implements InsertQueryInterface {
         int accuracy = IntegerUtils.checkedLongToInt( Math.round( ((double)mostRecent.getAccuracy()) * 10000000) );
         int logicalClock = IntegerUtils.checkedLongToInt( mostRecent.getLogicalClock() );
 
-        final QueryStringParameter idABParam = new QueryStringParameter( installationId.getIdABStr() );
+        final QueryStringParameter installationIdParam = new QueryStringParameter( installationId.getIdABStr() );
         final QueryStringParameter clientIdParam = new QueryStringParameter( clientUserId.toUpperCase() );
         final QueryStringParameter connectionIdParam = new QueryStringParameter( connectionId.getConnectionUniqueId() );
         final QueryBooleanParameter gpsAvailableParam = new QueryBooleanParameter( Boolean.valueOf(gpsAvailable) );
@@ -39,7 +39,7 @@ public class InsertActivityGpsLastQuery implements InsertQueryInterface {
         final QueryIntParameter  logicalClockParam = new QueryIntParameter( logicalClock );
         final QueryDateParameter activityTime = new QueryDateParameter( mostRecent.getTime() );
 
-        queryParameters.add(idABParam);
+        queryParameters.add(installationIdParam);
         queryParameters.add(clientIdParam);
         queryParameters.add(connectionIdParam);
         queryParameters.add(gpsAvailableParam);

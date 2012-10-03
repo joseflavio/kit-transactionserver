@@ -18,7 +18,10 @@ import org.dajo.framework.db.BatchInsertQueryParameters;
 import org.dajo.framework.db.BatchInsertQueryResult;
 import org.dajo.framework.db.DatabaseConfig;
 import org.dajo.framework.db.InsertQueryResult;
+import org.dajo.framework.db.SelectQueryResult;
+import org.dajo.framework.db.SelectQuerySingleResult;
 import org.dajo.framework.db.SingleConnectionQueryExecutor7;
+import org.dajo.framework.db.UpdateQueryResult;
 import org.dajo.math.IntegerUtils;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
@@ -72,6 +75,10 @@ public class GpsService {
         public void run() {
             LOGGER.info("LogGpsActivitiesTask - started");
 
+            if( coordenadasReceived.size() == 0 ) {
+                return;
+            }
+
             Collections.sort( coordenadasReceived, new LogicalClockComparator() );
 
             LOGGER.info("Coordenadas recebidas: ");
@@ -91,9 +98,25 @@ public class GpsService {
                 CoordenadaGpsSTY mostRecent = coordenadasReceived.get(coordenadasReceived.size()-1);
                 LOGGER.info("mostRecent="+mostRecent);
 
-                InsertActivityGpsLastQuery insertActivityGpsLastQuery = new InsertActivityGpsLastQuery(installationId, clientUserId, connectionInfo, gpsDataAvailable, mostRecent);
-                InsertQueryResult rs = dbgQueryExecutor.executeInsertQuery(insertActivityGpsLastQuery);
-                LOGGER.info("rs="+rs);
+                SelectActivityGpsLastQuery selectActivityGpsLastQuery = new SelectActivityGpsLastQuery(installationId, clientUserId);
+                SelectQueryResult<SelectQuerySingleResult<Integer>> rs = dbgQueryExecutor.executeSelectQuery(selectActivityGpsLastQuery, new SelectQueryResultAdapterInteger());
+                if( rs.isSelectQuerySuccessful() == true ) {
+                    if( rs.getResult().isAvailable() == false ) {
+                        InsertActivityGpsLastQuery insertActivityGpsLastQuery = new InsertActivityGpsLastQuery(installationId, clientUserId, connectionInfo, gpsDataAvailable, mostRecent);
+                        InsertQueryResult irs = dbgQueryExecutor.executeInsertQuery(insertActivityGpsLastQuery);
+                        LOGGER.info("irs="+irs);
+                    }
+                    else {
+                        LOGGER.info("Already exists, updating. rs="+rs);
+                        UpdateActivityGpsLastQuery updateQuery = new UpdateActivityGpsLastQuery(installationId, clientUserId, connectionInfo, gpsDataAvailable, mostRecent);
+                        UpdateQueryResult urs = dbgQueryExecutor.executeUpdateQuery(updateQuery);
+                        LOGGER.info("urs="+urs);
+                    }
+
+                }
+                else {
+                    LOGGER.error("Unexpected error. rs={}", rs);
+                }
 
                 Chronometer7 serviceChrono = new Chronometer7("GpsService.logGpsActivities");
                 try( ChronometerResource cr = serviceChrono.getAsResource() ) {

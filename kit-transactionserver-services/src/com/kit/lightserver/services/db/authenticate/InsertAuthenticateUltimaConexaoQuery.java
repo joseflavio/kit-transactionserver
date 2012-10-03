@@ -9,6 +9,7 @@ import org.dajo.framework.db.QueryStringParameter;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
+import com.kit.lightserver.services.be.gps.MsSql;
 
 final class InsertAuthenticateUltimaConexaoQuery implements InsertQueryInterface {
 
@@ -31,7 +32,7 @@ final class InsertAuthenticateUltimaConexaoQuery implements InsertQueryInterface
 
         final String selectQueryStr =
                 "INSERT INTO " + TableAuthenticateConstants.TABLE_AUTHENTICATE_ULTIMACONEXAO +
-                " ([KTClientUserId], [KTClientInstallIdAB], [KTConnectionId], [KTVersion]) VALUES (?, ?, ?, 1)";
+                " ([KTClientUserId], [KTClientInstallIdAB], [KTConnectionId], [KTVersion], [KTUpdateDBTime]) VALUES ( ?, ?, ?, 1, "+MsSql.SYSUTCDATETIME+" )";
 
         return selectQueryStr;
 
