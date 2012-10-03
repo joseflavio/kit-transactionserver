@@ -12,12 +12,14 @@
 	<property name="tmp.classes.dir" value="${tmp.builddir}/jar/classes"/>
 
 	<path id="project.classpath">
-		<fileset dir="${jar.javac.lib.dir}">
+		<fileset dir="${jar.javac.classpath.dir1}">
 			<include name="slf4j-api-*.jar" />
 			<include name="dajo-config-*.jar" />
-			<include name="dajo-database-*.jar" />
-			<include name="kit-transactionserver-simplestatemachine-*.jar" />
+			<include name="dajo-database-*.jar" />			
 		</fileset>
+		<fileset dir="${jar.javac.classpath.dir2}">
+			<include name="kit-transactionserver-simplestatemachine-*.jar" />
+	    </fileset>
 	</path>
 
 	<pathconvert property="manifest.classpath" pathsep=" ">

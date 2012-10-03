@@ -1,18 +1,19 @@
 <!DOCTYPE project> 
 <project name="kit-transactionserver-zip" default="build-deliverable" basedir=".">
-
+	
 	<property file="build-deliverable.local.properties"/>				
+	
+	<property name="build.lib.dir" value="../kit-transactionserver-main/lib.internal"/>
 	
 	<property name="deliverable.zipfilename" value="${deliverable.name}-${deliverable.version}-${server.config.name}"/>
 	<property name="tmp.deliverable.zipdir" value="${tmp.dir}/${deliverable.zipfilename}.zip" />
 	<property name="tmp.deliverable.dir" value="${tmp.deliverable.zipdir}/${deliverable.zipfilename}"/>
 
 	<target name="clean-all">
-		<delete dir="${tmp.dir}"/>
+		<delete quiet="true" dir="${tmp.dir}"/>
 	</target>
 
-	<target name="build-depencies-jars" depends="clean-all">
-		<property name="build.lib.dir" value="../kit-transactionserver-main/lib"/>
+	<target name="build-depencies-jars" depends="clean-all">		
 		<ant dir="../kit-transactionserver-simplestatemachine" antfile="build.xml" target="build-external">
 			<property name="build.dest.dir" value="${build.lib.dir}"/>
 		</ant>
