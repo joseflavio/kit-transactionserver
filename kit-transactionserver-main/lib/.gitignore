@@ -1,3 +1,5 @@
 bootstrap-core-0.0.1-SNAPSHOT.jar.rename
 infra-exception-0.0.1-SNAPSHOT.jar.rename
-kit*.jar
+kit-transactionserver-services-*.jar
+kit-transactionserver-resources-*.jar
+kit-transactionserver-main-*.jar
