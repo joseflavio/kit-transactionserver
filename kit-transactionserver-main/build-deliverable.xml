@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project> 
 <project name="kit-transactionserver-zip" default="build-deliverable" basedir=".">
 
-	<property file="build-deliverable.properties"/>
+	<property file="build-deliverable.local.properties"/>				
 	
 	<property name="deliverable.zipfilename" value="${deliverable.name}-${deliverable.version}-${server.config.name}"/>
 	<property name="tmp.deliverable.zipdir" value="${tmp.dir}/${deliverable.zipfilename}.zip" />

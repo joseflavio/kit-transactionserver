@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
 <project name="kit-transactionserver-main-jar" default="jar" basedir=".">
 
 	<property name="jar.name" value="kit-transactionserver-main"/>	
 
 	<property file="version.properties"/>
+	<property file="build.local.properties"/>	
 	<property file="build.properties"/>
 
 	<tstamp><format property="build.id" pattern="yyyyMMdd-hhmmss" timezone="UTC"/></tstamp>

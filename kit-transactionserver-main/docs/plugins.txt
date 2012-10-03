@@ -1,7 +1,16 @@
-Plug-ins:
-
 Find Bugs For Java
+--------------------------------------------------------------------
+Proje. site: http://findbugs.sourceforge.net/
+Update site: http://findbugs.cs.umd.edu/eclipse
+ 
 
-http://findbugs.sourceforge.net/
+Grep Console
+--------------------------------------------------------------------
+http://marian.schedenig.name/projects/grep-console/
+http://eclipse.schedenig.name (old one: http://eclipse.musgit.com)
+ 
 
-http://findbugs.cs.umd.edu/eclipse
+Google Web Toolkit
+--------------------------------------------------------------------
+Proje. site: https://developers.google.com/web-toolkit/
+Update site: http://dl.google.com/eclipse/plugin/3.7

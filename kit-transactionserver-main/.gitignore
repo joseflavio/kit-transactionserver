@@ -2,6 +2,5 @@
 /build
 /logs
 /bin
-build-deliverable.properties
-${build.dest.dir}
-/build.local.properties
+build.local.properties
+/build-deliverable.local.properties
