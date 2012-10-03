@@ -3,3 +3,4 @@ infra-exception-0.0.1-SNAPSHOT.jar.rename
 kit-transactionserver-services-*.jar
 kit-transactionserver-resources-*.jar
 kit-transactionserver-main-*.jar
+kit-transactionserver-simplestatemachine-*.jar
