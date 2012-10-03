@@ -1,6 +1,6 @@
 package com.kit.lightserver.statemachine;
 
-import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.configuration.ConfigAccessor;
 
 import com.kit.lightserver.adapters.adapterout.ClientAdapterOut;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;

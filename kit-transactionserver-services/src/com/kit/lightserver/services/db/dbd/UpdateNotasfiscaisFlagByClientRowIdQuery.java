@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
+import org.dajo.framework.db.QueryStringUtils;
 import org.dajo.framework.db.UpdateQueryInterface;
-import org.dajo.framework.db.util.QueryUtil;
 
 import com.kit.lightserver.domain.types.FormClientRowIdSTY;
 
@@ -29,7 +29,7 @@ final class UpdateNotasfiscaisFlagByClientRowIdQuery implements UpdateQueryInter
         this.flagName = flagName.getDbFlagColumnName();
         this.flagColumnDbUpdateTime = flagName.getDbFlagColumnName()+"UpdateDBTime";
 
-        this.rowIdsOrClause = QueryUtil.buildLongOrClause("KTRowId", notasfiscaisList.size());
+        this.rowIdsOrClause = QueryStringUtils.buildLongOrClause("KTRowId", notasfiscaisList.size());
 
         for (final FormClientRowIdSTY notafiscalSTY : notasfiscaisList) {
             assert( FormClientRowIdSTY.isNotafiscal(notafiscalSTY) == true );

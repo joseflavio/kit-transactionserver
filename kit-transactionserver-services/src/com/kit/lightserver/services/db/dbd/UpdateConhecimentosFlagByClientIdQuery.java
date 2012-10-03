@@ -6,8 +6,8 @@ import java.util.List;
 import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
+import org.dajo.framework.db.QueryStringUtils;
 import org.dajo.framework.db.UpdateQueryInterface;
-import org.dajo.framework.db.util.QueryUtil;
 
 import com.kit.lightserver.domain.types.FormClientRowIdSTY;
 
@@ -30,7 +30,7 @@ final class UpdateConhecimentosFlagByClientIdQuery implements UpdateQueryInterfa
         this.flagColumn = flag.getDbFlagColumnName();
         this.flagColumnDbUpdateTime = flag.getDbFlagColumnName() + "UpdateDBTime";
 
-        this.rowIdsOrClause = QueryUtil.buildLongOrClause("KTRowId", conhecimentosList.size());
+        this.rowIdsOrClause = QueryStringUtils.buildLongOrClause("KTRowId", conhecimentosList.size());
 
         final QueryStringParameter ktClientIdParam = new QueryStringParameter(ktClientUserId);
         queryParameters.add(ktClientIdParam);

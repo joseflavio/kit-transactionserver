@@ -8,21 +8,20 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dajo.chronometer.Chronometer7;
 import org.dajo.chronometer.Chronometer7.ChronometerResource;
-import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.configuration.ConfigAccessor;
 import org.dajo.framework.db.BatchInsertQueryParameters;
 import org.dajo.framework.db.BatchInsertQueryResult;
 import org.dajo.framework.db.DatabaseConfig;
 import org.dajo.framework.db.InsertQueryResult;
 import org.dajo.framework.db.SelectQueryResult;
-import org.dajo.framework.db.SelectQuerySingleResult;
 import org.dajo.framework.db.SingleConnectionQueryExecutor7;
 import org.dajo.framework.db.UpdateQueryResult;
-import org.dajo.math.IntegerUtils;
+import org.dajo.framework.db.resultadapters.SelectQuerySingleResult;
+import org.dajo.types.IntegerConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.CoordenadaGpsSTY;
@@ -141,7 +140,7 @@ public class GpsService {
         static private final long serialVersionUID = 1L;
         @Override
         public int compare(final CoordenadaGpsSTY o1, final CoordenadaGpsSTY o2) {
-            return IntegerUtils.safeLongToInt( o1.getLogicalClock() - o2.getLogicalClock() );
+            return IntegerConverter.safeLongToInt( o1.getLogicalClock() - o2.getLogicalClock() );
         }
     }
 

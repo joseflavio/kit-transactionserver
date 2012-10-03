@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.dajo.framework.db.SelectQueryResultAdapter;
-import org.dajo.framework.db.util.MsSqlBitConverter;
+import org.dajo.types.BooleanConverter;
 
 import com.kit.lightserver.domain.types.ConhecimentoSTY;
 import com.kit.lightserver.domain.types.FormFlagsSTY;
@@ -24,9 +24,9 @@ public final class SelectConhecimentosQueryResultAdapter implements SelectQueryR
             final int coKtRowId = rs.getInt("KTRowId");
             final String ktClientId = rs.getString("KTClientUserId");
 
-            final boolean isReceived = MsSqlBitConverter.convert(rs.getInt("KTFlagRecebido"));
-            final boolean isRead = MsSqlBitConverter.convert(rs.getInt("KTFlagLido"));
-            final boolean isEdited = MsSqlBitConverter.convert(rs.getInt("KTFlagEditado"));
+            final boolean isReceived = BooleanConverter.checkedIntToBool(rs.getInt("KTFlagRecebido"));
+            final boolean isRead = BooleanConverter.checkedIntToBool(rs.getInt("KTFlagLido"));
+            final boolean isEdited = BooleanConverter.checkedIntToBool(rs.getInt("KTFlagEditado"));
 
             final String numeroConhecimento = rs.getString("KTFieldNumeroDoConhecimento"); // knowledgeNumber
             final String serialConhecimento = rs.getString("KTFieldSerialDoConhecimento"); // knowledgeSerial

@@ -3,8 +3,8 @@ package com.kit.lightserver.services.db.authenticategpsenabled;
 import org.dajo.framework.db.InsertQueryResult;
 import org.dajo.framework.db.QueryExecutor;
 import org.dajo.framework.db.SelectQueryResult;
-import org.dajo.framework.db.SelectQueryResultAdapterBoolean;
-import org.dajo.framework.db.SelectQuerySingleResult;
+import org.dajo.framework.db.resultadapters.SelectQuerySimpleResultAdapters.ResultAdapterBool;
+import org.dajo.framework.db.resultadapters.SelectQuerySingleResult;
 
 public final class TableAuthenticateGpsEnabledOperations {
 
@@ -16,7 +16,7 @@ public final class TableAuthenticateGpsEnabledOperations {
 
     public SelectQueryResult<SelectQuerySingleResult<Boolean>> selectGpsEnabled(final String clientUserId) {
         SelectAuthenticateGpsEnabledQuery selectQuery = new SelectAuthenticateGpsEnabledQuery(clientUserId);
-        SelectQueryResultAdapterBoolean rsAdapter = new SelectQueryResultAdapterBoolean();
+        ResultAdapterBool rsAdapter = new ResultAdapterBool();
         SelectQueryResult<SelectQuerySingleResult<Boolean>> result = dbaQueryExecutor.executeSelectQuery(selectQuery, rsAdapter);
         return result;
     }

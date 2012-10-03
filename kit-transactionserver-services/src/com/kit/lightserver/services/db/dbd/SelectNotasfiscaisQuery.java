@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
+import org.dajo.framework.db.QueryStringUtils;
 import org.dajo.framework.db.SelectQueryInterface;
-import org.dajo.framework.db.util.QueryUtil;
 
 import com.kit.lightserver.domain.types.FormUniqueIdSTY;
 
@@ -31,7 +31,7 @@ final public class SelectNotasfiscaisQuery implements SelectQueryInterface {
 
         queryParameters.add( new QueryStringParameter(ktClientUserId) );
 
-        final String orClause = QueryUtil.buildLongOrClause(DBDTables.NOTASFISCAIS.PARENT_FORMID, parentFormsIds.size());
+        final String orClause = QueryStringUtils.buildLongOrClause(DBDTables.NOTASFISCAIS.PARENT_FORMID, parentFormsIds.size());
 
         for (final FormUniqueIdSTY parent : parentFormsIds) {
             assert( FormUniqueIdSTY.isConhecimento(parent) == true );

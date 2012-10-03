@@ -1,13 +1,12 @@
 package com.kit.lightserver.services.be.authentication;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dajo.framework.db.InsertQueryResult;
 import org.dajo.framework.db.SelectQueryResult;
-import org.dajo.framework.db.SelectQuerySingleResult;
 import org.dajo.framework.db.SingleConnectionQueryExecutor;
 import org.dajo.framework.db.UpdateQueryResult;
+import org.dajo.framework.db.resultadapters.SelectQuerySingleResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.kit.lightserver.domain.types.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;

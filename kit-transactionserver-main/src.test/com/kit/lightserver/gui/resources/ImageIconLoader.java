@@ -5,7 +5,7 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import org.dajo.framework.adapters.DajoFilepath;
+import org.dajo.framework.filepath.DajoFilepath;
 
 import com.kit.lightserver.KitTransactionServerGui;
 

@@ -3,17 +3,15 @@ package com.kit.lightserver.services.db.dbd;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.configuration.ConfigAccessor;
 import org.dajo.framework.db.DatabaseConfig;
 import org.dajo.framework.db.QueryExecutor;
 import org.dajo.framework.db.SimpleQueryExecutor;
 import org.dajo.framework.db.UpdateQueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fap.collections.SmartCollections;
-
 import com.kit.lightserver.domain.filters.ConhecimentoRowIdTransformFilter;
 import com.kit.lightserver.domain.filters.FormRowIdFilter;
 import com.kit.lightserver.domain.filters.NotafiscalRowIdTransformFilter;

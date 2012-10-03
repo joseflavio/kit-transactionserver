@@ -3,8 +3,8 @@ package com.kit.lightserver;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import org.dajo.framework.configuration.ConfigAccessor;
-import org.dajo.framework.configuration.ConfigurationReader;
+import org.dajo.configuration.ConfigAccessor;
+import org.dajo.configuration.ConfigurationReader;
 
 import com.fap.framework.exception.LogUncaughtExceptionHandler;
 

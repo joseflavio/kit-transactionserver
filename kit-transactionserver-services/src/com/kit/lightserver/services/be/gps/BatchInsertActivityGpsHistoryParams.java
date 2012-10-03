@@ -9,7 +9,7 @@ import org.dajo.framework.db.QueryDateParameter;
 import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
-import org.dajo.math.IntegerUtils;
+import org.dajo.types.IntegerConverter;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.CoordenadaGpsSTY;
@@ -22,10 +22,10 @@ final class BatchInsertActivityGpsHistoryParams implements BatchInsertQueryParam
     BatchInsertActivityGpsHistoryParams(final InstallationIdAbVO installationId, final String clientUserId, final ConnectionInfoVO connectionId,
             final boolean available, final CoordenadaGpsSTY coordenadaGps) {
 
-        int lat = IntegerUtils.checkedLongToInt( Math.round( ((double)coordenadaGps.getLatitude()) * 10000000) );
-        int lng = IntegerUtils.checkedLongToInt( Math.round( ((double)coordenadaGps.getLongitude()) * 10000000) );
-        int accuracy = IntegerUtils.checkedLongToInt( Math.round( ((double)coordenadaGps.getAccuracy()) * 10000000) );
-        int logicalClock = IntegerUtils.checkedLongToInt( coordenadaGps.getLogicalClock() );
+        int lat = IntegerConverter.checkedLongToInt( Math.round( ((double)coordenadaGps.getLatitude()) * 10000000) );
+        int lng = IntegerConverter.checkedLongToInt( Math.round( ((double)coordenadaGps.getLongitude()) * 10000000) );
+        int accuracy = IntegerConverter.checkedLongToInt( Math.round( ((double)coordenadaGps.getAccuracy()) * 10000000) );
+        int logicalClock = IntegerConverter.checkedLongToInt( coordenadaGps.getLogicalClock() );
 
         final QueryStringParameter idABParam = new QueryStringParameter( installationId.getIdABStr() );
         final QueryStringParameter clientIdParam = new QueryStringParameter( clientUserId.toUpperCase() );

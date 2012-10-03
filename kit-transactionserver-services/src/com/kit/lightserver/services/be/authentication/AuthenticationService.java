@@ -1,17 +1,15 @@
 package com.kit.lightserver.services.be.authentication;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dajo.chronometer.Chronometer;
-import org.dajo.framework.configuration.ConfigAccessor;
+import org.dajo.configuration.ConfigAccessor;
 import org.dajo.framework.db.DatabaseConfig;
 import org.dajo.framework.db.SimpleQueryExecutor;
 import org.dajo.framework.db.SingleConnectionQueryExecutor;
 import org.dajo.framework.db.UpdateQueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fap.thread.RichThreadFactory;
-
 import com.kit.lightserver.domain.types.AuthenticationRequestTypeEnumSTY;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;

@@ -4,12 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.dajo.framework.db.InsertQueryInterface;
+import org.dajo.framework.db.MsSql;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
-import com.kit.lightserver.services.be.gps.MsSql;
 
 final class InsertAuthenticateUltimaConexaoQuery implements InsertQueryInterface {
 

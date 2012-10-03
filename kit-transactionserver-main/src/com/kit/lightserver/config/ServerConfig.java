@@ -1,12 +1,11 @@
 package com.kit.lightserver.config;
 
+import org.dajo.configuration.ConfigAccessor;
+import org.dajo.framework.filepath.DajoFilepath;
+import org.dajo.framework.filepath.DajoFilepathAdapter;
+import org.dajo.types.IntegerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.dajo.framework.adapters.DajoFilepath;
-import org.dajo.framework.adapters.DajoFilepathAdapter;
-import org.dajo.framework.adapters.IntegerAdapter;
-import org.dajo.framework.configuration.ConfigAccessor;
 
 import com.kit.lightserver.services.be.authentication.AuthenticationService;
 

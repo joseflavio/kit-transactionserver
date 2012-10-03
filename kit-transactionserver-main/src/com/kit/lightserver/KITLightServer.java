@@ -9,13 +9,11 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import org.dajo.configuration.ConfigAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.dajo.framework.configuration.ConfigAccessor;
-
 import com.fap.thread.RichThreadFactory;
-
 import com.kit.lightserver.adapters.adapterin.AdiClientListenerRunnable;
 import com.kit.lightserver.domain.types.ConnectionInfoFactory;
 import com.kit.lightserver.domain.types.ConnectionInfoVO;

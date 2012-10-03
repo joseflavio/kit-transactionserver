@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.dajo.framework.db.SelectQueryResultAdapter;
-import org.dajo.framework.db.SelectQuerySingleResult;
+import org.dajo.framework.db.resultadapters.SelectQuerySingleResult;
 
 public class SelectQueryResultAdapterInteger implements SelectQueryResultAdapter<SelectQuerySingleResult<Integer>> {
 

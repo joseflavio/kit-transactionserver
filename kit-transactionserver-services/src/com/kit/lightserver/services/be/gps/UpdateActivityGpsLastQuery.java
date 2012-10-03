@@ -3,13 +3,14 @@ package com.kit.lightserver.services.be.gps;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.dajo.framework.db.MsSql;
 import org.dajo.framework.db.QueryBooleanParameter;
 import org.dajo.framework.db.QueryDateParameter;
 import org.dajo.framework.db.QueryIntParameter;
 import org.dajo.framework.db.QueryParameter;
 import org.dajo.framework.db.QueryStringParameter;
 import org.dajo.framework.db.UpdateQueryInterface;
-import org.dajo.math.IntegerUtils;
+import org.dajo.types.IntegerConverter;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.CoordenadaGpsSTY;
@@ -25,10 +26,10 @@ class UpdateActivityGpsLastQuery implements UpdateQueryInterface {
         /*
          * Set Parameters
          */
-        int lat = IntegerUtils.checkedLongToInt( Math.round( ((double)mostRecent.getLatitude()) * 10000000) );
-        int lng = IntegerUtils.checkedLongToInt( Math.round( ((double)mostRecent.getLongitude()) * 10000000) );
-        int accuracy = IntegerUtils.checkedLongToInt( Math.round( ((double)mostRecent.getAccuracy()) * 10000000) );
-        int logicalClock = IntegerUtils.checkedLongToInt( mostRecent.getLogicalClock() );
+        int lat = IntegerConverter.checkedLongToInt( Math.round( ((double)mostRecent.getLatitude()) * 10000000) );
+        int lng = IntegerConverter.checkedLongToInt( Math.round( ((double)mostRecent.getLongitude()) * 10000000) );
+        int accuracy = IntegerConverter.checkedLongToInt( Math.round( ((double)mostRecent.getAccuracy()) * 10000000) );
+        int logicalClock = IntegerConverter.checkedLongToInt( mostRecent.getLogicalClock() );
 
         final QueryStringParameter connectionIdParam = new QueryStringParameter( connectionId.getConnectionUniqueId() );
         final QueryBooleanParameter gpsAvailableParam = new QueryBooleanParameter( Boolean.valueOf(gpsAvailable) );

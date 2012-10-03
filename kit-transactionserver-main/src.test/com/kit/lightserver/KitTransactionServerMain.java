@@ -2,11 +2,10 @@ package com.kit.lightserver;
 
 import javax.swing.JOptionPane;
 
+import org.dajo.configuration.ConfigAccessor;
+import org.dajo.configuration.ConfigurationReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.dajo.framework.configuration.ConfigAccessor;
-import org.dajo.framework.configuration.ConfigurationReader;
 
 public final class KitTransactionServerMain {
 

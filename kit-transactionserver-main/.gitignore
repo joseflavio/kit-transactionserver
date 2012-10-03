@@ -4,3 +4,4 @@
 /bin
 build-deliverable.properties
 ${build.dest.dir}
+/build.local.properties

@@ -3,9 +3,9 @@ package com.kit.lightserver.services.db.authenticate;
 import org.dajo.framework.db.InsertQueryResult;
 import org.dajo.framework.db.QueryExecutor;
 import org.dajo.framework.db.SelectQueryResult;
-import org.dajo.framework.db.SelectQueryResultAdapterBoolean;
-import org.dajo.framework.db.SelectQuerySingleResult;
 import org.dajo.framework.db.UpdateQueryResult;
+import org.dajo.framework.db.resultadapters.SelectQuerySimpleResultAdapters.ResultAdapterBool;
+import org.dajo.framework.db.resultadapters.SelectQuerySingleResult;
 
 import com.kit.lightserver.domain.types.ConnectionInfoVO;
 import com.kit.lightserver.domain.types.InstallationIdAbVO;
@@ -34,7 +34,7 @@ public final class TableAuthenticateOperations {
 
     public SelectQueryResult<SelectQuerySingleResult<Boolean>> selectMustReset(final String clientUserId) {
         SelectAuthenticateDeveResetarQuery selectQuery = new SelectAuthenticateDeveResetarQuery(clientUserId);
-        SelectQueryResultAdapterBoolean rsAdapter = new SelectQueryResultAdapterBoolean();
+        ResultAdapterBool rsAdapter = new ResultAdapterBool();
         SelectQueryResult<SelectQuerySingleResult<Boolean>> result = dbdQueryExecutor.executeSelectQuery(selectQuery, rsAdapter);
         return result;
     }
